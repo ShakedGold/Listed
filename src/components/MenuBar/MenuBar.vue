@@ -17,5 +17,8 @@ import ActionBar from "./ActionBar/ActionBar.vue"
   #menubar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
   }
 </style>
