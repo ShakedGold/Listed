@@ -5,7 +5,7 @@
 <template>
   <div id="profile">
     <img id="profile-photo" src="https://images.unsplash.com/photo-1526588554903-b32eb4158064?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="" />
-    <p id="profile-name">Nizan</p>
+    <a href="../../views/Profile.vue"><p id="profile-name">Nizan</p></a>
   </div>
 </template>
 
