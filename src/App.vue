@@ -5,6 +5,7 @@ import MenuBar from './components/MenuBar/MenuBar.vue'
 <template>
   <div>
     <MenuBar />
+    <!--Hello-->
   </div>
 </template>
 
