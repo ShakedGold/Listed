@@ -2,10 +2,12 @@
 import { ref } from 'vue'
 
 const dragging = ref(false);
+const files = ref([]);
 
 function drop(e) {
     e.preventDefault();
     dragging.value = false;
+    onChange(e);
 }
 
 function dragover(e) {
@@ -18,8 +20,11 @@ function dragleave(e) {
     dragging.value = false;
 }
 
-function isDragging() {
-    return dragging.value;
+function onChange(e) {
+    if(e.dataTransfer)
+        files.value = e.dataTransfer.files;
+    else
+        files.value = e.target.files;
 }
 </script>
 
@@ -33,6 +38,15 @@ function isDragging() {
                 <div v-if="dragging">Release to drop files here.</div>
                 <div v-else>Drop files here or <u>click here</u> to upload.</div>
             </label>
+
+            <p>
+                <span v-if="files.length === 0">No files selected.</span>
+                <span v-else>
+                    <span v-for="file in files">
+                        {{ file.name }}<br>
+                    </span>
+                </span>
+            </p>
         </div>
     </div>
 </template>

@@ -17,6 +17,9 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+# Styled Components
+Listed_Style/*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
