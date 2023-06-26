@@ -11,7 +11,7 @@
 <style>
   #search {
     margin: 15px;
-    width: 70%;
+    width: 75%;
   }
   #search-input {
     width: 100%;
