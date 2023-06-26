@@ -1,13 +1,10 @@
 <script setup>
-import MenuBar from '../components/MenuBar/MenuBar.vue'
 </script>
 
 <template>
-    <div>
-    <MenuBar />
+  <div>
+    <h1>Hello</h1>
   </div>
 </template>
 
-<style>
-
-</style>
+<style></style>
