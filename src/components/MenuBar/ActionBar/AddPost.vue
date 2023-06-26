@@ -1,9 +1,3 @@
-<script setup>
-</script>
-
 <template>
-  <router-link to="/post"><button id="action">Add Post</button></router-link>
+  <router-link to="/post"><button id="action">+</button></router-link>
 </template>
-
-<style>
-</style>

@@ -1,5 +1,5 @@
 <script setup>
-import Dropover from '@/components/Dropover.vue';
+import Dropover from '@/components/Profile/Dropover.vue';
 </script>
 
 <template>

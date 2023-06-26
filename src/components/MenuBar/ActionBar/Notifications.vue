@@ -1,7 +1,3 @@
-<script>
-
-</script>
-
 <template>
-  <button id="action">Notifications</button>
+  <button id="action">&nbsp;</button>
 </template>
