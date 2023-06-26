@@ -6,7 +6,7 @@
 
 <template>
   <div>
-    <a href="#" class="button">Hover me</a>
+    <button>Add Post</button>
   </div>
 </template>
 
