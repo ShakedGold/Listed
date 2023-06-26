@@ -1,3 +1,9 @@
+<script setup>
+import Dropover from '@/components/Dropover.vue';
+</script>
+
 <template>
-    <h1>Post Creation</h1>
+    <div class="main">
+        <Dropover />
+    </div>
 </template>
