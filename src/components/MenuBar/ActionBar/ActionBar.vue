@@ -17,9 +17,4 @@ import Notifications from './Notifications.vue'
     display: flex;
     gap: 1rem;
   }
-  #container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 </style>

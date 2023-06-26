@@ -15,6 +15,5 @@
   }
   #search-input {
     width: 100%;
-    height: 70%;
   }
 </style>

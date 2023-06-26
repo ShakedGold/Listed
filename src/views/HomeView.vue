@@ -3,7 +3,5 @@ import MenuBar from '../components/MenuBar/MenuBar.vue'
 </script>
 
 <template>
-    <div>
-        <MenuBar />
-    </div>
+    <MenuBar />
 </template>
