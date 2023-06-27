@@ -20,24 +20,15 @@
 }
 #post-actions {
     background-color: rgb(0, 255, 0);
-    grid-column-start: 0;
-    grid-column-end: 1;
-    grid-row-start: 0;
-    grid-row-end: 1;
 }
 #post-body {
     width: 30%;
-    grid-column-start: 1;
 }
 #post-title {
     background-color: red;
-    grid-row-start: 0;
-    grid-column-start: 1;
 }
 #post-img {
     object-fit: cover;
     width: 500px;
-    grid-row-start: 1;
-    grid-column-start: 1;
 }
 </style>
