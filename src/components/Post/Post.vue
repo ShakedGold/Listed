@@ -1,7 +1,9 @@
 <template>
     <div id="post">
         <div id="post-actions">
-            <p class="Votes">Upvote</p>
+         <button class="vbutton">&#x2191;</button> 
+         <button class="vbutton">&#x21c5;</button>
+         <button class="vbutton">&#x2193;</button>
         </div>
         <div id="post-body">
             <p id="post-title">This is water</p>
@@ -17,10 +19,18 @@
     display: flex;
     padding: 0%;
     width: 650px;
+    height: 475px;
     border: solid 1px black;
 }
 #post-actions {
-    background-color: rgb(0, 255, 0);
+    border-right: solid 1px black;
+    height: 100%;
+    width: 2em ;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 #post-body {
     width: 100%;
@@ -30,7 +40,8 @@
     height: 10%;
     margin-top: 0%;
     margin-bottom: 0%;
-    background-color: red;
+    border-bottom: solid 1px black;
+    background-color: transparent;
 }
 #post-img {
     margin-top: 0%;
@@ -38,13 +49,14 @@
     width: 100%;
     height: 90%;
 }
-.Votes{
-    background-color: rgb(0, 255, 0);
-    height: 15em;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 100px;
-    font-size: 20px;
+.vbutton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5em;
     font-weight: bold;
+    color: black;
 }
+
 </style>
