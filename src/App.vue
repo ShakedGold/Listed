@@ -6,4 +6,7 @@
   * {
     font-family: "Fira Sans Condensed Medium";
   }
+::selection{
+  background: orange;
+}
 </style>
