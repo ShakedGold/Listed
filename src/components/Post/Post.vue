@@ -1,9 +1,12 @@
 <template>
     <div id="post">
         <div id="post-actions">
-         <button class="vbutton">&#x2191;</button> 
-         <button class="vbutton">&#x21c5;</button>
-         <button class="vbutton">&#x2193;</button>
+            
+            <img id="Ubutton" class="vbutton" @click="postVotes++" src=
+    "https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png" />
+    <span id="post-votes">{{postVotes}}</span>
+        <img id="Dbutton" class="vbutton" @click="postVotes--" src=
+        "https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
         </div>
         <div id="post-body">
             <p id="post-title">This is water</p>
@@ -30,7 +33,6 @@
     font-weight: bold;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 #post-body {
     width: 100%;
@@ -51,12 +53,36 @@
 }
 .vbutton {
     width: 100%;
-    height: 100%;
+    height: 10%;
     border: none;
+    border-radius: 20%;
+    margin: 50% 0% 50% 0%;
     background-color: transparent;
+    align-items: top;
     font-size: 1.5em;
+    font-weight: bold;
+    color: black;
+
+}
+
+.vbutton:hover {
+    cursor: pointer;
+    background-color: #bfdbf7;
+    color: black;
+}
+#post-votes {
+    margin: 0%;
+    padding: 0%;
+    font-size: 1.2em;
     font-weight: bold;
     color: black;
 }
 
+
+
 </style>
+
+<script setup>
+import { ref } from "vue";
+let postVotes = ref(0);
+</script>
