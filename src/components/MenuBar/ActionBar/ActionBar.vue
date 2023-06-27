@@ -15,20 +15,22 @@ import Notifications from './Notifications.vue'
 <style>
   #action-bar {
     display: flex;
+    flex-direction: row;
     gap: 1rem;
   }
   #action {
-    background-color: #061A86;
+    background-color: var(--accent);
     border: none;
+    width: 100px;
     color: white;
     padding: 0.5rem 1rem;
+    height: var(--interactable-height);
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 1rem;
     margin: 0.5rem 0.5rem;
     cursor: pointer;
-    border-radius: 0.5rem;
     transition-duration: 0.2s;
   }
 

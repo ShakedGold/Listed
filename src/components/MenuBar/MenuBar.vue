@@ -14,11 +14,18 @@ import ActionBar from "./ActionBar/ActionBar.vue"
 </template>
 
 <style>
+  #menubar * {
+    /* border radius */
+    border-radius: 0.5rem;
+    
+    /* height variable for interactables */
+    --interactable-height: 2.8rem;
+  }
+
   #menubar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
   }
 </style>
