@@ -4,4 +4,5 @@ import Post from "@/components/Post/Post.vue"
 
 <template>
     <Post />
+    
 </template>
