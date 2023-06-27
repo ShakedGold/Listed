@@ -18,4 +18,7 @@ import MenuBar from "@/components/MenuBar/MenuBar.vue";
     /* fonts */
     font-family: "Fira Sans Condensed Medium";
   }
+::selection{
+  background: orange;
+}
 </style>
