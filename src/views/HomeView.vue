@@ -1,8 +1,14 @@
 <script setup>
 import Post from "@/components/Post/Post.vue"
+function arrange() {
+    alert("Refreshing all posts!");
+}
 </script>
 
-<template>
+<template>  
+    <button @click="arrange()">Refresh</button>
+    <Post />
+    <Post />
     <Post />
 
 </template>
