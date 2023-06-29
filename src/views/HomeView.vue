@@ -1,7 +1,18 @@
 <script setup>
-import MenuBar from '../components/MenuBar/MenuBar.vue'
+import Post from "@/components/Post/Post.vue"
 </script>
 
 <template>
-    <MenuBar />
+    <Post />
+
 </template>
+
+<style>
+body {
+    background-color: #e7ecef;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5em;
+    color: black;
+}
+</style>

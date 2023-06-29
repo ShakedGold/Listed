@@ -1,7 +1,3 @@
-<script setup>
-import MenuBar from '../components/MenuBar/MenuBar.vue'
-</script>
-
 <template>
   <div>
     <MenuBar />
@@ -14,6 +10,6 @@ import MenuBar from '../components/MenuBar/MenuBar.vue'
 
 <style>
 #heading {
-  color: lightgray;
+  color: var(--accent);
 }
 </style>
