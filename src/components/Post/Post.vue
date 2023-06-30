@@ -15,6 +15,7 @@
                 alt=""/>
         </div>
     </div>
+
 </template>
 
 <style>
