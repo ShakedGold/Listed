@@ -66,7 +66,7 @@ let postVotes = ref(0);
     margin-top: 0%;
     object-fit: cover;
     width: 100%;
-    height: 87%;
+    height: 86.5%;
 }
 .vbutton {
     width: 100%;
