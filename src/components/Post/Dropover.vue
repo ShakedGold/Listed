@@ -29,7 +29,7 @@ function onChange(e) {
 </script>
 
 <template>
-    <div class="main">
+    <div class="dropzone">
         <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
             <input type="file" multiple name="file" id="fileInput" class="hidden-input" @change="onChange" ref="file"
                 accept=".pdf,.jpg,.jpeg,.png" />
@@ -50,3 +50,10 @@ function onChange(e) {
         </div>
     </div>
 </template>
+
+<style>
+.dropzone {
+    display: flex;
+    text-align: center;
+}
+</style>
