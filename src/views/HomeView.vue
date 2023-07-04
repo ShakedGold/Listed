@@ -1,46 +1,28 @@
 <script setup>
 import Post from "@/components/Post/Post.vue"
+import MenuBar from "@/components/MenuBar/MenuBar.vue"
+import { ref } from "vue";
+
 //array of all the posts
-var posts = [];
-
-// Function to get the number of likes for a post
-function getLikes(post) {
-  return Post.postVotes;
-}
-
-// Function to sort the posts by likes
-function sortPostsByLikes() {
-  posts.sort(function(a, b) {
-    return getLikes(b) - getLikes(a);
-  });
-
-  renderPosts();
-}
-
-function renderPosts() {
-  var container = document.getElementById('postsContainer');
-  container.innerHTML = '';
-
-  for (var i = 0; i < posts.length; i++) {
-    var post = posts[i];
-
-    var postElement = document.createElement('div');
-    postElement.textContent = post.title + ' - Likes: ' + post.postVotes;
-
-    container.appendChild(postElement);
+var posts = ref([
+  {
+    title: "test",
+    author: "shaked",
+    votes: 90,
+    time: 25200,
+  },
+  {
+    title: "shaked",
+    author: "shaked2",
+    votes: -1,
+    time: 63115200,
   }
-}
-
-// Initial rendering of posts
-renderPosts();
+]);
 </script>
 
-<template>  
-    <button @click="arrange()">Refresh</button>
-    <Post />
-    <Post />
-    <Post />
-
+<template>
+  <MenuBar />
+  <Post v-for="post in posts" v-bind:postObj="post"/>
 </template>
 
 <style>

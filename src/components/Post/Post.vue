@@ -1,19 +1,31 @@
 <script setup>
-///import Profile from "././components/MenuBar/ActionBar/Profile.vue"
-import { ref } from "vue";
-let postVotes = ref(0);
+const props = defineProps(["postObj"])
+
+function convertTime(time) {
+    let minutes = Math.floor(time / 60);
+    let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
+    let month = Math.floor(days / 30);
+    let year = Math.floor(month / 12);
+
+    if(minutes < 60) return minutes + "m";
+    else if(hours < 24) return hours + "h";
+    else if(days < 30) return days + "d";
+    else if(month < 12) return month + "m";
+    else return year + "y";
+}
 </script>
 
 <template>
     <div id="post">
         <div id="post-actions">
-            <!--UpVote--><img id="Ubutton" class="vbutton" @click="postVotes++" src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png" />
-            <!--NumOfVotes--><span id="post-votes">{{postVotes}}</span>
-            <!--DownVote--><img id="Dbutton" class="vbutton" @click="postVotes--" src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
+            <!--UpVote--><img id="Ubutton" class="vbutton" @click="postObj.votes++" src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png" />
+            <!--NumOfVotes--><span id="post-votes">{{ postObj.votes }}</span>
+            <!--DownVote--><img id="Dbutton" class="vbutton" @click="postObj.votes--" src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
         </div>
         <div id="post-body">
-            <p id="post-info">Uploaded by Nizan - 7 hours ago</p>
-            <p id="post-title">This is water</p>
+            <p id="post-info">Uploaded by {{ postObj.author }} - {{ convertTime(postObj.time) }} ago</p>
+            <p id="post-title">{{ postObj.title }}</p>
             <img id="post-img"
                 src="https://images.unsplash.com/photo-1594372365401-3b5ff14eaaed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                 alt=""/>
@@ -94,8 +106,5 @@ let postVotes = ref(0);
     font-weight: bold;
     color: black;
 }
-
-
-
 </style>
 
