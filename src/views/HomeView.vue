@@ -2,7 +2,7 @@
 import Post from "@/components/Post/Post.vue"
 import MenuBar from "@/components/MenuBar/MenuBar.vue"
 import { ref } from "vue"
-import { query, orderBy, limit } from "firebase/firestore";  
+import { query, orderBy } from "firebase/firestore";  
 import { getDocs } from "firebase/firestore";
 
 import { dbRef } from "@/scripts/firebase";

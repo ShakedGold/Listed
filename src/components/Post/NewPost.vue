@@ -1,26 +1,24 @@
 <script setup>
 import Dropover from "@/components/Post/Dropover.vue"
 
-import { addDoc } from "firebase/firestore";
-import { serverTimestamp } from 'firebase/firestore'
+import { addDoc, setDoc, doc } from "firebase/firestore";
 import { dbRef } from "@/scripts/firebase";
 
 import { ref } from "vue"
 import router from '@/router'
 
+import { Post, postConverter } from "@/classes/Post"
+
 let options = ref(["Choose a list", "Python", "Cooking", "Math"])
 let title = ref("")
 
 async function post() {
-    let postObj = {
-        title: title.value,
-        author: "shaked",
-        time: serverTimestamp(),
-        votes: 0
-    }
-
     try {
-        const docRef = await addDoc(dbRef, postObj);
+        const docRef = await addDoc(dbRef, {});
+
+        const ref = doc(dbRef, docRef.id).withConverter(postConverter);
+        await setDoc(ref, new Post(title.value, "shaked", "python", docRef.id));
+
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
         console.error("Error adding document: ", e);

@@ -1,4 +1,7 @@
 <script setup>
+import { updateDoc, doc } from 'firebase/firestore';
+import { dbRef } from "@/scripts/firebase"
+
 const props = defineProps({
     postObj: {},
 })
@@ -19,6 +22,9 @@ function convertTime(time) {
 }
 
 async function vote(vote) {
+    const postRef = doc(dbRef, props.postObj.ID);
+
+    await updateDoc(postRef, { votes: vote });
     props.postObj.votes = vote;
 }
 </script>
