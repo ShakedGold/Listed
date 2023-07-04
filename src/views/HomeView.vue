@@ -5,12 +5,12 @@ import { ref } from "vue"
 import { query, orderBy } from "firebase/firestore";  
 import { getDocs } from "firebase/firestore";
 
-import { dbRef } from "@/scripts/firebase";
+import { postRef } from "@/scripts/firebase";
 
 //array of all the posts
 var posts = ref([]);
 
-const q = query(dbRef, orderBy("votes", "desc"));
+const q = query(postRef, orderBy("votes", "desc"));
 const querySnapshot = await getDocs(q);
 querySnapshot.forEach((doc) => {
   posts.value.push(doc.data());
@@ -18,8 +18,9 @@ querySnapshot.forEach((doc) => {
 </script>
 
 <template>
-  <MenuBar />
-  <Post v-for="post in posts" v-bind:postObj="post" />
+  <div id="post-container">
+    <Post v-for="post in posts" v-bind:postObj="post" />
+  </div>
 </template>
 
 <style>
@@ -30,4 +31,12 @@ body {
   font-size: 1.5em;
   color: black;
 }
-</style> 
+
+#post-container {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  justify-content: center;
+  align-items: center;
+}
+</style>

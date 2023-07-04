@@ -10,7 +10,7 @@ export class Post {
         this.ID = ID;
     }
     toString() {
-        return this.title + ', ' + this.author + ', ' + this.votes + ', ' + this.time;
+        return this.title + ', ' + this.author + ', ' + this.votes + ', ' + this.time + ", " + this.list;
     }
 }
 
@@ -23,6 +23,7 @@ export const postConverter = {
             time: post.time,
             votes: post.votes,
             ID: post.ID,
+            list: post.list,
         };
     },
     fromFirestore: (snapshot, options) => {

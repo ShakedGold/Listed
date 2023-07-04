@@ -1,4 +1,9 @@
+<script setup>
+import MenuBar from "@/components/MenuBar/MenuBar.vue"
+</script>
+
 <template>
+  <MenuBar />
   <Suspense>
     <router-view></router-view>
   </Suspense>
