@@ -1,9 +1,7 @@
 <script setup>
-import Dropover from '@/components/Profile/Dropover.vue';
+import NewPost from "@/components/Post/NewPost.vue"
 </script>
 
 <template>
-    <div class="main">
-        <Dropover />
-    </div>
+    <NewPost/>
 </template>
