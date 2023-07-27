@@ -16,5 +16,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 let db = getFirestore(app)
-export const postRef = collection(db, "posts");
+export const postsRef = collection(db, "posts");
 export const listsRef = collection(db, "lists");
+export const usersRef = collection(db, "users");

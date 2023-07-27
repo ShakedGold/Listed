@@ -1,6 +1,6 @@
 <script setup>
 import { updateDoc, doc } from 'firebase/firestore';
-import { postRef } from "@/scripts/firebase"
+import { postsRef } from "@/scripts/firebase"
 
 import PostList from "@/components/List/PostList.vue"
 
@@ -25,7 +25,7 @@ function convertTime(time) {
 
 async function vote(vote) {
     props.postObj.votes = vote;
-    const postDocRef = doc(postRef, props.postObj.ID);
+    const postDocRef = doc(postsRef, props.postObj.ID);
     await updateDoc(postDocRef, { votes: vote });
 }
 </script>
@@ -42,14 +42,12 @@ async function vote(vote) {
         <div id="post-body">
             <div id="post-body-info">
                 <div id="post-info">
-                    <PostList :list="postObj.list"/>
-                    <p>Uploaded by {{ postObj.author }} - {{ convertTime(postObj.time) }} ago</p>
+                    <PostList :list="postObj.list" />
+                    <p>Uploaded by {{ postObj.username }} - {{ convertTime(postObj.time) }} ago</p>
                 </div>
                 <p id="post-title">{{ postObj.title }}</p>
             </div>
-            <img id="post-img"
-                src="https://source.unsplash.com/random/500x500"
-                alt="" />
+            <img id="post-img" src="https://source.unsplash.com/random/500x500" alt="" />
         </div>
     </div>
 </template>
@@ -61,11 +59,12 @@ async function vote(vote) {
     width: 40%;
     border: solid 1px black;
 }
+
 #post-info {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    
+
     color: gray;
     font-size: small;
     margin-top: 0;
