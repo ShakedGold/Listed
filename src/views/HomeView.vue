@@ -7,7 +7,7 @@ import { getDocs } from "firebase/firestore";
 import { postsRef } from "@/scripts/firebase";
 
 //array of all the posts
-var posts = ref([]);
+let posts = ref([]);
 
 const q = query(postsRef, orderBy("votes", "desc"));
 const querySnapshot = await getDocs(q);

@@ -29,7 +29,7 @@ export function Login(username, password) {
   });
 }
 export function SignUp(email, password, username) {
-  if (!validate_email(email) || !validate_password(password)) return
+  if (!validate_password(password)) return
 
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -63,13 +63,6 @@ export function SignUp(email, password, username) {
         reject();
       });
   });
-}
-function validate_email(email) {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    ) != null;
 }
 function validate_password(password) {
   return new String(password)
