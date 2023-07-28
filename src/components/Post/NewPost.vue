@@ -1,6 +1,8 @@
 <script setup>
 import Dropover from "@/components/Post/Dropover.vue"
 
+import { serverTimestamp } from "firebase/firestore";
+
 import { getDocs, setDoc, doc, query, where } from "firebase/firestore";
 import { postsRef, listsRef } from "@/scripts/firebase";
 
@@ -17,7 +19,7 @@ getOptions().then((lists) => {
     listOptions.value = lists;
 })
 
-let newPost = ref(new Post("", "", new List()), "");
+let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), [], []));
 let selectedList = ref("Select a list");
 let newList = ref(new List(""));
 let newListCreation = ref(false);
@@ -46,15 +48,7 @@ async function post() {
     // query list, if not exist create one
     const q = query(listsRef, where("name", "==", selectedList.value));
     const querySnapshot = await getDocs(q);
-
-    // get the selected list or create it
-    if (querySnapshot.empty) {
-        const ref = doc(listsRef).withConverter(listConverter);
-        newPost.value.list = new List(selectedList.value);
-        await setDoc(ref, newPost.value.list);
-    } else {
-        newPost.value.list = querySnapshot.docs[0].data();
-    }
+    newPost.value.list = querySnapshot.docs[0].data();
 
     // get user
     newPost.value.username = getCurrentUser().username;

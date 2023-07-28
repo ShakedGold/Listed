@@ -1,10 +1,11 @@
 export class User {
-  constructor(email, username) {
+  constructor(email, username, following) {
     this.email = email;
     this.username = username;
+    this.following = following;
   }
   toString() {
-    return this.email + ', ' + this.username;
+    return this.email + ', ' + this.username + ' ' + this.following;
   }
 }
 
@@ -14,10 +15,11 @@ export const userConverter = {
     return {
       email: user.email,
       username: user.username,
+      following: user.following
     };
   },
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
-    return new User(data.email, data.username);
+    return new User(data.email, data.username, data.following);
   }
 };

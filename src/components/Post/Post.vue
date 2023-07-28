@@ -2,6 +2,8 @@
 import { updateDoc, doc } from 'firebase/firestore';
 import { postsRef } from "@/scripts/firebase"
 
+import { getCurrentUser } from "@/scripts/auth.js"
+
 import PostList from "@/components/List/PostList.vue"
 
 const props = defineProps({
@@ -23,21 +25,55 @@ function convertTime(time) {
     else return year + "y";
 }
 
-async function vote(vote) {
-    props.postObj.votes = vote;
+async function like() {
+    // check if user already liked
+    if (props.postObj.dislikedBy.includes(getCurrentUser().username)) {
+        const index = props.postObj.dislikedBy.indexOf(getCurrentUser().username);
+        if (index > -1) { // only splice array when item is found
+            props.postObj.dislikedBy.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+    else if (props.postObj.likedBy.includes(getCurrentUser().username)) {
+        dislike();
+        return;
+    } else {
+        props.postObj.likedBy.push(getCurrentUser().username);
+    }
+    props.postObj.votes++;
     const postDocRef = doc(postsRef, props.postObj.ID);
-    await updateDoc(postDocRef, { votes: vote });
+    await updateDoc(postDocRef, { votes: props.postObj.votes, likedBy: props.postObj.likedBy, dislikedBy: props.postObj.dislikedBy });
+}
+
+async function dislike() {
+    if (props.postObj.likedBy.includes(getCurrentUser().username)) {
+        const index = props.postObj.likedBy.indexOf(getCurrentUser().username);
+        if (index > -1) { // only splice array when item is found
+            props.postObj.likedBy.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+    else if (props.postObj.dislikedBy.includes(getCurrentUser().username)) {
+        like();
+        return;
+    } else {
+        props.postObj.dislikedBy.push(getCurrentUser().username);
+    }
+    props.postObj.votes--;
+    const postDocRef = doc(postsRef, props.postObj.ID);
+    await updateDoc(postDocRef, { votes: props.postObj.votes, dislikedBy: props.postObj.dislikedBy, likedBy: props.postObj.likedBy });
 }
 </script>
 
 <template>
     <div id="post">
         <div id="post-actions">
-            <img id="Ubutton" class="vbutton" @click="vote(postObj.votes + 1)"
+            <img id="Ubutton" class="vbutton" @click="like"
+                :style="{ backgroundColor: (props.postObj.likedBy.includes(getCurrentUser().username) ? '#bfdbf7' : 'transparent') }"
                 src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png" />
             <span id="post-votes">{{ postObj.votes }}</span>
-            <img id="Dbutton" class="vbutton" @click="vote(postObj.votes - 1)"
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
+            <img id="Dbutton" class="vbutton" @click="dislike"
+                :style="{ backgroundColor: (props.postObj.dislikedBy.includes(getCurrentUser().username) ? '#bfdbf7' : 'transparent') }"
+                src="
+            https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
         </div>
         <div id="post-body">
             <div id="post-body-info">

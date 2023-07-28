@@ -4,6 +4,9 @@
       <h2 id="heading"><b>Login</b></h2>
     </div>
     <div>
+      <button @click="GoogleLogin()">Google Sign In</button>
+    </div>
+    <div>
       <input v-model="username" type="text" id="username" placeholder="Username"> <br>
       <input v-model="password" type="password" id="password" placeholder="Password">
     </div>
@@ -13,12 +16,16 @@
           router.push('/');
         });
       }">Login</button>
+      <button @click="() => {
+        router.push('/signup');
+      }">Signup</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { Login } from "@/scripts/auth.js"
+import { GoogleLogin } from "../scripts/googleauth";
 import { ref } from "vue"
 import router from "../router"
 
@@ -30,6 +37,7 @@ let password = ref("")
 #password-info {
   font-size: small;
 }
+
 #heading {
   color: var(--accent);
 }

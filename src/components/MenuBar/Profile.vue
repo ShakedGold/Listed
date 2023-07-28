@@ -1,13 +1,12 @@
 <script setup>
-import { getCurrentUser } from '../../scripts/auth';
+import { getCurrentUserOrNew } from '../../scripts/auth';
 </script>
 
 <template>
   <div id="profile">
     <router-link to="/"><img id="profile-photo" src="../../assets/logo/png/only-logo-no-background.png"
         alt="" /></router-link>
-    <router-link to="/profile" id="profile-link">{{ getCurrentUser() !== null ? getCurrentUser().username : ""
-    }}</router-link>
+    <router-link to="/profile" id="profile-link">{{ getCurrentUserOrNew().username }}</router-link>
   </div>
 </template>
 

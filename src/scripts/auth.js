@@ -1,12 +1,35 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { User, userConverter } from "@/classes/user.js";
 import { usersRef } from "@/scripts/firebase.js";
 import { getDocs, setDoc, doc, query, where } from "firebase/firestore";
+import { auth } from "./firebase";
+import router from "../router";
 
-const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    router.push("/");
+  } else {
+    router.push("/login");
+  }
+});
+
 
 export function getCurrentUser() {
-  return auth.currentUser !== null ? new User(auth.currentUser.email, auth.currentUser.displayName) : null;
+  // TODO: change the [] to the actual follow list
+  return auth.currentUser !== null ? new User(auth.currentUser.email, auth.currentUser.displayName, []) : null;
+}
+
+export function getCurrentUserOrNew() {
+  // TODO: change the [] to the actual follow list
+  return auth.currentUser !== null ? new User(auth.currentUser.email, auth.currentUser.displayName, []) : new User("", "Listed", []);
+}
+
+export function SignOut() {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
 }
 
 export function Login(username, password) {
@@ -44,11 +67,11 @@ export function SignUp(email, password, username) {
             resolve();
           })
           .catch((error) => {
-            reject();
+            reject(error);
           });
 
         const ref = doc(usersRef, user.uid).withConverter(userConverter);
-        await setDoc(ref, new User(email, username));
+        await setDoc(ref, new User(email, username, []));
       })
       .catch((error) => {
         const errorCode = error.code;
