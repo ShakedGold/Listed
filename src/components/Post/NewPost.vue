@@ -19,7 +19,7 @@ getOptions().then((lists) => {
     listOptions.value = lists;
 })
 
-let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), [], []));
+let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), [], [], ""));
 let selectedList = ref("Select a list");
 let newList = ref(new List(""));
 let newListCreation = ref(false);
@@ -90,7 +90,7 @@ async function submitList() {
                 <option v-for=" option  in  listOptions ">{{ option }}</option>
             </select>
             <input type="text" placeholder="Title" v-model="newPost.title">
-            <Dropover />
+            <Dropover :post="newPost" />
             <div>
                 <button @click="router.push('/')">Cancel</button>
                 <button @click="post">Post</button>

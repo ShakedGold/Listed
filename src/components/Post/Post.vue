@@ -6,10 +6,22 @@ import { getCurrentUser } from "@/scripts/auth.js"
 
 import PostList from "@/components/List/PostList.vue"
 
+import { onMounted, ref } from 'vue'
+import { storage } from '../../scripts/storage';
+import { ref as firebaseRef, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+
 const props = defineProps({
     postObj: {},
 })
 
+let postImageUrl = ref("");
+
+onMounted(() => {
+    const storageRef = firebaseRef(storage, `/uploads/${props.postObj.ID}/${props.postObj.imageName}`)
+    getDownloadURL(storageRef).then(function (url) {
+        postImageUrl.value = url;
+    });
+});
 function convertTime(time) {
     let elapsedTime = Math.floor(Date.now() / 1000 - time.seconds);
     let minutes = Math.floor(elapsedTime / 60);
@@ -87,7 +99,7 @@ async function dislike() {
                 </div>
                 <p id="post-title">{{ postObj.title }}</p>
             </div>
-            <img id="post-img" src="https://source.unsplash.com/random/500x500" alt="" />
+            <img id="post-img" :src="postImageUrl" alt="" />
         </div>
     </div>
 </template>

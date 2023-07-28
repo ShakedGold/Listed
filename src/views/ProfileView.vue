@@ -3,12 +3,17 @@ import MenuBar from '../components/MenuBar/MenuBar.vue';
 import { SignOut } from '../scripts/auth';
 import { useRoute } from 'vue-router';
 import { User } from '../classes/User.js'
-import { getUserFromUsername } from '../scripts/auth.js'
+import { getUserFromUsername, getCurrentUser } from '../scripts/auth.js'
 
 import { ref, watch } from 'vue';
 
 let route = useRoute();
 
+
+let user = ref(new User());
+getUserFromUsername(route.params.username).then((userFromDB) => {
+  user.value = userFromDB;
+});
 /*
 watch for params change, this is important for when a user clicks on a different, 
 user's profile and then his own so we need to update the user object
@@ -17,9 +22,7 @@ watch(route, (newRoute) => {
   getUserFromUsername(newRoute.params.username).then((userFromDB) => {
     user.value = userFromDB;
   });
-})
-
-let user = ref(new User());
+});
 </script>
 
 <template>
@@ -42,7 +45,7 @@ let user = ref(new User());
       friends:
     </h4>
   </div>
-  <button @click="SignOut()">SignOut</button>
+  <button v-if="user.username === getCurrentUser().username" @click="SignOut()">SignOut</button>
 </template>
 
 <style>

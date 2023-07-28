@@ -1,9 +1,15 @@
-import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { User, userConverter } from "@/classes/user.js";
 import { usersRef } from "@/scripts/firebase.js";
 import { getDocs, setDoc, doc, query, where } from "firebase/firestore";
 import { auth } from "./firebase";
-import router from "../router";
+import router, { requestedPath } from "../router";
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    router.push(requestedPath || "/");
+  }
+});
 
 export function getUserFromUsername(username) {
   const q = query(usersRef, where("username", "==", username));

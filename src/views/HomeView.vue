@@ -8,18 +8,27 @@ import { postsRef } from "@/scripts/firebase";
 
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
 
+let sortMode = ref("top");
 //array of all the posts
 let posts = ref([]);
 
-const q = query(postsRef, orderBy("votes", "desc"));
+const q = query(postsRef, orderBy('votes', "desc"));
 const querySnapshot = await getDocs(q);
 querySnapshot.forEach((doc) => {
   posts.value.push(doc.data());
 });
+
 </script>
 
 <template>
   <MenuBar />
+  <div id="sorting-container">
+    <p>Sort By: </p>
+    <select name="sort-selection" id="sort-selection" v-model="sortMode">
+      <option value="new">New</option>
+      <option value="top">Top</option>
+    </select>
+  </div>
   <div id="post-container" v-if="posts.length !== 0">
     <Post v-for="post in posts" v-bind:postObj="post" />
   </div>

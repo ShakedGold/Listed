@@ -1,5 +1,5 @@
 export class Post {
-    constructor(title, username, list, ID, votes, time, likedBy, dislikedBy) {
+    constructor(title, username, list, ID, votes, time, likedBy, dislikedBy, imageName) {
         this.title = title;
         this.username = username;
         this.list = list;
@@ -8,10 +8,11 @@ export class Post {
         this.ID = ID;
         this.likedBy = likedBy;
         this.dislikedBy = dislikedBy;
+        this.imageName = imageName;
     }
     toString() {
         return this.title + ', ' + this.username + ', ' + this.votes + ', ' + this.time + ", " +
-            this.list + ', ' + this.ID + ', ' + this.likedBy + ', ' + this.dislikedBy;
+            this.list + ', ' + this.ID + ', ' + this.likedBy + ', ' + this.dislikedBy + ', ' + this.imageName;
     }
 }
 
@@ -27,10 +28,11 @@ export const postConverter = {
             ID: post.ID,
             likedBy: post.likedBy,
             dislikedBy: post.dislikedBy,
+            imageName: post.imageName,
         };
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Post(data.title, data.username, data.list, data.ID, data.votes, data.time, data.likedBy, data.dislikedBy);
+        return new Post(data.title, data.username, data.list, data.ID, data.votes, data.time, data.likedBy, data.dislikedBy, data.imageName);
     }
 };

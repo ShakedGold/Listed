@@ -1,8 +1,43 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { storage } from '../../scripts/storage';
+import { ref as firebaseRef, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { Post } from '../../classes/Post';
 
+let props = defineProps({
+    post: {
+        type: Post,
+        required: true
+    }
+})
 const dragging = ref(false);
-const files = ref([]);
+const file = ref(undefined);
+
+// wait for when the postID is set (the post button has been clicked) and then upload the files.
+watch(() => props.post.ID, (postID, oldVal) => {
+    let percent = ref(0);
+
+    const storageRef = firebaseRef(storage, `/uploads/${postID}/${file.value.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, file.value);
+
+    uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+            percent.value = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            console.log(percent.value);
+        },
+        (err) => console.log(err),
+        () => {
+            // download url
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                console.log(url);
+            });
+        }
+    );
+
+});
 
 function drop(e) {
     e.preventDefault();
@@ -20,18 +55,20 @@ function dragleave(e) {
     dragging.value = false;
 }
 
+
 function onChange(e) {
-    if(e.dataTransfer)
-        files.value = e.dataTransfer.files;
+    if (e.dataTransfer)
+        file.value = e.dataTransfer.files[0];
     else
-        files.value = e.target.files;
+        file.value = e.target.files[0];
+    props.post.imageName = file.value.name;
 }
 </script>
 
 <template>
     <div class="dropzone">
         <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
-            <input type="file" multiple name="file" id="fileInput" class="hidden-input" @change="onChange" ref="file"
+            <input type="file" name="file" id="fileInput" class="hidden-input" @change="onChange" ref="fileRef"
                 accept=".pdf,.jpg,.jpeg,.png" />
 
             <label for="fileInput" class="file-label">
@@ -40,11 +77,9 @@ function onChange(e) {
             </label>
 
             <p>
-                <span v-if="files.length === 0">No files selected.</span>
+                <span v-if="!file">No files selected.</span>
                 <span v-else>
-                    <span v-for="file in files">
-                        {{ file.name }}<br>
-                    </span>
+                    {{ file.name }}
                 </span>
             </p>
         </div>
