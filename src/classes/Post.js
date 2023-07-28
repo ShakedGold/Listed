@@ -1,16 +1,17 @@
-import { serverTimestamp } from 'firebase/firestore'
-
 export class Post {
-    constructor (title, author, list, ID) {
+    constructor(title, username, list, ID, votes, time, likedBy, dislikedBy) {
         this.title = title;
+        this.username = username;
         this.list = list;
-        this.votes = 0;
-        this.author = author;
-        this.time = serverTimestamp();
+        this.votes = votes;
+        this.time = time;
         this.ID = ID;
+        this.likedBy = likedBy;
+        this.dislikedBy = dislikedBy;
     }
     toString() {
-        return this.title + ', ' + this.author + ', ' + this.votes + ', ' + this.time + ", " + this.list;
+        return this.title + ', ' + this.username + ', ' + this.votes + ', ' + this.time + ", " +
+            this.list + ', ' + this.ID + ', ' + this.likedBy + ', ' + this.dislikedBy;
     }
 }
 
@@ -19,15 +20,17 @@ export const postConverter = {
     toFirestore: (post) => {
         return {
             title: post.title,
-            author: post.author,
+            username: post.username,
             time: post.time,
             votes: post.votes,
-            ID: post.ID,
             list: post.list,
+            ID: post.ID,
+            likedBy: post.likedBy,
+            dislikedBy: post.dislikedBy,
         };
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Post(data.title, data.author, data.list, data.ID);
+        return new Post(data.title, data.username, data.list, data.ID, data.votes, data.time, data.likedBy, data.dislikedBy);
     }
 };

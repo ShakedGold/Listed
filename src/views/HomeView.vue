@@ -1,16 +1,15 @@
 <script setup>
 import Post from "@/components/Post/Post.vue"
-import MenuBar from "@/components/MenuBar/MenuBar.vue"
 import { ref } from "vue"
-import { query, orderBy } from "firebase/firestore";  
+import { query, orderBy } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
 
-import { postRef } from "@/scripts/firebase";
+import { postsRef } from "@/scripts/firebase";
 
 //array of all the posts
-var posts = ref([]);
+let posts = ref([]);
 
-const q = query(postRef, orderBy("votes", "desc"));
+const q = query(postsRef, orderBy("votes", "desc"));
 const querySnapshot = await getDocs(q);
 querySnapshot.forEach((doc) => {
   posts.value.push(doc.data());
@@ -18,8 +17,11 @@ querySnapshot.forEach((doc) => {
 </script>
 
 <template>
-  <div id="post-container">
+  <div id="post-container" v-if="posts.length !== 0">
     <Post v-for="post in posts" v-bind:postObj="post" />
+  </div>
+  <div v-else>
+    <h1>So Empty...</h1>
   </div>
 </template>
 
