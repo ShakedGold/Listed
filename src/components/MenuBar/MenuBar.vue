@@ -2,11 +2,15 @@
 import Profile from "./Profile.vue"
 import Search from "./Search.vue"
 import ActionBar from "./ActionBar/ActionBar.vue"
+
+import { getCurrentUserOrNew } from "../../scripts/auth.js"
+
+let props = defineProps(["user"]);
 </script>
 
 <template>
   <div id="menubar">
-    <Profile />
+    <Profile :user="getCurrentUserOrNew()" />
     <Search />
     <ActionBar />
   </div>

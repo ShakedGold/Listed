@@ -1,12 +1,17 @@
 <script setup>
-import { getCurrentUserOrNew } from '../../scripts/auth';
+import router from '../../router/index.js';
+let props = defineProps(['user']);
+
+function goToProfile() {
+  router.push({ name: 'User', params: { username: props.user.username } });
+}
 </script>
 
 <template>
   <div id="profile">
     <router-link to="/"><img id="profile-photo" src="../../assets/logo/png/only-logo-no-background.png"
         alt="" /></router-link>
-    <router-link to="/profile" id="profile-link">{{ getCurrentUserOrNew().username }}</router-link>
+    <p @click="goToProfile" id="profile-link">{{ user.username }}</p>
   </div>
 </template>
 
@@ -28,6 +33,7 @@ import { getCurrentUserOrNew } from '../../scripts/auth';
 
 #profile-link {
   text-decoration: none;
+  cursor: pointer;
 }
 
 /* unvisited link */

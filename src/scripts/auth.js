@@ -1,18 +1,21 @@
-import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { User, userConverter } from "@/classes/user.js";
 import { usersRef } from "@/scripts/firebase.js";
 import { getDocs, setDoc, doc, query, where } from "firebase/firestore";
 import { auth } from "./firebase";
 import router from "../router";
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    router.push("/");
-  } else {
-    router.push("/login");
-  }
-});
-
+export function getUserFromUsername(username) {
+  const q = query(usersRef, where("username", "==", username));
+  return new Promise((resolve, reject) => {
+    getDocs(q).then((querySnapshot) => {
+      if (querySnapshot.docs.length == 0) reject("No user found");
+      resolve(querySnapshot.docs[0].data());
+    }).catch((error) => {
+      reject(error)
+    });
+  });
+}
 
 export function getCurrentUser() {
   // TODO: change the [] to the actual follow list
@@ -26,7 +29,7 @@ export function getCurrentUserOrNew() {
 
 export function SignOut() {
   signOut(auth).then(() => {
-    // Sign-out successful.
+    router.push({ name: "Login" });
   }).catch((error) => {
     // An error happened.
   });

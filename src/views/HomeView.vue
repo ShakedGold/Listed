@@ -6,6 +6,8 @@ import { getDocs } from "firebase/firestore";
 
 import { postsRef } from "@/scripts/firebase";
 
+import MenuBar from "@/components/MenuBar/MenuBar.vue";
+
 //array of all the posts
 let posts = ref([]);
 
@@ -17,6 +19,7 @@ querySnapshot.forEach((doc) => {
 </script>
 
 <template>
+  <MenuBar />
   <div id="post-container" v-if="posts.length !== 0">
     <Post v-for="post in posts" v-bind:postObj="post" />
   </div>

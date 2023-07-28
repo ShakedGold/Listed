@@ -1,4 +1,5 @@
 <template>
+  <MenuBar />
   <div>
     <div>
       <h2 id="heading"><b>Login</b></h2>
@@ -13,7 +14,8 @@
     <div>
       <button @click="() => {
         Login(username, password).then(() => {
-          router.push('/');
+          console.log(requestedPath);
+          router.push(requestedPath || '/');
         });
       }">Login</button>
       <button @click="() => {
@@ -27,7 +29,8 @@
 import { Login } from "@/scripts/auth.js"
 import { GoogleLogin } from "../scripts/googleauth";
 import { ref } from "vue"
-import router from "../router"
+import router, { requestedPath } from '../router';
+import MenuBar from "@/components/MenuBar/MenuBar.vue";
 
 let username = ref("")
 let password = ref("")

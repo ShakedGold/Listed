@@ -1,4 +1,6 @@
 <template>
+  <MenuBar />
+
   <div>
     <div>
       <h2 id="heading"><b>SignUp</b></h2>
@@ -23,6 +25,7 @@
 </template>
 
 <script setup>
+import MenuBar from "@/components/MenuBar/MenuBar.vue";
 import { SignUp } from "@/scripts/auth.js"
 import { ref } from "vue"
 import router from "../router"
