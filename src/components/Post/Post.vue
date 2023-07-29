@@ -90,10 +90,12 @@ async function dislike() {
         <div id="post-body">
             <div id="post-body-info">
                 <div id="post-info">
-                    <PostList :list="postObj.list" />
+                    <!--<PostList :list="postObj.list" />-->
+                    <router-link :to="{ list: 'List', params: { listname: postObj.list } }"
+                            id="list-link"><PostList :list="postObj.list" /></router-link>
                     <p>Uploaded by <router-link :to="{ name: 'User', params: { username: postObj.username } }"
                             id="profile-link">{{ postObj.username }}</router-link>
-                        -
+                        - 
                         {{
                             convertTime(postObj.time) }} ago</p>
                 </div>
