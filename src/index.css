@@ -10,7 +10,5 @@
       url(./assets/fonts/FiraSansCondensedMedium.ttf) format("truetype");
   }
 
-  html {
-    font-family: "Fira Sans Condensed Medium";
-  }
+
 }

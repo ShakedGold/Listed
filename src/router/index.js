@@ -7,7 +7,6 @@ import PostCreation from '../views/PostView.vue'
 import LogIn from '../views/LogInView.vue'
 import SignUp from '../views/SignUpView.vue'
 import ListView from '../views/ListView.vue'
-import Test from '../views/Test.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
