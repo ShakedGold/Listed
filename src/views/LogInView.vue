@@ -14,7 +14,6 @@
     <div>
       <button @click="() => {
         Login(username, password).then(() => {
-          console.log(requestedPath);
           router.push(requestedPath || '/');
         });
       }">Login</button>

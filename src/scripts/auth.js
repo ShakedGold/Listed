@@ -24,13 +24,25 @@ export function getUserFromUsername(username) {
 }
 
 export function getCurrentUser() {
-  // TODO: change the [] to the actual follow list
-  return auth.currentUser !== null ? new User(auth.currentUser.email, auth.currentUser.displayName, []) : null;
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser == null) reject("No user found");
+    getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
+      resolve(userFromDB);
+    }).catch((error) => {
+      reject(error);
+    })
+  });
 }
 
 export function getCurrentUserOrNew() {
-  // TODO: change the [] to the actual follow list
-  return auth.currentUser !== null ? new User(auth.currentUser.email, auth.currentUser.displayName, []) : new User("", "Listed", []);
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser === null) resolve(new User("", "Listed", [], {}));
+    getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
+      resolve(userFromDB);
+    }).catch((error) => {
+      reject(error);
+    })
+  });
 }
 
 export function SignOut() {
@@ -79,8 +91,8 @@ export function SignUp(email, password, username) {
             reject(error);
           });
 
-        const ref = doc(usersRef, user.uid).withConverter(userConverter);
-        await setDoc(ref, new User(email, username, []));
+        const ref = doc(usersRef, username).withConverter(userConverter);
+        await setDoc(ref, new User(email, username, [], {}));
       })
       .catch((error) => {
         const errorCode = error.code;

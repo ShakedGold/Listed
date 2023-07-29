@@ -1,8 +1,7 @@
 <script setup>
 import Post from "@/components/Post/Post.vue"
 import { ref } from "vue"
-import { query, orderBy } from "firebase/firestore";
-import { getDocs } from "firebase/firestore";
+import { query, orderBy, getDocs } from "firebase/firestore";
 
 import { postsRef } from "@/scripts/firebase";
 
@@ -17,7 +16,6 @@ const querySnapshot = await getDocs(q);
 querySnapshot.forEach((doc) => {
   posts.value.push(doc.data());
 });
-
 </script>
 
 <template>
@@ -30,7 +28,7 @@ querySnapshot.forEach((doc) => {
     </select>
   </div>
   <div id="post-container" v-if="posts.length !== 0">
-    <Post v-for="post in posts" v-bind:postObj="post" />
+    <Post v-for="post in posts" :postObj="post" />
   </div>
   <div v-else>
     <h1>So Empty...</h1>

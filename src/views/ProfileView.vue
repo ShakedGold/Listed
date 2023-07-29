@@ -10,7 +10,7 @@ import { ref, watch } from 'vue';
 let route = useRoute();
 
 
-let user = ref(new User());
+let user = ref(new User("", "", [], {}));
 getUserFromUsername(route.params.username).then((userFromDB) => {
   user.value = userFromDB;
 });
@@ -23,6 +23,8 @@ watch(route, (newRoute) => {
     user.value = userFromDB;
   });
 });
+
+let currentUser = await getCurrentUser();
 </script>
 
 <template>
@@ -45,7 +47,7 @@ watch(route, (newRoute) => {
       friends:
     </h4>
   </div>
-  <button v-if="user.username === getCurrentUser().username" @click="SignOut()">SignOut</button>
+  <button v-if="user.username === currentUser.username" @click="SignOut()">SignOut</button>
 </template>
 
 <style>

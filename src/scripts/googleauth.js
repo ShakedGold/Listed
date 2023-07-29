@@ -14,7 +14,6 @@ export function GoogleLogin() {
 
       // The signed-in user info.
       const user = result.user;
-      console.log(user.email);
       // IdP data available using getAdditionalUserInfo(result)
       // ...
     }).catch((error) => {

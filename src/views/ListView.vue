@@ -1,9 +1,8 @@
 <script setup>
 import Post from "@/components/Post/Post.vue"
 import { ref } from "vue"
-import { query, orderBy } from "firebase/firestore";
-import { getDocs } from "firebase/firestore";
-
+import { query, orderBy, where, getDocs } from "firebase/firestore";
+import { useRoute } from "vue-router";
 import { postsRef } from "@/scripts/firebase";
 
 ///import { List } from '../classes/List.js'
@@ -17,15 +16,11 @@ let route = useRoute();
 //array of all the posts
 let posts = ref([]);
 
-const q = query(postsRef, orderBy('votes', "desc"));
+const q = query(postsRef, orderBy('votes', "desc"), where("list.name", "==", route.params.name));
 const querySnapshot = await getDocs(q);
 querySnapshot.forEach((doc) => {
-    ///Add IF term ro check if post is in the selected list
-    if(doc.data().listname===route.params.listname) {
-        posts.value.push(doc.data());
-    }
+  posts.value.push(doc.data());
 });
-
 </script>
 
 <template>

@@ -1,7 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
-import { storage } from '../../scripts/storage';
-import { ref as firebaseRef, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { ref } from 'vue'
 import { Post } from '../../classes/Post';
 
 let props = defineProps({
@@ -13,31 +11,7 @@ let props = defineProps({
 const dragging = ref(false);
 const file = ref(undefined);
 
-// wait for when the postID is set (the post button has been clicked) and then upload the files.
-watch(() => props.post.ID, (postID, oldVal) => {
-    let percent = ref(0);
-
-    const storageRef = firebaseRef(storage, `/uploads/${postID}/${file.value.name}`)
-    const uploadTask = uploadBytesResumable(storageRef, file.value);
-
-    uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-            percent.value = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            console.log(percent.value);
-        },
-        (err) => console.log(err),
-        () => {
-            // download url
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                console.log(url);
-            });
-        }
-    );
-
-});
+let emits = defineEmits(["filesChange"]);
 
 function drop(e) {
     e.preventDefault();
@@ -67,9 +41,10 @@ function onChange(e) {
 
 <template>
     <div class="dropzone">
-        <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
-            <input type="file" name="file" id="fileInput" class="hidden-input" @change="onChange" ref="fileRef"
-                accept=".pdf,.jpg,.jpeg,.png" />
+        <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave"
+            @drop="(e) => { drop(e); $emit('filesChange', e) }">
+            <input type="file" name="file" id="fileInput" class="hidden-input" @change="(e) => $emit('filesChange', e)"
+                ref="fileRef" accept=".pdf,.jpg,.jpeg,.png" />
 
             <label for="fileInput" class="file-label">
                 <div v-if="dragging">Release to drop files here.</div>
@@ -77,9 +52,9 @@ function onChange(e) {
             </label>
 
             <p>
-                <span v-if="!file">No files selected.</span>
+                <span v-if="!post.imageName">No files selected.</span>
                 <span v-else>
-                    {{ file.name }}
+                    {{ post.imageName }}
                 </span>
             </p>
         </div>
