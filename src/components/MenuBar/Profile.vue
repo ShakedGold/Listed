@@ -8,10 +8,10 @@ function goToProfile() {
 </script>
 
 <template>
-  <div id="profile">
+  <div class="flex">
     <router-link to="/"><img id="profile-photo" src="../../assets/logo/png/only-logo-no-background.png"
         alt="" /></router-link>
-    <p @click="goToProfile" id="profile-link">{{ user.username }}</p>
+    <p @click="goToProfile">{{ user.username }}</p>
   </div>
 </template>
 
@@ -23,12 +23,6 @@ function goToProfile() {
   margin-right: 10px;
   margin-bottom: 10px;
   margin-top: 20%;
-}
-
-#profile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 #profile-link {

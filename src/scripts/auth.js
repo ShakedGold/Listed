@@ -75,6 +75,9 @@ export function Login(username, password) {
 export function SignUp(email, password, username) {
   if (!validate_password(password)) return
 
+  // TODO check if username is already taken with a query
+
+
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {

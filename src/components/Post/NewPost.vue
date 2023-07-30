@@ -16,10 +16,7 @@ import { storage } from '@/scripts/storage';
 import { ref as firebaseRef, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
 
-let listOptions = ref([]);
-getOptions().then((lists) => {
-    listOptions.value = lists;
-})
+let listOptions = ref(await getOptions());
 
 let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), ""));
 let file = ref({ name: "" });
@@ -103,9 +100,7 @@ async function submitList() {
     await setDoc(ref, new List(newList.value.name));
 
     selectedList.value = newList.value.name;
-    getOptions().then((lists) => {
-        listOptions.value = lists;
-    });
+    listOptions.value = await getOptions();
 }
 
 function uploadfiles(e) {
@@ -131,17 +126,15 @@ function uploadfiles(e) {
     </ProgressModal>
 
     <div v-if="!newListCreation">
-        <div id="new-post">
-            <select @change="onSelect($event)" v-model="selectedList">
-                <option disabled>Select a list</option>
-                <option v-for=" option  in  listOptions ">{{ option }}</option>
-            </select>
-            <input type="text" placeholder="Title" v-model="newPost.title">
-            <Dropover :post="newPost" @files-change="uploadfiles" />
-            <div>
-                <button @click="router.push('/')">Cancel</button>
-                <button @click="post">Post</button>
-            </div>
+        <select @change="onSelect($event)" v-model="selectedList">
+            <option disabled>Select a list</option>
+            <option v-for=" option  in  listOptions ">{{ option }}</option>
+        </select>
+        <input type="text" placeholder="Title" v-model="newPost.title">
+        <Dropover :post="newPost" @files-change="uploadfiles" />
+        <div>
+            <button @click="router.push('/')">Cancel</button>
+            <button @click="post">Post</button>
         </div>
     </div>
     <div v-else>
