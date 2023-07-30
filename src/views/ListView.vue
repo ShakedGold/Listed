@@ -32,6 +32,9 @@ querySnapshot.forEach((doc) => {
       <option value="top">Top</option>
     </select>
   </div>
+  <div id="list-header">
+    <h1><b>{{route.params.name}}</b></h1>
+  </div>
   <div id="post-container" v-if="posts.length !== 0">
     <Post v-for="post in posts" v-bind:postObj="post" />
   </div>
@@ -47,6 +50,10 @@ body {
   padding: 0;
   font-size: 1.5em;
   color: black;
+}
+
+#list-header{
+  text-align: center;
 }
 
 #post-container {
