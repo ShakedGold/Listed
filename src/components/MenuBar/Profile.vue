@@ -1,12 +1,17 @@
-<script>
+<script setup>
+import router from '../../router/index.js';
+let props = defineProps(['user']);
 
+function goToProfile() {
+  router.push({ name: 'User', params: { username: props.user.username } });
+}
 </script>
 
 <template>
-  <div id="profile">
+  <div class="flex">
     <router-link to="/"><img id="profile-photo" src="../../assets/logo/png/only-logo-no-background.png"
         alt="" /></router-link>
-    <router-link to="/profile" id="profile-link">Nizan</router-link>
+    <p @click="goToProfile">{{ user.username }}</p>
   </div>
 </template>
 
@@ -20,14 +25,9 @@
   margin-top: 20%;
 }
 
-#profile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 #profile-link {
   text-decoration: none;
+  cursor: pointer;
 }
 
 /* unvisited link */
@@ -51,51 +51,51 @@
 }
 
 .main {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    height: 100vh;
-    justify-content: center;
-    text-align: center;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  text-align: center;
 }
 
 .dropzone-container {
-    padding: 4rem;
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
+  padding: 4rem;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
 }
 
 .hidden-input {
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    width: 1px;
-    height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  height: 1px;
 }
 
 .file-label {
-    font-size: 20px;
-    display: block;
-    cursor: pointer;
+  font-size: 20px;
+  display: block;
+  cursor: pointer;
 }
 
 .preview-container {
-    display: flex;
-    margin-top: 2rem;
+  display: flex;
+  margin-top: 2rem;
 }
 
 .preview-card {
-    display: flex;
-    border: 1px solid #a2a2a2;
-    padding: 5px;
-    margin-left: 5px;
+  display: flex;
+  border: 1px solid #a2a2a2;
+  padding: 5px;
+  margin-left: 5px;
 }
 
 .preview-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
-    border: 1px solid #a2a2a2;
-    background-color: #a2a2a2;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #a2a2a2;
+  background-color: #a2a2a2;
 }
 </style>

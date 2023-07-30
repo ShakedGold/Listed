@@ -1,57 +1,25 @@
 <script setup>
-import { updateDoc, doc } from 'firebase/firestore';
-import { postRef } from "@/scripts/firebase"
+import { getCurrentUserOrNew } from "@/scripts/auth.js"
 
-import PostList from "@/components/List/PostList.vue"
+import Sidebar from './Sidebar/Sidebar.vue';
+import Body from './Body/Body.vue';
+
+import { ref } from 'vue';
 
 const props = defineProps({
     postObj: {},
-})
+});
 
-function convertTime(time) {
-    let elapsedTime = Math.floor(Date.now() / 1000 - time.seconds);
-    let minutes = Math.floor(elapsedTime / 60);
-    let hours = Math.floor(minutes / 60);
-    let days = Math.floor(hours / 24);
-    let month = Math.floor(days / 30);
-    let year = Math.floor(month / 12);
-
-    if (minutes < 60) return minutes + "m";
-    else if (hours < 24) return hours + "h";
-    else if (days < 30) return days + "d";
-    else if (month < 12) return month + "m";
-    else return year + "y";
-}
-
-async function vote(vote) {
-    props.postObj.votes = vote;
-    const postDocRef = doc(postRef, props.postObj.ID);
-    await updateDoc(postDocRef, { votes: vote });
-}
+let user = ref(await getCurrentUserOrNew());
 </script>
 
 <template>
-    <div id="post">
-        <div id="post-actions">
-            <img id="Ubutton" class="vbutton" @click="vote(postObj.votes + 1)"
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png" />
-            <span id="post-votes">{{ postObj.votes }}</span>
-            <img id="Dbutton" class="vbutton" @click="vote(postObj.votes - 1)"
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png" />
-        </div>
-        <div id="post-body">
-            <div id="post-body-info">
-                <div id="post-info">
-                    <PostList :list="postObj.list"/>
-                    <p>Uploaded by {{ postObj.author }} - {{ convertTime(postObj.time) }} ago</p>
-                </div>
-                <p id="post-title">{{ postObj.title }}</p>
-            </div>
-            <img id="post-img"
-                src="https://source.unsplash.com/random/500x500"
-                alt="" />
-        </div>
+    <div class="flex border-2 border-black">
+        <Sidebar :user="user" :post="postObj" />
+
+        <Body :post="postObj" />
     </div>
+<<<<<<< HEAD
 
 </template>
 
@@ -130,3 +98,6 @@ async function vote(vote) {
 </style>
 
 
+=======
+</template>
+>>>>>>> 1b0a00d9506a652a31492331de8e7d1f6c94f744

@@ -1,8 +1,9 @@
 <script setup>
 import Dropover from "@/components/Post/Dropover.vue"
+import ProgressModal from "@/components/Modal/ProgressModal.vue"
 
-import { getDocs, addDoc, setDoc, doc, query, where } from "firebase/firestore";
-import { postRef, listsRef } from "@/scripts/firebase";
+import { getDocs, setDoc, doc, query, where, serverTimestamp } from "firebase/firestore";
+import { postsRef, listsRef } from "@/scripts/firebase";
 
 import { ref } from "vue"
 import router from '@/router'
@@ -10,83 +11,140 @@ import router from '@/router'
 import { Post, postConverter } from "@/classes/Post"
 import { List, listConverter } from "@/classes/List"
 
-let options = ref([])
-getOptions();
+import { getCurrentUserOrNew } from "@/scripts/auth.js"
+import { storage } from '@/scripts/storage';
+import { ref as firebaseRef, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+
+
+let listOptions = ref(await getOptions());
+
+let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), ""));
+let file = ref({ name: "" });
+let selectedList = ref("Select a list");
+let newList = ref(new List(""));
+let newListCreation = ref(false);
+let uploadModal = ref(false);
+let percent = ref(0);
 
 async function getOptions() {
-    options.value = []
-    options.value.push(new List("Select list"))
-    options.value.push(new List("Add new list"))
+    let lists = [];
+    lists.push(new List("Add new list"))
     const querySnapshot = await getDocs(listsRef);
     querySnapshot.forEach((doc) => {
-        options.value.push(new List(doc.data().name))
-    })
+        lists.push(new List(doc.data().name))
+    });
+    return lists;
 }
 
-let title = ref("")
-let selectedList = ref("Select list")
-let is_new_list = ref(false)
-let new_list = ref({})
-
 async function post() {
-    const docRef = await addDoc(postRef, {});
+    if (selectedList.value === "Select a list") {
+        alert("Must select a list or create a new one");
+        return;
+    }
+    else if (newPost.value.title === "") {
+        alert("Must enter a title");
+        return;
+    }
+
 
     // query list, if not exist create one
     const q = query(listsRef, where("name", "==", selectedList.value));
     const querySnapshot = await getDocs(q);
+    newPost.value.list = querySnapshot.docs[0].data();
 
-    let list = undefined;
-    if (!querySnapshot.empty) {
-        list = querySnapshot.docs[0].data();
-    } else {
-        const ref = doc(listsRef, docRef.id).withConverter(listConverter);
-        list = new List(selectedList.value);
-        await setDoc(ref, list);
-    }
+    // get user
+    getCurrentUserOrNew().then(async (user) => {
+        newPost.value.username = user.username;
 
-    const ref = doc(postRef, docRef.id).withConverter(postConverter);
-    await setDoc(ref, new Post(title.value, "shaked", list, docRef.id));
-    // move to HomeView
-    router.push('/')
+        // create post
+        const ref = doc(postsRef).withConverter(postConverter);
+
+        // set post ID to doc ID
+        newPost.value.ID = ref.id;
+
+        // show upload modal
+        uploadModal.value = true;
+
+        const storageRef = firebaseRef(storage, `/uploads/${newPost.value.ID}/${file.value.name}`)
+        const uploadTask = uploadBytesResumable(storageRef, file.value);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                percent.value = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+            },
+            (err) => console.log(err),
+            () => {
+                // download url
+                getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+                    await setDoc(ref, newPost.value);
+
+                    // move to HomeView
+                    router.push('/')
+                });
+            }
+        );
+    });
 }
 
 function onSelect(event) {
-    if (event.target.value === "Add new list") {
-        is_new_list.value = true;
-    }
+    newListCreation.value = event.target.value === "Add new list";
 }
 
-async function submit_list() {
-    is_new_list.value = false;
+async function submitList() {
+    newListCreation.value = false;
 
-    const docRef = await addDoc(listsRef, {});
-    const ref = doc(listsRef, docRef.id).withConverter(listConverter);
-    await setDoc(ref, new List(new_list.value.name));
+    const ref = doc(listsRef).withConverter(listConverter);
+    await setDoc(ref, new List(newList.value.name));
 
-    selectedList.value = new_list.value.name;
-    getOptions();
+    selectedList.value = newList.value.name;
+    listOptions.value = await getOptions();
+}
+
+function uploadfiles(e) {
+    if (e.dataTransfer)
+        file.value = e.dataTransfer.files[0];
+    else
+        file.value = e.target.files[0];
+    newPost.value.imageName = file.value.name;
 }
 </script>
 
 <template>
-    <div v-if="!is_new_list">
-        <div id="new-post">
-            <select selected="Choose a list" @change="onSelect($event)" v-model="selectedList">
-                <option v-for="option in options">{{ option }}</option>
-            </select>
-            <input type="text" placeholder="Title" v-model="title">
-            <Dropover />
-            <div>
-                <button @click="router.push('/')">Cancel</button>
-                <button @click="post">Post</button>
-            </div>
+    <ProgressModal :open="uploadModal" :progress="percent">
+        <template #header>
+            <h1>Uploading post</h1>
+        </template>
+        <template #body>
+            <h1>{{ newPost.title }}</h1>
+        </template>
+        <template #footer>
+            <p>{{ percent }}%</p>
+        </template>
+    </ProgressModal>
+
+    <div v-if="!newListCreation">
+        <select @change="onSelect($event)" v-model="selectedList">
+            <option disabled>Select a list</option>
+            <option v-for=" option  in  listOptions ">{{ option }}</option>
+        </select>
+        <input type="text" placeholder="Title" v-model="newPost.title">
+        <Dropover :post="newPost" @files-change="uploadfiles" />
+        <div>
+            <button @click="router.push('/')">Cancel</button>
+            <button @click="post">Post</button>
         </div>
     </div>
     <div v-else>
         <p>New List</p>
-        <input type="text" placeholder="List Name" v-model="new_list.name">
-        <button @click="submit_list">Done</button>
-        <button @click="is_new_list=false">Cancel</button>
+        <input type="text" placeholder="List Name" v-model="newList.name">
+        <button @click="submitList">Done</button>
+        <button @click="() => {
+            newListCreation = false;
+            selectedList = 'Select a list';
+        }">Cancel</button>
     </div>
 </template>
 

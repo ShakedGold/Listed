@@ -1,0 +1,14 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Fira Sans Condensed Medium";
+    src: local("Fira Sans Condensed Medium"),
+      url(./assets/fonts/FiraSansCondensedMedium.ttf) format("truetype");
+  }
+
+
+}

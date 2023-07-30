@@ -1,8 +1,17 @@
 <script setup>
 import { ref } from 'vue'
+import { Post } from '../../classes/Post';
 
+let props = defineProps({
+    post: {
+        type: Post,
+        required: true
+    }
+})
 const dragging = ref(false);
-const files = ref([]);
+const file = ref(undefined);
+
+let emits = defineEmits(["filesChange"]);
 
 function drop(e) {
     e.preventDefault();
@@ -20,19 +29,22 @@ function dragleave(e) {
     dragging.value = false;
 }
 
+
 function onChange(e) {
-    if(e.dataTransfer)
-        files.value = e.dataTransfer.files;
+    if (e.dataTransfer)
+        file.value = e.dataTransfer.files[0];
     else
-        files.value = e.target.files;
+        file.value = e.target.files[0];
+    props.post.imageName = file.value.name;
 }
 </script>
 
 <template>
     <div class="dropzone">
-        <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
-            <input type="file" multiple name="file" id="fileInput" class="hidden-input" @change="onChange" ref="file"
-                accept=".pdf,.jpg,.jpeg,.png" />
+        <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave"
+            @drop="(e) => { drop(e); $emit('filesChange', e) }">
+            <input type="file" name="file" id="fileInput" class="hidden-input" @change="(e) => $emit('filesChange', e)"
+                ref="fileRef" accept=".pdf,.jpg,.jpeg,.png" />
 
             <label for="fileInput" class="file-label">
                 <div v-if="dragging">Release to drop files here.</div>
@@ -40,11 +52,9 @@ function onChange(e) {
             </label>
 
             <p>
-                <span v-if="files.length === 0">No files selected.</span>
+                <span v-if="!post.imageName">No files selected.</span>
                 <span v-else>
-                    <span v-for="file in files">
-                        {{ file.name }}<br>
-                    </span>
+                    {{ post.imageName }}
                 </span>
             </p>
         </div>

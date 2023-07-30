@@ -11,7 +11,9 @@ export class List {
 // Firestore data converter
 export const listConverter = {
     toFirestore: (list) => {
-        return unpack(list);
+        return {
+            name: list.name
+        };
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
