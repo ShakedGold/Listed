@@ -29,7 +29,7 @@ let currentUser = await getCurrentUser();
 <template>
 	<MenuBar />
 	<div>
-		<h1 id="heading" class="text-accent"><b>Profile</b></h1>
+		<h1 id="heading" class="text-4xl"><b>Profile</b></h1>
 		<hr style="width: 15%; text-align: left; margin-left: 0; color: gray" />
 	</div>
 	<div>

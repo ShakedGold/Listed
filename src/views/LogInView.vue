@@ -2,7 +2,7 @@
 	<MenuBar />
 	<div>
 		<div>
-			<h2><b>Login</b></h2>
+			<h2 class="text-4xl"><b>Login</b></h2>
 		</div>
 		<div>
 			<button @click="GoogleLogin()">Google Sign In</button>

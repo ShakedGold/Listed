@@ -3,7 +3,7 @@
 
 	<div>
 		<div>
-			<h2><b>SignUp</b></h2>
+			<h2 class="text-4xl"><b>SignUp</b></h2>
 		</div>
 		<div>
 			<input v-model="email" type="email" id="email" placeholder="Email" />
