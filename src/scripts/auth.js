@@ -8,6 +8,7 @@ import router, { requestedPath } from "../router";
 onAuthStateChanged(auth, (user) => {
   if (user) {
     router.push(requestedPath || "/");
+    console.log("hi");
   }
 });
 
