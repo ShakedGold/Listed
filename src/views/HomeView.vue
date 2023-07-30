@@ -28,7 +28,7 @@ querySnapshot.forEach((doc) => {
 		</select>
 	</div>
 	<div
-		class="flex flex-col gap-24 justify-center align-middle"
+		class="flex flex-col gap-24 justify-center align-middle items-center"
 		v-if="posts.length !== 0"
 	>
 		<Post v-for="post in posts" :postObj="post" />
