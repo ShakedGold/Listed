@@ -9,7 +9,7 @@ async function search() {
 </script>
 
 <template>
-	<div class="w-[75%] flex flex-row align-middle ml-[15px] mr-[15]">
+	<div class="w-[75%] flex flex-row m-auto align-middle ml-[15px] mr-[15]">
 		<input
 			type="text"
 			name="searchQueryInput"
