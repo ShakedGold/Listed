@@ -14,5 +14,4 @@ let user = ref(await getCurrentUserOrNew());
 		<Search />
 		<ActionBar />
 	</div>
-	<hr />
 </template>
