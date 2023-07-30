@@ -16,13 +16,3 @@ let user = ref(await getCurrentUserOrNew());
 	</div>
 	<hr />
 </template>
-
-<style>
-#menubar * {
-	/* border radius */
-	border-radius: 0.5rem;
-
-	/* height variable for interactables */
-	--interactable-height: 2.8rem;
-}
-</style>
