@@ -44,7 +44,7 @@ function onChange(e) {
         <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave"
             @drop="(e) => { drop(e); $emit('filesChange', e) }">
             <input type="file" name="file" id="fileInput" class="hidden-input" @change="(e) => $emit('filesChange', e)"
-                ref="fileRef" accept=".pdf,.jpg,.jpeg,.png" />
+                ref="fileRef" accept=".jpg,.jpeg,.png" />
 
             <label for="fileInput" class="file-label">
                 <div v-if="dragging">Release to drop files here.</div>

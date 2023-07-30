@@ -11,7 +11,8 @@ function goToProfile() {
   <div class="flex">
     <router-link to="/"><img id="profile-photo" src="../../assets/logo/png/only-logo-no-background.png"
         alt="" /></router-link>
-    <p @click="goToProfile">{{ user.username }}</p>
+    <p class="m-auto select-none cursor-pointer hover:text-blue-900" @click="goToProfile">{{ user.username
+    }}</p>
   </div>
 </template>
 
