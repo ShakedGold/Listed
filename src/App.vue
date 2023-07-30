@@ -1,21 +1,7 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
-  <Suspense>
-    <router-view></router-view>
-  </Suspense>
+	<Suspense>
+		<router-view></router-view>
+	</Suspense>
 </template>
-
-<style>
-* {
-  /* colors */
-  --primary: #061A86;
-  --secondary: #0080FF;
-  --accent: #061A86;
-  --faded-accent: #162997;
-
-  /* fonts */
-  font-family: "Fira Sans Condensed Medium";
-}
-</style>
