@@ -1,5 +1,6 @@
-//import { getCurrentUser} from "../scripts/auth.js";
-//let currentUser =  getCurrentUser();
+import { getCurrentUser} from "../scripts/auth.js";
+import { usersRef } from "../scripts/firebase.js";
+import {doc, updateDoc} from "firebase/firestore";
 
 export class User {
   constructor(email, username, following, followers, postInteractions) {
@@ -12,13 +13,19 @@ export class User {
   toString() {
     return this.email + ', ' + this.username + ', ' + this.following + ', ' + this.followers + ', ' + this.postInteractions;
   }
-  follow(user) {
-    alert(this.username + user.username);
-    this.followers+=user;
-    user.following+=this;
-  }
 }
   
+export async function Follow(user) {
+  let currentUser = await getCurrentUser();
+  user.followers.push(currentUser.username);
+  currentUser.following.push(user.username);
+  updateUser(user);
+  updateUser(currentUser);
+}
+async function updateUser(user) {
+  const userDocRef = doc(usersRef, user.username);
+  await updateDoc(userDocRef, { followers: user.followers, following: user.following });
+}
 // Firestore data converter
 export const userConverter = {
   toFirestore: (user) => {

@@ -4,7 +4,7 @@ import { User } from "../classes/User.js";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
 import { SignOut } from "../scripts/auth";
 import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
-import { follow } from "../classes/User.js";
+import { Follow } from "../classes/User.js";
 
 import { ref, watch } from "vue";
 
@@ -50,7 +50,7 @@ let currentUser = await getCurrentUser();
     <h4>Username: {{ user.username }}</h4>
       <h4>Following: {{ user.following }}</h4>
       <h4>Followers: {{ user.followers}}</h4>
-      <button @click="follow(user)">
+      <button @click="Follow(user)">
         Follow
       </button>
   </div>

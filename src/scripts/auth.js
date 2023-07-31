@@ -36,7 +36,7 @@ export function getCurrentUser() {
 
 export function getCurrentUserOrNew() {
   return new Promise((resolve, reject) => {
-    if (auth.currentUser === null) resolve(new User("", "Listed", [], {}));
+    if (auth.currentUser === null) resolve(new User("", "Listed", [], [], {}));
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
       resolve(userFromDB);
     }).catch((error) => {
