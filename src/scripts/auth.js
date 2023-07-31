@@ -11,6 +11,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// TODO: use username as ID for ref
 export function getUserFromUsername(username) {
   const q = query(usersRef, where("username", "==", username));
   return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export function getCurrentUser() {
 
 export function getCurrentUserOrNew() {
   return new Promise((resolve, reject) => {
-    if (auth.currentUser === null) resolve(new User("", "Listed", [], {}));
+    if (auth.currentUser === null) resolve(new User("", "Listed", [], [], {}));
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
       resolve(userFromDB);
     }).catch((error) => {
@@ -95,7 +96,7 @@ export function SignUp(email, password, username) {
           });
 
         const ref = doc(usersRef, username).withConverter(userConverter);
-        await setDoc(ref, new User(email, username, [], {}));
+        await setDoc(ref, new User(email, username, [], [], {}));
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from "vue";
+import router from "../../router/index.js";
 
 let searchInput = ref("");
 
 async function search() {
 	let searchText = searchInput.value;
+  router.push({ name: 'List', params: { name: searchText} });
 }
 </script>
 

@@ -46,7 +46,6 @@ onMounted(() => {
           -
           {{
             convertTime(post.time) }} ago</p>
-
       </div>
       <p>{{ post.title }}</p>
     </div>
