@@ -11,6 +11,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// TODO: use username as ID for ref
 export function getUserFromUsername(username) {
   const q = query(usersRef, where("username", "==", username));
   return new Promise((resolve, reject) => {

@@ -5,6 +5,5 @@ import NewPost from "@/components/Post/NewPost.vue"
 
 <template>
     <MenuBar />
-
     <NewPost />
 </template>

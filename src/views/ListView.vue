@@ -5,8 +5,6 @@ import { getDocs, orderBy, query, where } from "firebase/firestore";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
-///import { List } from '../classes/List.js'
-
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
 
 let sortMode = ref("top");
@@ -39,10 +37,7 @@ querySnapshot.forEach((doc) => {
 	<div class="flex items-center justify-center">
 		<b>{{ route.params.name }}</b>
 	</div>
-	<div
-		class="flex flex-col gap-24 justify-center align-middle items-center"
-		v-if="posts.length !== 0"
-	>
+	<div class="flex flex-col gap-24 justify-center align-middle items-center" v-if="posts.length !== 0">
 		<Post v-for="post in posts" v-bind:postObj="post" />
 	</div>
 	<div v-else>

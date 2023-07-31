@@ -55,13 +55,12 @@ async function post() {
 		return;
 	}
 
-	// query list, if not exist create one
 	const q = query(listsRef, where("name", "==", selectedList.value));
 	const querySnapshot = await getDocs(q);
 	newPost.value.list = querySnapshot.docs[0].data();
 
 	// get user
-	getCurrentUserOrNew().then(async (user) => {
+	getCurrentUserOrNew().then((user) => {
 		newPost.value.username = user.username;
 
 		// create post
@@ -150,14 +149,11 @@ function uploadfiles(e) {
 		<p>New List</p>
 		<input type="text" placeholder="List Name" v-model="newList.name" />
 		<button @click="submitList">Done</button>
-		<button
-			@click="
-				() => {
-					newListCreation = false;
-					selectedList = 'Select a list';
-				}
-			"
-		>
+		<button @click="() => {
+			newListCreation = false;
+			selectedList = 'Select a list';
+		}
+			">
 			Cancel
 		</button>
 	</div>
