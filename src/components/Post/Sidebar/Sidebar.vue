@@ -31,6 +31,10 @@ function interact(interaction) {
     props.post.votes += interaction;
   }
 
+  if (props.user.postInteractions[props.post.ID] === InteractionEnum.None) {
+    delete props.user.postInteractions[props.post.ID];
+  }
+
   update();
 }
 async function updatePost() {
@@ -55,7 +59,7 @@ async function update() {
       icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
       :click-fn="() => interact(InteractionEnum.Liked)"
       :class="user.postInteractions[post.ID] === InteractionEnum.Liked ? 'bg-blue-400 rounded-3xl' : ''" />
-    <span class="">{{ post.votes }}</span>
+    <span class="text-xl">{{ post.votes }}</span>
     <Interaction class="object-cover w-[60px]" text="like"
       icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
       :click-fn="() => interact(InteractionEnum.Disliked)"
