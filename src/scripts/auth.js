@@ -96,7 +96,7 @@ export function SignUp(email, password, username) {
           });
 
         const ref = doc(usersRef, username).withConverter(userConverter);
-        await setDoc(ref, new User(email, username, [], {}));
+        await setDoc(ref, new User(email, username, [], [], {}));
       })
       .catch((error) => {
         const errorCode = error.code;
