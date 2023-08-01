@@ -10,8 +10,9 @@
 			url(./assets/fonts/FiraSansCondensedMedium.ttf) format("truetype");
 	}
 }
+
 @layer components {
 	.button {
-		@apply transition-all text-white bg-accent border-0 py-2 px-8 focus:outline-none hover:bg-fadedaccent rounded text-lg;
+		@apply text-white bg-accent border-0 py-2 px-8 focus:outline-none hover:bg-fadedaccent rounded text-lg;
 	}
 }

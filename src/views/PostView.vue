@@ -1,26 +1,15 @@
 <script setup>
-import Post from '../components/Post/Post.vue'
-import { ref } from 'vue'
+import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { storage } from '../scripts/storage';
+import { ref as firebaseRef, getDownloadURL } from "firebase/storage"
 
-let props = defineProps({
-  posts: Object
-});
+let route = useRoute();
 
-let sortMode = ref('top');
+const storageRef = firebaseRef(storage, `/uploads/${route.params.id}/${route.params.imageName}`)
+let postImageUrl = ref(await getDownloadURL(storageRef));
 </script>
 
 <template>
-  <div>
-    <p>Sort By:</p>
-    <select name="sort-selection" id="sort-selection" v-model="sortMode">
-      <option value="new">New</option>
-      <option value="top">Top</option>
-    </select>
-  </div>
-  <div class="flex flex-col gap-24 justify-center align-middle items-center" v-if="posts.length !== 0">
-    <Post v-for="post in posts" :postObj="post" />
-  </div>
-  <div v-else>
-    <h1>So Empty...</h1>
-  </div>
+  <img :src="postImageUrl" alt="">
 </template>

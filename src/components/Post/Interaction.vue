@@ -16,5 +16,5 @@ let props = defineProps({
 </script>
 
 <template>
-  <img @click="clickFn" :alt="text" :src="iconUrl" class="transition-all" />
+  <img @click="clickFn" :alt="text" :src="iconUrl" class="" />
 </template>

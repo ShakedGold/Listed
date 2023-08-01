@@ -5,7 +5,7 @@ import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import PostView from "./PostView.vue";
+import PostsView from "./PostsView.vue";
 
 let route = useRoute();
 
@@ -25,5 +25,5 @@ watch(route, async () => {
 
 <template>
 	<MenuBar />
-	<PostView :posts="posts" :key="posts" />
+	<PostsView :posts="posts" />
 </template>

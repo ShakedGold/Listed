@@ -26,11 +26,11 @@ export function getUserFromUsername(username) {
 
 export function getCurrentUser() {
   return new Promise((resolve, reject) => {
-    if (auth.currentUser == null) reject("No user found");
+    if (auth.currentUser == null) resolve(null);
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
       resolve(userFromDB);
     }).catch((error) => {
-      reject(error);
+      resolve(null);
     })
   });
 }

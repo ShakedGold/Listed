@@ -11,7 +11,7 @@ module.exports = {
 				fadedaccent: "#162997",
 			},
 			height: {
-				interact: "2.8rem",
+				interact: "2.5rem",
 			},
 		},
 		fontFamily: {

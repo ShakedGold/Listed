@@ -5,7 +5,7 @@ import { postsRef } from "@/scripts/firebase";
 import { ref } from "vue";
 
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import PostView from "./PostView.vue";
+import PostsView from "./PostsView.vue";
 
 //array of all the posts
 let posts = ref(await getPosts());
@@ -19,5 +19,5 @@ async function getPosts() {
 
 <template>
 	<MenuBar />
-	<PostView :posts="posts" :key="posts" />
+	<PostsView :posts="posts" />
 </template>
