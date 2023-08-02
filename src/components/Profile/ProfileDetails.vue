@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import { User } from '../../classes/User';
-import { getCurrentUser } from '../../scripts/auth';
+import { getCurrentUser, SignOut } from '../../scripts/auth';
 
 let props = defineProps({
   user: {
@@ -15,7 +15,7 @@ let currentUser = ref(await getCurrentUser());
 </script>
 
 <template>
-  <div class="rounded-md p-5 border-black border-2 inline-block">
+  <div class="rounded-md p-5 border-black border-2 inline-block shadow-2xl sticky top-0">
     <div>
       <h1 id="heading" class="text-4xl"><b>Profile</b></h1>
       <hr style="width: 15%; text-align: left; margin-left: 0; color: gray" />

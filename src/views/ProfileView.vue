@@ -33,7 +33,6 @@ watch(route, async (newRoute) => {
 
 <template>
 	<MenuBar />
-
 	<ProfileDetails :user="user" />
 	<PostsView :posts="posts" :key="posts" />
 </template>

@@ -16,23 +16,6 @@ export class User {
   toString() {
     return this.email + ', ' + this.username + ', ' + this.following + ', ' + this.followers + ', ' + this.postInteractions;
   }
-
-  async Follow(user) {
-    user.followers.push(this.username);
-    await user.updateUser({ followers: user.followers });
-    this.following.push(user.username);
-    await this.updateUser({ following: user.following });
-  }
-
-  async updateUser(update) {
-    const userDocRef = doc(usersRef, user.username);
-    await updateDoc(userDocRef, update);
-  }
-
-  async SignOut() {
-    await signOut(auth);
-    router.push({ name: "Login" });
-  }
 }
 
 // Firestore data converter
