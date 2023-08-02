@@ -55,14 +55,14 @@ async function update() {
 
 <template>
   <div class="text-center border-black border-r-2">
-    <Interaction class="object-cover w-[60px] active:bg-blue-400" text="like"
+    <Interaction class="object-cover w-[60px] rounded-full" text="like"
       icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
       :click-fn="() => interact(InteractionEnum.Liked)"
-      :class="user.postInteractions[post.ID] === InteractionEnum.Liked ? 'bg-blue-400 rounded-2xl' : 'hover:bg-accent hover:bg-opacity-40 hover:rounded-2xl'" />
+      :class="user.postInteractions[post.ID] === InteractionEnum.Liked ? 'bg-blue-400' : 'hover:bg-accent hover:bg-opacity-40'" />
     <span class="text-2xl select-none">{{ post.votes }}</span>
-    <Interaction class="object-cover w-[60px] active:bg-blue-400" text="like"
+    <Interaction class="object-cover w-[60px] rounded-full" text="like"
       icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
       :click-fn="() => interact(InteractionEnum.Disliked)"
-      :class="user.postInteractions[post.ID] === InteractionEnum.Disliked ? 'bg-blue-400 rounded-2xl' : 'hover:bg-accent hover:bg-opacity-40 hover:rounded-2xl'" />
+      :class="user.postInteractions[post.ID] === InteractionEnum.Disliked ? 'bg-blue-400' : 'hover:bg-accent hover:bg-opacity-40'" />
   </div>
 </template>
