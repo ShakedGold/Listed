@@ -6,7 +6,7 @@ import { SignOut } from "../scripts/auth";
 import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 import { postsRef } from "../scripts/firebase";
-import { Follow } from "../classes/User.js";
+import { Follow, unFollow, isFollowing } from "../classes/User.js";
 
 import { ref, watch } from "vue";
 
@@ -45,8 +45,8 @@ watch(route, async (newRoute) => {
 		<div>
 			<h4>Username: {{ user.username }}</h4>
 			<h4>Email address: {{ user.email }}</h4>
-			<h4>Following: {{ user.following }}</h4>
-			<h4>Followers: {{ user.followers }}</h4>
+			<h4>Following: {{ user.following.length }}</h4>
+			<h4>Followers: {{ user.followers.length }}</h4>
 			<button @click="SignOut()" class="button">
 				SignOut
 			</button>
@@ -55,11 +55,18 @@ watch(route, async (newRoute) => {
 	<!--Another user's profile page-->
 	<div v-else>
 		<h4>Username: {{ user.username }}</h4>
-		<h4>Following: {{ user.following }}</h4>
-		<h4>Followers: {{ user.followers }}</h4>
-		<button @click="Follow(user.value)" class="button">
-			Follow
-		</button>
+		<h4>Following: {{ user.following.length }}</h4>
+		<h4>Followers: {{ user.followers.length }}</h4>
+		<div v-if="isFollowing(user)">
+			<button @click="unFollow(user.value)" class="button">
+				Following
+			</button>
+		</div>
+		<div v-else>
+			<button @click="Follow(user.value)" class="button">
+				Follow
+			</button>
+		</div>
 	</div>
 	<PostView :posts="posts" :key="posts" />
 </template>

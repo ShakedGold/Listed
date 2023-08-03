@@ -22,6 +22,24 @@ export async function Follow(user) {
   updateUser(user);
   updateUser(currentUser);
 }
+
+export async function unFollow(user) {
+  let currentUser = await getCurrentUser();
+  user.followers.pop(currentUser.username);
+  currentUser.following.pop(user.username);
+  updateUser(user);
+  updateUser(currentUser);
+}
+
+export async  function isFollowing(user) {
+  let currentUser = await getCurrentUser();
+  for (let i=0; i<user.followers.length; i++) {
+    if (user.followers[i]===currentUser) {
+      return true;
+    }
+  }
+  return false;
+}
 async function updateUser(user) {
   const userDocRef = doc(usersRef, user.username);
   await updateDoc(userDocRef, { followers: user.followers, following: user.following });
