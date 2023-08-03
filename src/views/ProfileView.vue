@@ -57,7 +57,7 @@ watch(route, async (newRoute) => {
 		<h4>Username: {{ user.username }}</h4>
 		<h4>Following: {{ user.following.length }}</h4>
 		<h4>Followers: {{ user.followers.length }}</h4>
-		<div v-if="isFollowing(user)">
+		<div v-if="isFollowing(user)===ture">
 			<button @click="unFollow(user.value)" class="button">
 				Following
 			</button>
