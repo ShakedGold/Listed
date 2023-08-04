@@ -24,6 +24,7 @@ let reports = ref([
   'Inappropriate',
   'Other',
 ]);
+let selectedReport = ref('');
 
 function interact(interaction) {
   if (props.user.postInteractions[props.post.ID] === interaction) {
@@ -63,6 +64,7 @@ async function update() {
   await updatePost();
   await updateUser();
 }
+console.log(selectedReport.value);
 </script>
 
 <template>
@@ -71,12 +73,14 @@ async function update() {
       <h1 class="text-2xl">Report Post</h1>
     </template>
     <template #body>
-      <div class="flex flex-col">
-        <span class="flex gap-1" v-for="report in reports">
-          <input type="checkbox" :id="report" />
-          <label :for="report">{{ report }}</label>
-        </span>
-      </div>
+      <form>
+        <div class="flex flex-col">
+          <span class="flex gap-1" v-for="report in reports">
+            <input :value="report" name="report" type="radio" :id="report" v-model="selectedReport" />
+            <label :for="report">{{ report }}</label>
+          </span>
+        </div>
+      </form>
     </template>
   </ConfirmModal>
   <div class="text-center border-black border-r-2 relative">
