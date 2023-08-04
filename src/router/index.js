@@ -3,7 +3,7 @@ import { getCurrentUser } from '../scripts/auth'
 
 import Profile from '../views/ProfileView.vue'
 import Home from '../views/HomeView.vue'
-import PostCreation from '../views/PostView.vue'
+import NewPost from '../views/NewPostView.vue'
 import LogIn from '../views/LogInView.vue'
 import SignUp from '../views/SignUpView.vue'
 import ListView from '../views/ListView.vue'
@@ -12,7 +12,7 @@ const router = createRouter({
   routes: [
     { path: '/', component: Home, name: 'Home', meta: { requiresAuth: true } }, // Add meta field for authentication check
     { path: '/user/:username', component: Profile, name: 'User', meta: { requiresAuth: true } },
-    { path: '/post', component: PostCreation, name: 'Post', meta: { requiresAuth: true } },
+    { path: '/post', component: NewPost, name: 'Post', meta: { requiresAuth: true } },
     { path: '/login', component: LogIn, name: 'Login', },
     { path: '/signup', component: SignUp, name: 'Signup', },
     { path: '/list/:name', component: ListView, name: 'List', meta: { requiresAuth: true } },
