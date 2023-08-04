@@ -1,49 +1,36 @@
 <template>
-	<div
-		class="transition-all bg-black"
-		:class="
-			open
-				? 'w-full h-full fixed top-0 left-0 p-0 m-0 opacity-50 visible'
-				: 'opacity-0'
-		"
-	>
-		<Teleport to="body">
-			<div
-				class="fixed z-[999] top-[20%] left-[50%] width-[300px] ml-[-150px] transition-all bg-white border-neutral-800 border-2 rounded-md p-5 flex flex-col gap-6"
-				:class="open ? visible() : invisible()"
-			>
-				<div class="text-2xl font-bold">
-					<div class="modal-header">
-						<slot name="header"></slot>
-					</div>
+	<Modal :open="open">
+		<template #header>
+			<span class="text-2xl font-bold">
+				<slot name="header"></slot>
+			</span>
+		</template>
+		<template #body>
+			<span>
+				<div class="modal-body">
+					<slot name="body"></slot>
 				</div>
-				<div class="flex flex-col">
-					<span>
-						<div class="modal-body">
-							<slot name="body"></slot>
-						</div>
-					</span>
-					<span class="flex gap-2 sticky top-0 right-10 w-full justify-end">
-						<div class="modal-footer">
-							<slot name="footer"> </slot>
-						</div>
-						<button @click="onCancel">
-							<font-awesome-icon
-								:icon="['far', 'circle-xmark']"
-								class="text-red-700"
-							/>
-						</button>
-						<button @click="onConfirm">
-							<font-awesome-icon :icon="['far', 'check-circle']" />
-						</button>
-					</span>
+			</span>
+		</template>
+		<template #footer>
+			<div class="flex gap-2 sticky top-0 right-10 w-full justify-end">
+				<slot name="footer"></slot>
+				<div class="flex gap-1">
+					<button @click="onCancel">
+						<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
+					</button>
+					<button @click="onConfirm">
+						<font-awesome-icon :icon="['far', 'check-circle']" />
+					</button>
 				</div>
 			</div>
-		</Teleport>
-	</div>
+		</template>
+	</Modal>
 </template>
 
 <script setup>
+import Modal from './Modal.vue';
+
 let props = defineProps({
 	open: {
 		type: Boolean,
@@ -51,19 +38,11 @@ let props = defineProps({
 	},
 	onCancel: {
 		type: Function,
-		default: () => {},
+		default: () => { },
 	},
 	onConfirm: {
 		type: Function,
-		default: () => {},
+		default: () => { },
 	},
 });
-
-function visible() {
-	return "transform translate-y-0 opacity-100";
-}
-
-function invisible() {
-	return "transform -translate-y-full opacity-0";
-}
 </script>

@@ -9,7 +9,7 @@ let user = ref(await getCurrentUserOrNew());
 </script>
 
 <template>
-	<div id="menubar" class="flex justify-center align-middle px-2 py-4">
+	<div id="menubar" class="flex px-2 py-4 gap-2">
 		<Profile :user="user" />
 		<Search />
 		<ActionBar />

@@ -11,6 +11,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// TODO: use username as ID for ref
 export function getUserFromUsername(username) {
   const q = query(usersRef, where("username", "==", username));
   return new Promise((resolve, reject) => {
@@ -27,7 +28,7 @@ export function getCurrentUser() {
   return new Promise((resolve, reject) => {
     if (auth.currentUser == null) reject("No user found");
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(userFromDB);
+      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
     }).catch((error) => {
       reject(error);
     })
@@ -36,9 +37,9 @@ export function getCurrentUser() {
 
 export function getCurrentUserOrNew() {
   return new Promise((resolve, reject) => {
-    if (auth.currentUser === null) resolve(new User("", "Listed", [], {}));
+    if (auth.currentUser === null) resolve(new User());
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(userFromDB);
+      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
     }).catch((error) => {
       reject(error);
     })
@@ -73,7 +74,7 @@ export function Login(username, password) {
   });
 }
 export function SignUp(email, password, username) {
-  if (!validate_password(password)) return
+  //if (!validate_password(password)) return
 
   // TODO check if username is already taken with a query
 
@@ -95,7 +96,7 @@ export function SignUp(email, password, username) {
           });
 
         const ref = doc(usersRef, username).withConverter(userConverter);
-        await setDoc(ref, new User(email, username, [], {}));
+        await setDoc(ref, new User(email, username, [], [], {}));
       })
       .catch((error) => {
         const errorCode = error.code;
