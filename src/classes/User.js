@@ -15,30 +15,29 @@ export class User {
   }
 }
   
-export async function Follow(user) {
-  let currentUser = await getCurrentUser();
-  user.followers.push(currentUser.username);
-  currentUser.following.push(user.username);
-  updateUser(user);
-  updateUser(currentUser);
+export function Follow(user) {
+  getCurrentUser().then((currentUser) =>{
+    user.followers.push(currentUser.username);
+    currentUser.following.push(user.username);
+    updateUser(user);
+    updateUser(currentUser);
+  });
 }
 
-export async function unFollow(user) {
-  let currentUser = await getCurrentUser();
-  user.followers.pop(currentUser.username);
-  currentUser.following.pop(user.username);
-  updateUser(user);
-  updateUser(currentUser);
+export function unFollow(user) {
+  getCurrentUser().then((currentUser) =>{
+    user.followers.pop(currentUser.username);
+    currentUser.following.pop(user.username);
+    updateUser(user);
+    updateUser(currentUser);
+  });
 }
 
-export async  function isFollowing(user) {
-  let currentUser = await getCurrentUser();
-  for (let i=0; i<user.followers.length; i++) {
-    if (user.followers[i]===currentUser) {
-      return true;
-    }
-  }
-  return false;
+export function isFollowing(user) {
+  getCurrentUser().then((currentUser) =>{
+    console.log(user.followers.includes(currentUser.username));
+    return user.followers.includes(currentUser.username);
+  });
 }
 async function updateUser(user) {
   const userDocRef = doc(usersRef, user.username);
