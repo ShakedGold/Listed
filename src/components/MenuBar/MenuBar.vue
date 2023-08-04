@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import { getCurrentUserOrNew } from "../../scripts/auth";
+import { getCurrentUser } from "../../scripts/auth";
 import ActionBar from "./ActionBar/ActionBar.vue";
 import Profile from "./Profile.vue";
 import Search from "./Search.vue";
 
-let user = ref(await getCurrentUserOrNew());
+let user = ref(await getCurrentUser());
 </script>
 
 <template>
@@ -13,5 +13,6 @@ let user = ref(await getCurrentUserOrNew());
 		<Profile :user="user" />
 		<Search />
 		<ActionBar />
+		<Profile :user="user" />
 	</div>
 </template>

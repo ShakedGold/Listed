@@ -14,7 +14,7 @@ let user = ref(await getCurrentUserOrNew());
 </script>
 
 <template>
-    <div class="flex border-2 border-black">
+    <div class="flex border-2 border-black rounded-md shadow-2xl mb-10">
         <Sidebar :user="user" :post="postObj" />
 
         <Body :post="postObj" />
