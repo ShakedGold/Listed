@@ -28,7 +28,7 @@ export function getCurrentUser() {
   return new Promise((resolve, reject) => {
     if (auth.currentUser == null) resolve(null);
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(userFromDB);
+      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
     }).catch((error) => {
       resolve(null);
     })
@@ -37,9 +37,9 @@ export function getCurrentUser() {
 
 export function getCurrentUserOrNew() {
   return new Promise((resolve, reject) => {
-    if (auth.currentUser === null) resolve(new User("", "Listed", [], [], {}));
+    if (auth.currentUser === null) resolve(new User());
     getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(userFromDB);
+      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
     }).catch((error) => {
       reject(error);
     })
