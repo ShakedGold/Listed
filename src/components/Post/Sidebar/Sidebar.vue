@@ -68,7 +68,7 @@ console.log(selectedReport.value);
 </script>
 
 <template>
-  <ConfirmModal :open="open" :on-cancel="() => open = false">
+  <ConfirmModal :open="open" :on-cancel="() => open = false" :show-icons="false">
     <template #header>
       <h1 class="text-2xl">Report Post</h1>
     </template>
@@ -82,6 +82,12 @@ console.log(selectedReport.value);
         </div>
       </form>
     </template>
+    <template #cancel>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Cancel</button>
+    </template>
+    <template #confirm>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
+    </template>
   </ConfirmModal>
   <div class="text-center border-black border-r-2 relative">
     <Interaction class="object-cover w-[60px]" text="like"
@@ -93,7 +99,7 @@ console.log(selectedReport.value);
       icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
       :click-fn="() => interact(InteractionEnum.Disliked)"
       :class="user.postInteractions[post.ID] === InteractionEnum.Disliked ? 'bg-blue-400 rounded-3xl' : ''" />
-    <Interaction class="object-cover w-[60px] absolute bottom-0"
+    <Interaction class="object-cover w-[60px] absolute bottom-0" text=""
       icon-url="https://cdn-icons-png.flaticon.com/128/4201/4201965.png" :click-fn="Report"></Interaction>
   </div>
 </template>
