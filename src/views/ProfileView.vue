@@ -3,23 +3,18 @@ import MenuBar from "../components/MenuBar/MenuBar.vue";
 import PostsView from "./PostsView.vue";
 import ProfileDetails from "../components/Profile/ProfileDetails.vue";
 
-import { Post } from '../classes/Post'
-
 import { useRoute } from "vue-router";
 
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 
 import { postsRef } from "../scripts/firebase";
 
-import { getCurrentUser, getUserFromUsername } from "../scripts/auth";
+import { getUserFromUsername } from "../scripts/auth";
 
-import { ref, watch } from "vue";
-
-import PostView from "./PostView.vue";
+import { ref, watch, toRaw } from "vue";
 
 let route = useRoute();
 let user = ref(await getUserFromUsername(route.params.username));
-let currentUser = ref(await getCurrentUser());
 let posts = ref(await getPosts());
 
 async function getPosts() {
@@ -40,37 +35,6 @@ watch(route, async (newRoute) => {
 
 <template>
 	<MenuBar />
-	<div>
-		<h1 id="heading" class="text-4xl"><b>Profile</b></h1>
-		<hr style="width: 15%; text-align: left; margin-left: 0; color: gray" />
-	</div>
-	<!--Personal profile page-->
-	<div v-if="user.username === currentUser.username">
-		<div>
-			<h4>Username: {{ user.username }}</h4>
-			<h4>Email address: {{ user.email }}</h4>
-			<h4>Following: {{ user.following.length }}</h4>
-			<h4>Followers: {{ user.followers.length }}</h4>
-			<button @click="SignOut()" class="button">
-				SignOut
-			</button>
-		</div>
-	</div>
-	<!--Another user's profile page-->
-	<div v-else>
-		<h4>Username: {{ user.username }}</h4>
-		<h4>Following: {{ user.following.length }}</h4>
-		<h4>Followers: {{ user.followers.length }}</h4>
-		<div v-if="currentUser.IsFollowing(user)">
-			<button @click="currentUser.UnFollow(user)" class="button">
-				Following
-			</button>
-		</div>
-		<div v-else>
-			<button @click="currentUser.Follow(user)" class="button">
-				Follow
-			</button>
-		</div>
-	</div>
-	<PostView :posts="posts" :key="posts" />
+	<ProfileDetails :user="user" />
+	<PostsView :posts="posts" :key="posts" />
 </template>

@@ -11,12 +11,7 @@
 			<input class="input-field" v-model="password" type="password" placeholder="Password" />
 		</div>
 		<div class="flex gap-2">
-			<button class="button" @click="() => {
-				Login(username, password).then(() => {
-					router.push(requestedPath || '/');
-				});
-			}
-				">
+			<button class="button" @click="Login(username, password)">
 				Login
 			</button>
 			<button class="button" @click="() => router.push('/signup')">

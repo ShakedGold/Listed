@@ -1,5 +1,8 @@
-import { usersRef } from "../scripts/firebase.js";
+import { usersRef, auth } from "../scripts/firebase.js";
 import { doc, updateDoc } from "firebase/firestore";
+
+import { signOut } from "firebase/auth";
+import router from "../router/index.js";
 
 export class User {
   constructor(email = '', username = 'Listed', following = [], followers = [], postInteractions = {}) {
@@ -35,17 +38,20 @@ export class User {
   IsFollowing(user) {
     return this.following.includes(user.username);
   }
+
+  SignOut() {
+    signOut(auth).then(() => {
+      router.push({ name: "Login" });
+    }).catch((error) => {
+      console.log(error);
+      // An error happened.
+    });
+  }
 }
 // Firestore data converter
 export const userConverter = {
   toFirestore: (user) => {
-    return {
-      email: user.email,
-      username: user.username,
-      following: user.following,
-      followers: user.followers,
-      postInteractions: user.postInteractions,
-    };
+    return JSON.parse(JSON.stringify(user));
   },
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
