@@ -5,6 +5,7 @@ import { SignOut } from "../scripts/auth";
 import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 import { postsRef } from "../scripts/firebase";
+import SearchListModal from '../../Modal/SearchListModal.vue';
 
 import { ref, watch } from "vue";
 
@@ -30,6 +31,10 @@ watch(route, async (newRoute) => {
 	user.value = await getUserFromUsername(newRoute.params.username);
 	posts.value = await getPosts();
 });
+
+function OpenInfo() {
+  open.value = true;
+}
 </script>
 
 <template>
@@ -67,4 +72,20 @@ watch(route, async (newRoute) => {
 		</div>
 	</div>
 	<PostView :posts="posts" :key="posts" />
+
+	<SearchListModal :open="open" :on-cancel"() => open = false" :show-icons="false">
+	<template #header>
+	      <h1 class="text-2xl">Followers</h1>
+	</template>
+	<template #body>
+	<div class="flex flex-col">
+        <span class="flex gap-1" v-for="follower in user.followers">
+          <label>{{ follower.username }}</label>
+        </span>
+      </div>
+	</template>
+	<template #cancel>
+	      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Close</button>
+	</template>
+	</SearchListModal>
 </template>
