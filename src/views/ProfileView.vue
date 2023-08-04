@@ -1,12 +1,10 @@
 <script setup>
 import { useRoute } from "vue-router";
-import { User } from "../classes/User.js";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
 import { SignOut } from "../scripts/auth";
 import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 import { postsRef } from "../scripts/firebase";
-import { Follow, unFollow, isFollowing } from "../classes/User.js";
 
 import { ref, watch } from "vue";
 
@@ -57,13 +55,13 @@ watch(route, async (newRoute) => {
 		<h4>Username: {{ user.username }}</h4>
 		<h4>Following: {{ user.following.length }}</h4>
 		<h4>Followers: {{ user.followers.length }}</h4>
-		<div v-if="isFollowing(user)">
-			<button @click="unFollow(user)" class="button">
+		<div v-if="currentUser.IsFollowing(user)">
+			<button @click="currentUser.UnFollow(user)" class="button">
 				Following
 			</button>
 		</div>
 		<div v-else>
-			<button @click="Follow(user)" class="button">
+			<button @click="currentUser.Follow(user)" class="button">
 				Follow
 			</button>
 		</div>

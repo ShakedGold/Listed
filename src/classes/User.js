@@ -1,9 +1,8 @@
-import { getCurrentUser} from "../scripts/auth.js";
 import { usersRef } from "../scripts/firebase.js";
-import {doc, updateDoc} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 export class User {
-  constructor(email, username, following, followers, postInteractions) {
+  constructor(email = '', username = 'Listed', following = [], followers = [], postInteractions = {}) {
     this.email = email;
     this.username = username;
     this.following = following;
@@ -13,35 +12,29 @@ export class User {
   toString() {
     return this.email + ', ' + this.username + ', ' + this.following + ', ' + this.followers + ', ' + this.postInteractions;
   }
-}
-  
-export function Follow(user) {
-  getCurrentUser().then((currentUser) =>{
-    user.followers.push(currentUser.username);
-    currentUser.following.push(user.username);
-    updateUser(user);
-    updateUser(currentUser);
-  });
-}
+  async UpdateUser(patch) {
+    const userDocRef = doc(usersRef, this.username);
+    await updateDoc(userDocRef, patch);
+  }
 
-export function unFollow(user) {
-  getCurrentUser().then((currentUser) =>{
-    user.followers.pop(currentUser.username);
-    currentUser.following.pop(user.username);
-    updateUser(user);
-    updateUser(currentUser);
-  });
-}
+  Follow(user) {
+    this.following.push(user.username);
+    user.followers.push(this.username);
+    console.log(user.UpdateUser);
+    user.UpdateUser({ followers: user.followers });
+    this.UpdateUser({ following: this.following });
+  }
+  UnFollow(user) {
+    this.following.pop(user.username);
+    user.followers.pop(this.username);
 
-export function isFollowing(user) {
-  getCurrentUser().then((currentUser) =>{
-    console.log(user.followers.includes(currentUser.username));
-    return user.followers.includes(currentUser.username);
-  });
-}
-async function updateUser(user) {
-  const userDocRef = doc(usersRef, user.username);
-  await updateDoc(userDocRef, { followers: user.followers, following: user.following });
+    user.UpdateUser({ followers: user.followers });
+    this.UpdateUser({ following: this.following });
+  }
+
+  IsFollowing(user) {
+    return this.following.includes(user.username);
+  }
 }
 // Firestore data converter
 export const userConverter = {
