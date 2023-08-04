@@ -1,5 +1,7 @@
+import { List } from "../classes/List.js";
+
 export class Post {
-    constructor(title, username, list, ID, votes, time, imageName) {
+    constructor(title = '', username = '', list = new List(), ID = '', votes = 0, time = undefined, imageName = '') {
         this.title = title;
         this.username = username;
         this.list = list;

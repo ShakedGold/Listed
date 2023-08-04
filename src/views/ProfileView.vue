@@ -1,15 +1,17 @@
 <script setup>
-import { useRoute } from "vue-router";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
 import PostsView from "./PostsView.vue";
 import ProfileDetails from "../components/Profile/ProfileDetails.vue";
 
+import { Post } from '../classes/Post'
+
 import { useRoute } from "vue-router";
-import { ref, watch } from "vue";
 
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 
 import { postsRef } from "../scripts/firebase";
+
+import { getCurrentUser, getUserFromUsername } from "../scripts/auth";
 
 import { ref, watch } from "vue";
 
@@ -17,6 +19,7 @@ import PostView from "./PostView.vue";
 
 let route = useRoute();
 let user = ref(await getUserFromUsername(route.params.username));
+let currentUser = ref(await getCurrentUser());
 let posts = ref(await getPosts());
 
 async function getPosts() {
