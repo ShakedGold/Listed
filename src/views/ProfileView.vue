@@ -21,7 +21,7 @@ async function getPosts() {
 	let q = query(
 		postsRef,
 		where("username", "==", user.value.username),
-		orderBy("votes", "desc")
+		orderBy("time", "desc")
 	);
 	let querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
