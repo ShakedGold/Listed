@@ -16,12 +16,20 @@
 			<div class="flex gap-2 sticky top-0 right-10 w-full justify-end">
 				<slot name="footer"></slot>
 				<div class="flex gap-1">
-					<button @click="onCancel">
-						<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
-					</button>
-					<button @click="onConfirm">
-						<font-awesome-icon :icon="['far', 'check-circle']" />
-					</button>
+					<div @click="onCancel">
+						<slot name="cancel">
+							<button v-if="showIcons">
+								<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
+							</button>
+						</slot>
+					</div>
+					<div @click="onConfirm">
+						<slot name="confirm">
+							<button v-if="showIcons">
+								<font-awesome-icon :icon="['far', 'check-circle']" />
+							</button>
+						</slot>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -43,6 +51,10 @@ let props = defineProps({
 	onConfirm: {
 		type: Function,
 		default: () => { },
+	},
+	showIcons: {
+		type: Boolean,
+		default: true,
 	},
 });
 </script>

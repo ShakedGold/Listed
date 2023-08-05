@@ -5,7 +5,7 @@ import { SignOut } from "../scripts/auth";
 import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
 import { query, where, orderBy, getDocs } from "firebase/firestore";
 import { postsRef } from "../scripts/firebase";
-import SearchListModal from '../../Modal/SearchListModal.vue';
+import ConfirmModal from '../components/Modal/ConfirmModal.vue';
 
 import { ref, watch } from "vue";
 
@@ -32,9 +32,8 @@ watch(route, async (newRoute) => {
 	posts.value = await getPosts();
 });
 
-function OpenInfo() {
-  open.value = true;
-}
+let open = ref(false);
+let selection = ref("");
 </script>
 
 <template>
@@ -48,8 +47,8 @@ function OpenInfo() {
 		<div>
 			<h4>Username: {{ user.username }}</h4>
 			<h4>Email address: {{ user.email }}</h4>
-			<h4>Following: {{ user.following.length }}</h4>
-			<h4>Followers: {{ user.followers.length }}</h4>
+			<h4>Following: <div @click="() => {open = true; selection='following'}">{{ user.following.length }}</div></h4>
+			<h4>Followers: <div @click="() => {open = true; selection='followers'}">{{ user.followers.length }}</div></h4>
 			<button @click="SignOut()" class="button">
 				SignOut
 			</button>
@@ -58,8 +57,8 @@ function OpenInfo() {
 	<!--Another user's profile page-->
 	<div v-else>
 		<h4>Username: {{ user.username }}</h4>
-		<h4>Following: {{ user.following.length }}</h4>
-		<h4>Followers: {{ user.followers.length }}</h4>
+		<h4>Following: <div @click="() => {open = true; selection='following'}">{{ user.following.length }}</div></h4>
+		<h4>Followers: <div @click="() => {open = true; selection='followers'}">{{ user.followers.length }}</div></h4>
 		<div v-if="currentUser.IsFollowing(user)">
 			<button @click="currentUser.UnFollow(user)" class="button">
 				Following
@@ -73,19 +72,25 @@ function OpenInfo() {
 	</div>
 	<PostView :posts="posts" :key="posts" />
 
-	<SearchListModal :open="open" :on-cancel"() => open = false" :show-icons="false">
+	<ConfirmModal :open="open" :on-cancel="() => open=false" :show-icons="false">
 	<template #header>
-	      <h1 class="text-2xl">Followers</h1>
+	      <h1 class="text-2xl" v-if="selection=='following'">Following</h1>
+		  <h1 class="text-2xl" v-else>Followers</h1>
 	</template>
 	<template #body>
-	<div class="flex flex-col">
-        <span class="flex gap-1" v-for="follower in user.followers">
-          <label>{{ follower.username }}</label>
+	<div class="flex flex-col" v-if="selection=='following'">
+        <span class="flex gap-1" v-for="follow in user.following">
+          <label>{{ follow }}</label>
         </span>
-      </div>
+    </div>
+	<div class="flex flex-col" v-else>
+        <span class="flex gap-1" v-for="follower in user.followers">
+          <label>{{ follower }}</label>
+        </span>
+    </div>
 	</template>
 	<template #cancel>
 	      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Close</button>
 	</template>
-	</SearchListModal>
+	</ConfirmModal>
 </template>
