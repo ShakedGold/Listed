@@ -5,7 +5,7 @@
     ">
     <Teleport to="body">
       <div
-        class="fixed z-[999] top-[20%] left-[50%] width-[300px] ml-[-150px] transition-all bg-white border-neutral-800 border-2 rounded-md p-5 flex flex-col gap-6"
+        class="fixed z-[999] top-[20%] left-[50%] width-[300px] ml-[-150px] transition-all bg-white border-neutral-700 border-[1.5px] rounded-md p-5 flex flex-col gap-6"
         :class="open ? visible() : invisible()">
         <div class="text-2xl font-bold">
           <slot name="header"></slot>
