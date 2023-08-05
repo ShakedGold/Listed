@@ -39,7 +39,7 @@ let currentUser = ref(await getCurrentUser());
 		<div v-else>
 			<div v-if="currentUser.IsFollowing(user)">
 				<button @click="currentUser.UnFollow(user)" class="button w-full">
-					Following
+					Unfollow
 				</button>
 			</div>
 			<div v-else>
