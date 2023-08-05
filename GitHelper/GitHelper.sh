@@ -1,11 +1,14 @@
 #! /bin/bash
+currentBranch=$(git branch | grep \* | cut -d ' ' -f2)
+
 echo "What do you want to do?"
 echo "1. Create branch from url (trello url)"
-echo "2. Get updates from current branch"
+echo "2. Get updates from current branch ($currentBranch -> pull)"
 echo "3. Get updates from remote main branch (checkout)"
 echo "4. Switch to branch"
 echo "5. Pull updates from remote branch"
-echo "6. Exit"
+echo "7. List all branches"
+echo "8. Exit"
 
 echo -n "Enter your choice: "
 read inp
@@ -19,7 +22,7 @@ case $inp in
 	read inp	
     if [[ "$inp" != "y" ]]; then
       echo "Exiting"
-      exit 1
+      exit 0
 	fi
     
     echo "Fetching updates..."
@@ -46,16 +49,16 @@ case $inp in
     git pull
   ;;
   4)
-    echo "Enter branch name"
+    echo -n "Enter branch name: "
 	read branchName
-    branch=$(git branch | grep -i $branchName)
-    echo "Is $branch the correct branch name? (y/n)"
+    branch=$(git branch | grep -i $branchName | sed 's/\*//' | tr -d ' ')
+    echo -n "Is $branch the correct branch name? (y/n): "
 	read inp
 
-    if (inp -ne "y"); then
+    if [[ "$inp" != "y" ]]; then
       echo "Exiting"
-	  exit 1
-    fi
+      exit 0
+	fi
 
     echo "Checking out branch $branch"
     git checkout $branch
@@ -69,10 +72,17 @@ case $inp in
 	echo "Pulling updates"
 	git pull origin $branch
   ;;
-  6)
+  7)
+	echo "Fetching updates..."
+	git fetch
+	echo "All of the git branches are:"
+	git branch -a | sed "s/*//g" | tr -d ' '
+	;;
+  8)
 	echo "Exiting"
 	;;
   *)
     echo "Invalid choice"
+	exit 1
   ;;
 esac
