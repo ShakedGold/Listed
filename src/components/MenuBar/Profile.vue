@@ -8,18 +8,14 @@ function goToProfile() {
 </script>
 
 <template>
-	<div class="flex">
-		<router-link to="/"
-			><img
-				class="object-contain w-[50px] h-[50px] mr-3 mb-3 mt-[20%]"
-				src="../../assets/logo/png/only-logo-no-background.png"
-				alt=""
-		/></router-link>
-		<p
-			class="m-auto select-none cursor-pointer hover:text-blue-900"
-			@click="goToProfile"
-		>
+	<div class="flex" v-if="user">
+		<b class="m-auto select-none cursor-pointer hover:text-blue-900" @click="goToProfile">
 			{{ user.username }}
-		</p>
+		</b>
+	</div>
+	<div v-else class="flex">
+		<button class="button m-auto rounded-3xl" @click="router.push({ name: 'Login' })">
+			Login
+		</button>
 	</div>
 </template>

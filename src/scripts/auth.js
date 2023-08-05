@@ -1,7 +1,7 @@
-import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { User, userConverter } from "@/classes/user.js";
 import { usersRef } from "@/scripts/firebase.js";
-import { getDocs, setDoc, doc, query, where } from "firebase/firestore";
+import { getDocs, setDoc, getDoc, doc, query, where } from "firebase/firestore";
 import { auth } from "./firebase";
 import router, { requestedPath } from "../router";
 
@@ -12,46 +12,20 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // TODO: use username as ID for ref
-export function getUserFromUsername(username) {
-  const q = query(usersRef, where("username", "==", username));
-  return new Promise((resolve, reject) => {
-    getDocs(q).then((querySnapshot) => {
-      if (querySnapshot.docs.length == 0) reject("No user found");
-      resolve(querySnapshot.docs[0].data());
-    }).catch((error) => {
-      reject(error)
-    });
-  });
+export async function getUserFromUsername(username) {
+  const userRef = doc(usersRef, username).withConverter(userConverter);
+  const userDoc = await getDoc(userRef);
+  return userDoc.data()
 }
 
 export function getCurrentUser() {
-  return new Promise((resolve, reject) => {
-    if (auth.currentUser == null) reject("No user found");
-    getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
-    }).catch((error) => {
-      reject(error);
-    })
-  });
+  if (auth.currentUser == null) return null;
+  return getUserFromUsername(auth.currentUser.displayName);
 }
 
 export function getCurrentUserOrNew() {
-  return new Promise((resolve, reject) => {
-    if (auth.currentUser === null) resolve(new User());
-    getUserFromUsername(auth.currentUser.displayName).then((userFromDB) => {
-      resolve(new User(userFromDB.email, userFromDB.username, userFromDB.following, userFromDB.followers, userFromDB.postInteractions));
-    }).catch((error) => {
-      reject(error);
-    })
-  });
-}
-
-export function SignOut() {
-  signOut(auth).then(() => {
-    router.push({ name: "Login" });
-  }).catch((error) => {
-    // An error happened.
-  });
+  if (auth.currentUser === null) return new User();
+  return getUserFromUsername(auth.currentUser.displayName);
 }
 
 export function Login(username, password) {
@@ -60,6 +34,7 @@ export function Login(username, password) {
     getEmailFromUsername(username)
       .then((email) => {
         signInWithEmailAndPassword(auth, email, password).then(() => {
+          router.push(requestedPath || "/");
           resolve();
         })
           .catch((error) => {
@@ -74,11 +49,7 @@ export function Login(username, password) {
   });
 }
 export function SignUp(email, password, username) {
-  //if (!validate_password(password)) return
-
   // TODO check if username is already taken with a query
-
-
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -112,10 +83,6 @@ export function SignUp(email, password, username) {
       });
   });
 }
-function validate_password(password) {
-  return new String(password)
-    .match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) != null
-}
 
 /* 
 Explanation: 
@@ -124,7 +91,7 @@ so we get the email by a query where the username is the username we passed in (
 then we get the email with a promise (getDocs returns a promise) and return the email in a promise when the getDocs finished successfully
 */
 function getEmailFromUsername(username) {
-  const q = query(usersRef, where("username", "==", username));
+  const q = query(usersRef, where("username", "==", username)).withConverter(userConverter);
   return new Promise((resolve, reject) => {
     getDocs(q).then((querySnapshot) => {
       if (querySnapshot.docs.length == 0) reject("No user found");
