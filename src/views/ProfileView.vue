@@ -1,26 +1,30 @@
 <script setup>
 import MenuBar from "../components/MenuBar/MenuBar.vue";
-import PostsView from "./PostsView.vue";
 import ProfileDetails from "../components/Profile/ProfileDetails.vue";
+import PostsView from "./PostsView.vue";
 
 import { useRoute } from "vue-router";
 
-import { query, where, orderBy, getDocs } from "firebase/firestore";
+import { getDocs, orderBy, query, where } from "firebase/firestore";
 
 import { postsRef } from "../scripts/firebase";
 
 import { getUserFromUsername } from "../scripts/auth";
 
-import { ref, watch, toRaw } from "vue";
+import { ref, watch } from "vue";
 
 let route = useRoute();
 let user = ref(await getUserFromUsername(route.params.username));
 let posts = ref(await getPosts());
 
 async function getPosts() {
-	let q = query(postsRef, where("username", "==", user.value.username), orderBy("votes", "desc"));
+	let q = query(
+		postsRef,
+		where("username", "==", user.value.username),
+		orderBy("votes", "desc")
+	);
 	let querySnapshot = await getDocs(q);
-	return querySnapshot.docs.map(doc => doc.data());
+	return querySnapshot.docs.map((doc) => doc.data());
 }
 
 /*
@@ -35,6 +39,8 @@ watch(route, async (newRoute) => {
 
 <template>
 	<MenuBar />
-	<ProfileDetails :user="user" />
-	<PostsView :posts="posts" :key="posts" />
+	<div class="relative">
+		<ProfileDetails :user="user" />
+		<PostsView :posts="posts" :key="posts" />
+	</div>
 </template>
