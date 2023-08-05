@@ -1,7 +1,7 @@
 <script setup>
 import { Interaction as InteractionEnum } from "../../../classes/Interaction";
 import Interaction from "../Interaction.vue";
-
+import { defineProps, ref } from "vue";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { postsRef, usersRef } from "../../../scripts/firebase";
