@@ -135,7 +135,7 @@ function uploadfiles(e) {
 	</ProgressModal>
 	<div class="grid h-full w-full gap-2">
 		<div class="flex relative left-[25%]">
-			<h1 class="text-2xl">Create a post</h1>
+			<h1 class="text-2xl select-none">Create a post</h1>
 		</div>
 		<div class="grid h-full w-full place-items-center gap-2">
 			<div class="w-[50%] flex flex-col gap-3">
