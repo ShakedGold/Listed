@@ -3,6 +3,8 @@ import { onMounted, ref } from 'vue'
 import { storage } from '../../../scripts/storage';
 import { ref as firebaseRef, getDownloadURL } from "firebase/storage"
 
+import router from '../../../router';
+
 let props = defineProps({
   post: {
     type: Object,
@@ -32,23 +34,29 @@ onMounted(() => {
     postImageUrl.value = url;
   });
 });
+
+function goToImage() {
+  router.push({ name: 'Image', params: { id: props.post.ID, imageName: props.post.imageName } });
+}
 </script>
 
 <template>
   <div class="flex flex-col">
     <div class="pl-2">
-      <div class="flex gap-2 text-gray-500 text-sm">
-        <router-link class="text-slate-950" :to="{ name: 'List', params: { name: post.list.name } }">
+      <div class="flex gap-2 text-gray-500 text-sm select-none">
+        <router-link class="text-slate-950 hover:underline" :to="{ name: 'List', params: { name: post.list.name } }">
           {{ post.list.name }}
         </router-link>
-        <p>Uploaded by <router-link class="text-slate-950" :to="{ name: 'User', params: { username: post.username } }">{{
-          post.username }}</router-link>
+        <p>Uploaded by <router-link class="text-slate-950 hover:underline"
+            :to="{ name: 'User', params: { username: post.username } }">{{
+              post.username }}</router-link>
           -
           {{
             convertTime(post.time) }} ago</p>
       </div>
       <p>{{ post.title }}</p>
     </div>
-    <img class="object-cover w-[800px]" :src="postImageUrl" :alt="post.title" />
+    <img class="object-cover w-[800px] h-[450px] rounded-br-[0.2rem] cursor-pointer" @click="goToImage"
+      :src="postImageUrl" :alt="post.title" />
   </div>
 </template>

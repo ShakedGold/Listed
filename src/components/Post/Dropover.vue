@@ -37,9 +37,9 @@ function onChange(e) {
 </script>
 
 <template>
-	<div class="flex text-center">
+	<div class="flex text-center w-full">
 		<div
-			class="p-16 bg-[#f7fafc] b-1 border-solid border-[#e2e8f0]"
+			class="p-16 bg-[#f7fafc] w-full rounded-md b-1 border-solid border-2 border-[#e2e8f0]"
 			@dragover="dragover"
 			@dragleave="dragleave"
 			@drop="
