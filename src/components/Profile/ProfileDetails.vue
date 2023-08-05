@@ -15,39 +15,37 @@ let currentUser = ref(await getCurrentUser());
 
 <template>
 	<div
-		class="sticky top-[6rem] border-2 inline-block p-5 float-left rounded-md shadow-xl border-black bg-white w-[400px] ml-5 overflow-y-auto"
+		class="sticky top-[5.6rem] border-2 inline-block p-5 float-left rounded-md shadow-xl border-black bg-white w-[400px] ml-5 overflow-y-auto"
 	>
 		<div class="grid place-items-center">
 			<h1 class="text-4xl select-none"><b>Profile</b></h1>
 			<hr class="w-full text-gray-500 m-1" />
 		</div>
 		<!--Personal profile page-->
-		<div
-			v-if="user.username === currentUser.username"
-			class="grid place-items-center gap-2"
-		>
+		<div class="grid place-items-center gap-2 mb-4">
 			<h4>{{ user.username }}</h4>
 			<h4>{{ user.email }}</h4>
 			<div class="grid grid-flow-col gap-5">
 				<h4>Following: {{ user.following.length }}</h4>
 				<h4>Followers: {{ user.followers.length }}</h4>
 			</div>
+		</div>
+		<div v-if="user.username === currentUser.username">
 			<button @click="currentUser.SignOut()" class="button w-full">
-				SignOut
+				Signout
 			</button>
 		</div>
 		<!--Another user's profile page-->
 		<div v-else>
-			<h4>Username: {{ user.username }}</h4>
-			<h4>Following: {{ user.following.length }}</h4>
-			<h4>Followers: {{ user.followers.length }}</h4>
 			<div v-if="currentUser.IsFollowing(user)">
-				<button @click="currentUser.UnFollow(user)" class="button">
+				<button @click="currentUser.UnFollow(user)" class="button w-full">
 					Following
 				</button>
 			</div>
 			<div v-else>
-				<button @click="currentUser.Follow(user)" class="button">Follow</button>
+				<button @click="currentUser.Follow(user)" class="button w-full">
+					Follow
+				</button>
 			</div>
 		</div>
 	</div>

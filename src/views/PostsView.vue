@@ -13,7 +13,7 @@ let props = defineProps({
 	>
 		<Post v-for="post in posts" :postObj="post" :key="posts" />
 	</div>
-	<div v-else>
-		<h1>So Empty...</h1>
+	<div v-else class="grid place-items-center">
+		<h1 class="text-4xl">So Empty...</h1>
 	</div>
 </template>

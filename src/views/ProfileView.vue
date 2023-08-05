@@ -40,7 +40,7 @@ watch(route, async (newRoute) => {
 <template>
 	<MenuBar />
 	<div class="relative">
-		<ProfileDetails :user="user" />
+		<ProfileDetails class="mr-4" :user="user" />
 		<PostsView :posts="posts" :key="posts" />
 	</div>
 </template>

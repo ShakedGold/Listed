@@ -16,7 +16,7 @@ let user = ref(await getCurrentUser());
 	>
 		<img
 			src="../../assets/logo/png/logo-no-background.png"
-			class="object-cover w-[190px] cursor-pointer"
+			class="object-cover w-[170px] cursor-pointer"
 			alt="listed icon"
 			@click="router.push('/')"
 		/>
