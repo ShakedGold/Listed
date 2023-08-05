@@ -186,6 +186,7 @@ function uploadfiles(e) {
 					<textarea
 						v-model="newPost.text"
 						class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
+						placeholder="Type your thoughts here..."
 						rows="8"
 					></textarea>
 				</div>
