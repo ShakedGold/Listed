@@ -143,7 +143,7 @@ function uploadfiles(e) {
 				<div class="border-2 grid grid-flow-col rounded-md">
 					<button
 						@click="mode = 'media'"
-						class="p-2 hover:bg-neutral-200"
+						class="p-2 hover:bg-neutral-200 rounded-bl-[0.2rem]"
 						:class="mode === 'media' ? 'border-b-4 border-b-accent' : ''"
 					>
 						Media
@@ -157,7 +157,7 @@ function uploadfiles(e) {
 					</button>
 					<button
 						@click="mode = 'files'"
-						class="border-l-2 p-2 hover:bg-neutral-200"
+						class="border-l-2 p-2 hover:bg-neutral-200 rounded-br-[0.2rem]"
 						:class="mode === 'files' ? 'border-b-4 border-b-accent' : ''"
 					>
 						Files
