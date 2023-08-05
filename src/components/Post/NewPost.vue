@@ -1,29 +1,29 @@
 <script setup>
-import Dropover from "@/components/Post/Dropover.vue";
 import ProgressModal from "@/components/Modal/ProgressModal.vue";
+import Dropover from "@/components/Post/Dropover.vue";
 
+import { listsRef, postsRef } from "@/scripts/firebase";
 import {
-	getDocs,
-	setDoc,
 	doc,
+	getDocs,
 	query,
-	where,
 	serverTimestamp,
+	setDoc,
+	where,
 } from "firebase/firestore";
-import { postsRef, listsRef } from "@/scripts/firebase";
 
-import { ref } from "vue";
 import router from "@/router";
+import { ref } from "vue";
 
-import { Post, postConverter } from "@/classes/Post";
 import { List, listConverter } from "@/classes/List";
+import { Post, postConverter } from "@/classes/Post";
 
 import { getCurrentUserOrNew } from "@/scripts/auth.js";
 import { storage } from "@/scripts/storage";
 import {
 	ref as firebaseRef,
-	uploadBytesResumable,
 	getDownloadURL,
+	uploadBytesResumable,
 } from "firebase/storage";
 
 let listOptions = ref(await getOptions());
@@ -35,6 +35,7 @@ let newList = ref(new List(""));
 let newListCreation = ref(false);
 let uploadModal = ref(false);
 let percent = ref(0);
+let mode = ref("media");
 
 async function getOptions() {
 	let lists = [];
@@ -100,11 +101,11 @@ async function post() {
 }
 
 function onSelect(event) {
-	newListCreation.value = event.target.value === "Add new list";
+	mode.value = event.target.value === "Add new list" ? "list" : mode.value;
 }
 
 async function submitList() {
-	newListCreation.value = false;
+	mode.value = "media";
 
 	const ref = doc(listsRef).withConverter(listConverter);
 	await setDoc(ref, new List(newList.value.name));
@@ -132,29 +133,97 @@ function uploadfiles(e) {
 			<p>{{ percent }}%</p>
 		</template>
 	</ProgressModal>
-
-	<div v-if="!newListCreation">
-		<select @change="onSelect($event)" v-model="selectedList">
-			<option disabled>Select a list</option>
-			<option v-for="option in listOptions">{{ option }}</option>
-		</select>
-		<input type="text" placeholder="Title" v-model="newPost.title" />
-		<Dropover :post="newPost" @files-change="uploadfiles" />
-		<div>
-			<button @click="router.push('/')">Cancel</button>
-			<button @click="post">Post</button>
+	<div class="grid h-full w-full gap-2">
+		<div class="flex relative left-[25%]">
+			<h1 class="text-2xl">Create a post</h1>
 		</div>
-	</div>
-	<div v-else>
-		<p>New List</p>
-		<input type="text" placeholder="List Name" v-model="newList.name" />
-		<button @click="submitList">Done</button>
-		<button @click="() => {
-			newListCreation = false;
-			selectedList = 'Select a list';
-		}
-			">
-			Cancel
-		</button>
+		<div class="grid h-full w-full place-items-center gap-2">
+			<div class="w-[50%] flex flex-col gap-3">
+				<hr class="w-full" />
+				<div class="border-2 grid grid-flow-col rounded-md">
+					<button
+						@click="mode = 'media'"
+						class="p-2 hover:bg-neutral-200"
+						:class="mode === 'media' ? 'border-b-4 border-b-accent' : ''"
+					>
+						Media
+					</button>
+					<button
+						@click="mode = 'text'"
+						class="border-l-2 p-2 hover:bg-neutral-200"
+						:class="mode === 'text' ? 'border-b-4 border-b-accent' : ''"
+					>
+						Text
+					</button>
+					<button
+						@click="mode = 'files'"
+						class="border-l-2 p-2 hover:bg-neutral-200"
+						:class="mode === 'files' ? 'border-b-4 border-b-accent' : ''"
+					>
+						Files
+					</button>
+				</div>
+				<div class="flex flex-col gap-2">
+					<select
+						@change="onSelect($event)"
+						v-model="selectedList"
+						class="w-[20%] bg-transparent border-2 outline-none rounded-md p-2 cursor-pointer"
+					>
+						<option disabled>Select a list</option>
+						<option v-for="option in listOptions">{{ option }}</option>
+					</select>
+					<input
+						type="text"
+						placeholder="Title"
+						v-model="newPost.title"
+						class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
+					/>
+				</div>
+				<div v-if="mode === 'media'" class="flex flex-col gap-2 w-full h-full">
+					<Dropover :post="newPost" @files-change="uploadfiles" />
+				</div>
+				<div v-if="mode === 'text'" class="flex flex-col gap-2 w-full h-full">
+					<textarea
+						v-model="newPost.text"
+						class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
+						rows="8"
+					></textarea>
+				</div>
+				<div v-if="mode === 'files'" class="flex flex-col gap-2 w-full h-full">
+					<Dropover :post="newPost" @files-change="uploadfiles" />
+				</div>
+				<div class="flex flex-col gap-3" v-if="mode !== 'list'">
+					<hr class="w-full" />
+					<div class="flex gap-2">
+						<!-- For the future: Tags -->
+						<input
+							type="text"
+							placeholder="Tags"
+							v-model="newPost.tags"
+							class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
+						/>
+					</div>
+					<div class="flex gap-2 justify-end">
+						<button @click="router.push('/')" class="button">Cancel</button>
+						<button @click="post" class="button">Post</button>
+					</div>
+				</div>
+				<div v-if="mode === 'list'">
+					<p>New List</p>
+					<input type="text" placeholder="List Name" v-model="newList.name" />
+					<button @click="submitList">Done</button>
+					<button
+						@click="
+							() => {
+								mode = 'media';
+								selectedList = 'Select a list';
+							}
+						"
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
