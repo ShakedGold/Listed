@@ -3,7 +3,7 @@ import { Interaction as InteractionEnum } from "../../../classes/Interaction";
 import Interaction from "../Interaction.vue";
 import { defineProps, ref } from "vue";
 import { doc, updateDoc } from "firebase/firestore";
-
+import ConfirmModal from "../../Modal/ConfirmModal.vue";
 import { postsRef, usersRef } from "../../../scripts/firebase";
 
 let props = defineProps({
@@ -18,6 +18,11 @@ let props = defineProps({
 });
 let open = ref(false);
 let reports = ref([
+	'Spam',
+	'Inappropriate',
+	'Other',
+]);
+let reportDetails = ref([
 	'Spam',
 	'Inappropriate',
 	'Other',
@@ -67,56 +72,48 @@ async function update() {
 	await updateUser();
 }
 console.log(selectedReport.value);
+
+function Next() {
+	console.log(selectedReport.value);
+	open.value = false;
+}
 </script>
 
 <template>
-<<<<<<< HEAD
-	<div class="text-center border-black border-r-2">
+	<ConfirmModal :open="open" :on-cancel="() => open = false" :show-icons="false">
+		<template #header>
+			<h1 class="text-2xl">Report Post</h1>
+		</template>
+		<template #body>
+			<form>
+				<div class="flex flex-col">
+					<span class="flex gap-1" v-for="report in reports">
+						<input :value="report" name="report" type="radio" :id="report" v-model="selectedReport" />
+						<label :for="report">{{ report }}</label>
+						<span>hello</span>
+					</span>
+				</div>
+			</form>
+		</template>
+		<template #cancel>
+			<button class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">Cancel</button>
+		</template>
+		<template #confirm>
+			<button class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full"
+				@click="Next">Next</button>
+		</template>
+	</ConfirmModal>
+	<div class="text-center border-black border-r-2 relative">
 		<Interaction class="object-cover w-[60px]" text="like"
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Liked)"
 			:class="user.postInteractions[post.ID] === InteractionEnum.Liked ? 'bg-blue-400 rounded-3xl' : ''" />
-		<span class="text-xl">{{ post.votes }}</span>
+		<span class="">{{ post.votes }}</span>
 		<Interaction class="object-cover w-[60px]" text="like"
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Disliked)"
 			:class="user.postInteractions[post.ID] === InteractionEnum.Disliked ? 'bg-blue-400 rounded-3xl' : ''" />
+		<Interaction class="object-cover w-[60px] absolute bottom-0" text=""
+			icon-url="https://cdn-icons-png.flaticon.com/128/4201/4201965.png" :click-fn="Report"></Interaction>
 	</div>
 </template>
-=======
-  <ConfirmModal :open="open" :on-cancel="() => open = false" :show-icons="false">
-    <template #header>
-      <h1 class="text-2xl">Report Post</h1>
-    </template>
-    <template #body>
-      <form>
-        <div class="flex flex-col">
-          <span class="flex gap-1" v-for="report in reports">
-            <input :value="report" name="report" type="radio" :id="report" v-model="selectedReport" />
-            <label :for="report">{{ report }}</label>
-          </span>
-        </div>
-      </form>
-    </template>
-    <template #cancel>
-      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Cancel</button>
-    </template>
-    <template #confirm>
-      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
-    </template>
-  </ConfirmModal>
-  <div class="text-center border-black border-r-2 relative">
-    <Interaction class="object-cover w-[60px]" text="like"
-      icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
-      :click-fn="() => interact(InteractionEnum.Liked)"
-      :class="user.postInteractions[post.ID] === InteractionEnum.Liked ? 'bg-blue-400 rounded-3xl' : ''" />
-    <span class="">{{ post.votes }}</span>
-    <Interaction class="object-cover w-[60px]" text="like"
-      icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
-      :click-fn="() => interact(InteractionEnum.Disliked)"
-      :class="user.postInteractions[post.ID] === InteractionEnum.Disliked ? 'bg-blue-400 rounded-3xl' : ''" />
-    <Interaction class="object-cover w-[60px] absolute bottom-0" text=""
-      icon-url="https://cdn-icons-png.flaticon.com/128/4201/4201965.png" :click-fn="Report"></Interaction>
-  </div>
-</template>
->>>>>>> e2a688f (Merge branch 'f-9-add-report-button' of https://github.com/ShakedGold/Listed into f-9-add-report-button)
