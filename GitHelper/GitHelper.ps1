@@ -49,7 +49,7 @@ switch ($inp) {
   4 {
     Write-Host -NoNewline "Enter branch name: "
     $branchName = Read-Host
-    $branch = git branch -a | Where-Object { $_ -like "*$branchName*" }
+    $branch = git branch -a | Where-Object { $_ -like "*$branchName*" } | Select-Object -First 1
     $branch = $branch -replace "remotes/origin/", ""
     if ($branch -eq $null) {
       Write-Host "Branch $branchName does not exist"
