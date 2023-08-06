@@ -34,6 +34,12 @@ watch(route, async (newRoute) => {
 
 let open = ref(false);
 let selection = ref("");
+let searchTerm = ref("");
+function searchUser(){
+	searchTerm=document.getElementById("userSearchBox").value;
+	console.log(searchTerm);
+}
+
 </script>
 
 <template>
@@ -76,18 +82,18 @@ let selection = ref("");
 	<template #header>
 	      <h1 class="text-2xl" v-if="selection=='following'">Following</h1>
 		  <h1 class="text-2xl" v-else>Followers</h1>
-		  <input type="text" class="border-2 border-black shadow-lg">
-		  <button class="button">search</button>
+		  <input type="text" class="border-2 border-black shadow-lg" id="userSearchBox">
+		  <button class="button" @click="searchUser()">search</button>
 	</template>
 	<template #body>
 	<div class="flex flex-col" v-if="selection=='following'">
         <span class="flex gap-1" v-for="follow in user.following">
-          <label>{{ follow }}</label>
+          <label v-if="follow.includes(searchTerm)">{{ follow }}</label>
         </span>
     </div>
 	<div class="flex flex-col" v-else>
         <span class="flex gap-1" v-for="follower in user.followers">
-          <label>{{ follower }}</label>
+          <label v-if="follower.includes(searchTerm)">{{ follower }}</label>
         </span>
     </div>
 	</template>
