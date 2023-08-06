@@ -51,7 +51,7 @@ case $inp in
   4)
     echo -n "Enter branch name: "
 	read branchName
-    branch=$(git branch -r | sed 's/.*origin\///g' | grep -i $branchName | sed 's/\*//' | tr -d ' ')
+    branch=$(git branch -r | sed 's/.*origin\///g' | grep -i $branchName | sed 's/\*//' | tr -d ' ' | tail -1)
     echo -n "Is $branch the correct branch name? (y/n): "
 	read inp
 
