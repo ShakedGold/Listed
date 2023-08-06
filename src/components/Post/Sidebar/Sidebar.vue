@@ -30,8 +30,7 @@ function Report() {
 }
 function Next() {
 	open.value = false;
-	props.user.reportedPosts[props.post.ID] = selectedReport.value;
-	props.user.UpdateUser({ reportedPosts: props.user.reportedPosts });
+	props.post.Report(selectedReport.value, props.user);
 }
 </script>
 
@@ -55,8 +54,10 @@ function Next() {
 							:id="report"
 							v-model="selectedReport"
 						/>
-						<label :for="report">{{ report }}</label>
-						<span>{{ reportDetail }}</span>
+						<div class="grid">
+							<label :for="report">{{ report }}</label>
+							<span class="text-gray-400">{{ reportDetail }}</span>
+						</div>
 					</span>
 				</div>
 			</form>
