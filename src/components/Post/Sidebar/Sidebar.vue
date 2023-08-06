@@ -1,85 +1,112 @@
 <script setup>
+import { defineProps, ref } from "vue";
 import { Interaction as InteractionEnum } from "../../../classes/Interaction";
+import { Post } from "../../../classes/Post";
+import { Report as ReportArray } from "../../../classes/Report";
+import { User } from "../../../classes/User";
+import ConfirmModal from "../../Modal/ConfirmModal.vue";
 import Interaction from "../Interaction.vue";
-
-import { doc, updateDoc } from "firebase/firestore";
-
-import { postsRef, usersRef } from "../../../scripts/firebase";
 
 let props = defineProps({
 	user: {
-		type: Object,
+		type: User,
 		required: true,
 	},
 	post: {
-		type: Object,
+		type: Post,
 		required: true,
 	},
 });
+let open = ref(false);
+let reports = ref(ReportArray);
+let selectedReport = ref("");
 
 function interact(interaction) {
-	if (props.user.postInteractions[props.post.ID] === interaction) {
-		props.post.votes -= interaction;
-		props.user.postInteractions[props.post.ID] = InteractionEnum.None;
-	} else if (
-		props.user.postInteractions[props.post.ID] !== InteractionEnum.None &&
-		props.user.postInteractions[props.post.ID] !== undefined
-	) {
-		props.post.votes += 2 * interaction;
-		props.user.postInteractions[props.post.ID] = interaction;
-	} else {
-		props.user.postInteractions[props.post.ID] = interaction;
-		props.post.votes += interaction;
-	}
-
-	if (props.user.postInteractions[props.post.ID] === InteractionEnum.None) {
-		delete props.user.postInteractions[props.post.ID];
-	}
-
-	update();
-}
-async function updatePost() {
-	const postDocRef = doc(postsRef, props.post.ID);
-	await updateDoc(postDocRef, { votes: props.post.votes });
+	props.post.Interact(interaction, props.user);
 }
 
-async function updateUser() {
-	const userDocRef = doc(usersRef, props.user.username);
-	await updateDoc(userDocRef, {
-		postInteractions: props.user.postInteractions,
-	});
+function Report() {
+	open.value = true;
 }
-
-async function update() {
-	await updatePost();
-	await updateUser();
+function Next() {
+	open.value = false;
+	props.post.Report(selectedReport.value, props.user);
 }
 </script>
 
 <template>
-	<div class="text-center border-black border-r-2">
+	<ConfirmModal
+		:open="open"
+		:on-cancel="() => (open = false)"
+		:show-icons="false"
+	>
+		<template #header>
+			<h1 class="text-2xl">Report Post</h1>
+		</template>
+		<template #body>
+			<form>
+				<div class="flex flex-col">
+					<span class="flex gap-1" v-for="(reportDetail, report) in reports">
+						<input
+							:value="report"
+							name="report"
+							type="radio"
+							:id="report"
+							v-model="selectedReport"
+						/>
+						<div class="grid">
+							<label :for="report">{{ report }}</label>
+							<span class="text-gray-400">{{ reportDetail }}</span>
+						</div>
+					</span>
+				</div>
+			</form>
+		</template>
+		<template #cancel>
+			<button
+				class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
+			>
+				Cancel
+			</button>
+		</template>
+		<template #confirm>
+			<button
+				class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full"
+				@click="Next"
+			>
+				Next
+			</button>
+		</template>
+	</ConfirmModal>
+	<div class="text-center border-black border-r-2 relative">
 		<Interaction
-			class="object-cover w-[60px] rounded-full transition-all"
+			class="object-cover w-[60px]"
 			text="like"
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Liked)"
 			:class="
 				user.postInteractions[post.ID] === InteractionEnum.Liked
-					? 'bg-blue-400'
-					: 'hover:bg-accent hover:bg-opacity-40'
+					? 'bg-blue-400 rounded-3xl'
+					: ''
 			"
 		/>
-		<span class="text-2xl select-none">{{ post.votes }}</span>
+		<span class="">{{ post.votes }}</span>
 		<Interaction
-			class="object-cover w-[60px] rounded-full"
+			class="object-cover w-[60px]"
 			text="like"
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Disliked)"
 			:class="
 				user.postInteractions[post.ID] === InteractionEnum.Disliked
-					? 'bg-blue-400'
-					: 'hover:bg-accent hover:bg-opacity-40'
+					? 'bg-blue-400 rounded-3xl'
+					: ''
 			"
 		/>
+		<Interaction
+			class="object-cover w-[60px] absolute bottom-0"
+			text=""
+			icon-url="https://cdn-icons-png.flaticon.com/128/4201/4201965.png"
+			:click-fn="Report"
+		></Interaction>
 	</div>
 </template>

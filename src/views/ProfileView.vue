@@ -1,17 +1,13 @@
 <script setup>
+import { getDocs, orderBy, query, where } from "firebase/firestore";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { postConverter } from "../classes/Post";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
 import ProfileDetails from "../components/Profile/ProfileDetails.vue";
-import PostsView from "./PostsView.vue";
-
-import { useRoute } from "vue-router";
-
-import { getDocs, orderBy, query, where } from "firebase/firestore";
-
-import { postsRef } from "../scripts/firebase";
-
 import { getUserFromUsername } from "../scripts/auth";
-
-import { ref, watch } from "vue";
+import { postsRef } from "../scripts/firebase";
+import PostsView from "./PostsView.vue";
 
 let route = useRoute();
 let user = ref(await getUserFromUsername(route.params.username));
@@ -22,7 +18,7 @@ async function getPosts() {
 		postsRef,
 		where("username", "==", user.value.username),
 		orderBy("time", "desc")
-	);
+	).withConverter(postConverter);
 	let querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
 }
