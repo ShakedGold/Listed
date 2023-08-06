@@ -20,7 +20,7 @@ let props = defineProps({
 let open = ref(false);
 let reports = ref(ReportArray);
 let selectedReport = ref("");
-let Reported = ref(true);
+let Reported = ref(false);
 function interact(interaction) {
 	props.post.Interact(interaction, props.user);
 }
@@ -29,22 +29,25 @@ function Report() {
 	open.value = true;
 }
 function Next() {
-	open.value = false;
+	Reported.value = true;
 	props.post.Report(selectedReport.value, props.user);
 }
 function another() {
-	Reported.value = true;
-
+	Reported.value = false;
 }
 function Done() {
 	open.value = false;
-	Reported.value = true;
-
+	Reported.value = false;
 }
 </script>
 
 <template>
-	<ConfirmModal :open="open" :on-cancel="() => (open = false)" :show-icons="false" v-if="Reported">
+	<ConfirmModal
+		:open="open"
+		:on-cancel="() => (open = false)"
+		:show-icons="false"
+		v-if="!Reported"
+	>
 		<template #header>
 			<h1 class="text-2xl">Report Post</h1>
 		</template>
@@ -84,22 +87,31 @@ function Done() {
 		</template>
 	</ConfirmModal>
 
-
-	<ConfirmModal :open="open" :on-cancel="() => (open = false)" :show-icons="false" v-if="Reported === false">
+	<ConfirmModal
+		:open="open"
+		:on-cancel="() => (open = false)"
+		:show-icons="false"
+		v-if="Reported"
+	>
 		<template #header>
 			<h1 class="text-2xl">Thank you for your report :)</h1>
 		</template>
 		<template #cancel>
-			<button class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full" @click="Done">
+			<button
+				class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full"
+				@click="Done"
+			>
 				Done
 			</button>
 		</template>
 		<template #confirm>
-			<button class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-full" @click="another">
+			<button
+				class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-full"
+				@click="another"
+			>
 				Report another
 			</button>
 		</template>
-
 	</ConfirmModal>
 	<div class="text-center border-black border-r-2 relative">
 		<Interaction

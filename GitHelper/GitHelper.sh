@@ -1,4 +1,5 @@
 #! /bin/bash
+
 currentBranch=$(git branch | grep \* | cut -d ' ' -f2)
 
 echo "What do you want to do?"
