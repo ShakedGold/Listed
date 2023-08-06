@@ -120,7 +120,7 @@ function Done() {
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Liked)"
 			:class="
-				user.postInteractions[post.ID] === InteractionEnum.Liked
+				post.interactions[user.username] === InteractionEnum.Liked
 					? 'bg-blue-400 rounded-3xl'
 					: ''
 			"
@@ -132,7 +132,7 @@ function Done() {
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Disliked)"
 			:class="
-				user.postInteractions[post.ID] === InteractionEnum.Disliked
+				post.interactions[user.username] === InteractionEnum.Disliked
 					? 'bg-blue-400 rounded-3xl'
 					: ''
 			"
