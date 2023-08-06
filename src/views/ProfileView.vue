@@ -76,6 +76,8 @@ let selection = ref("");
 	<template #header>
 	      <h1 class="text-2xl" v-if="selection=='following'">Following</h1>
 		  <h1 class="text-2xl" v-else>Followers</h1>
+		  <input type="text" class="border-2 border-black shadow-lg">
+		  <button class="button">search</button>
 	</template>
 	<template #body>
 	<div class="flex flex-col" v-if="selection=='following'">
