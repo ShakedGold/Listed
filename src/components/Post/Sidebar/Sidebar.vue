@@ -1,11 +1,11 @@
 <script setup>
+import { defineProps, ref } from "vue";
 import { Interaction as InteractionEnum } from "../../../classes/Interaction";
+import { Post } from "../../../classes/Post";
 import { Report as ReportArray } from "../../../classes/Report";
+import { User } from "../../../classes/User";
 import ConfirmModal from "../../Modal/ConfirmModal.vue";
 import Interaction from "../Interaction.vue";
-
-import { Post } from "../../../classes/Post";
-import { User } from "../../../classes/User";
 
 let props = defineProps({
 	user: {
@@ -24,9 +24,12 @@ let selectedReport = ref("");
 function interact(interaction) {
 	props.post.Interact(interaction, props.user);
 }
+
+function Report() {
+	open.value = true;
+}
 function Next() {
 	open.value = false;
-	alert("Post Reported thanks for your feedback");
 	props.user.reportedPosts[props.post.ID] = selectedReport.value;
 	props.user.UpdateUser({ reportedPosts: props.user.reportedPosts });
 }
@@ -44,7 +47,7 @@ function Next() {
 		<template #body>
 			<form>
 				<div class="flex flex-col">
-					<span class="flex gap-1" v-for="(reportdetail, report) in reports">
+					<span class="flex gap-1" v-for="(reportDetail, report) in reports">
 						<input
 							:value="report"
 							name="report"
@@ -52,12 +55,8 @@ function Next() {
 							:id="report"
 							v-model="selectedReport"
 						/>
-						<div class="grid pl-1 pt-5">
-							<label class="text-md md:font-bold" :for="report">{{
-								report
-							}}</label>
-							<span class="text-gray-400 text-md pl-2">{{ reportdetail }}</span>
-						</div>
+						<label :for="report">{{ report }}</label>
+						<span>{{ reportDetail }}</span>
 					</span>
 				</div>
 			</form>
@@ -74,7 +73,7 @@ function Next() {
 				class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full"
 				@click="Next"
 			>
-				Report
+				Next
 			</button>
 		</template>
 	</ConfirmModal>
@@ -85,7 +84,7 @@ function Next() {
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/up-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Liked)"
 			:class="
-				post.interactions[user.username] === InteractionEnum.Liked
+				user.postInteractions[post.ID] === InteractionEnum.Liked
 					? 'bg-blue-400 rounded-3xl'
 					: ''
 			"
@@ -97,7 +96,7 @@ function Next() {
 			icon-url="https://media.geeksforgeeks.org/wp-content/uploads/20220529211152/down-300x300.png"
 			:click-fn="() => interact(InteractionEnum.Disliked)"
 			:class="
-				post.interactions[user.username] === InteractionEnum.Disliked
+				user.postInteractions[post.ID] === InteractionEnum.Disliked
 					? 'bg-blue-400 rounded-3xl'
 					: ''
 			"
