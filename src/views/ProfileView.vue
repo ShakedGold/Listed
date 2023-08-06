@@ -1,26 +1,29 @@
 <script setup>
+import { getDocs, orderBy, query, where } from "firebase/firestore";
+import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { postConverter } from "../classes/Post";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
-import { SignOut } from "../scripts/auth";
-import { getCurrentUser, getUserFromUsername } from "../scripts/auth.js";
-import { query, where, orderBy, getDocs } from "firebase/firestore";
+import ProfileDetails from "../components/Profile/ProfileDetails.vue";
+import { getUserFromUsername } from "../scripts/auth";
 import { postsRef } from "../scripts/firebase";
-import ConfirmModal from '../components/Modal/ConfirmModal.vue';
 
 import { ref, watch } from "vue";
 
-import PostView from "./PostView.vue";
+import PostsView from "./PostsView.vue";
 
 let route = useRoute();
-
 let user = ref(await getUserFromUsername(route.params.username));
-let currentUser = ref(await getCurrentUser());
 let posts = ref(await getPosts());
 
 async function getPosts() {
-	let q = query(postsRef, where("username", "==", user.value.username), orderBy("votes", "desc"));
+	let q = query(
+		postsRef,
+		where("username", "==", user.value.username),
+		orderBy("time", "desc")
+	).withConverter(postConverter);
 	let querySnapshot = await getDocs(q);
-	return querySnapshot.docs.map(doc => doc.data());
+	return querySnapshot.docs.map((doc) => doc.data());
 }
 
 /*
@@ -44,61 +47,8 @@ function searchUser(){
 
 <template>
 	<MenuBar />
-	<div>
-		<h1 id="heading" class="text-4xl"><b>Profile</b></h1>
-		<hr style="width: 15%; text-align: left; margin-left: 0; color: gray" />
+	<div class="relative">
+		<ProfileDetails class="mr-4" :user="user" />
+		<PostsView :posts="posts" :key="posts" />
 	</div>
-	<!--Personal profile page-->
-	<div v-if="user.username === currentUser.username">
-		<div>
-			<h4>Username: {{ user.username }}</h4>
-			<h4>Email address: {{ user.email }}</h4>
-			<h4>Following: <div @click="() => {open = true; selection='following'}">{{ user.following.length }}</div></h4>
-			<h4>Followers: <div @click="() => {open = true; selection='followers'}">{{ user.followers.length }}</div></h4>
-			<button @click="SignOut()" class="button">
-				SignOut
-			</button>
-		</div>
-	</div>
-	<!--Another user's profile page-->
-	<div v-else>
-		<h4>Username: {{ user.username }}</h4>
-		<h4>Following: <div @click="() => {open = true; selection='following'}">{{ user.following.length }}</div></h4>
-		<h4>Followers: <div @click="() => {open = true; selection='followers'}">{{ user.followers.length }}</div></h4>
-		<div v-if="currentUser.IsFollowing(user)">
-			<button @click="currentUser.UnFollow(user)" class="button">
-				Following
-			</button>
-		</div>
-		<div v-else>
-			<button @click="currentUser.Follow(user)" class="button">
-				Follow
-			</button>
-		</div>
-	</div>
-	<PostView :posts="posts" :key="posts" />
-
-	<ConfirmModal :open="open" :on-cancel="() => open=false" :show-icons="false">
-	<template #header>
-	      <h1 class="text-2xl" v-if="selection=='following'">Following</h1>
-		  <h1 class="text-2xl" v-else>Followers</h1>
-		  <input type="text" class="border-2 border-black shadow-lg" id="userSearchBox">
-		  <button class="button" @click="searchUser()">search</button>
-	</template>
-	<template #body>
-	<div class="flex flex-col" v-if="selection=='following'">
-        <span class="flex gap-1" v-for="follow in user.following">
-          <label v-if="follow.includes(searchTerm)">{{ follow }}</label>
-        </span>
-    </div>
-	<div class="flex flex-col" v-else>
-        <span class="flex gap-1" v-for="follower in user.followers">
-          <label v-if="follower.includes(searchTerm)">{{ follower }}</label>
-        </span>
-    </div>
-	</template>
-	<template #cancel>
-	      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Close</button>
-	</template>
-	</ConfirmModal>
 </template>

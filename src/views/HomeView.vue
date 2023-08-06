@@ -1,17 +1,20 @@
 <script setup>
-import { getDocs, orderBy, query } from "firebase/firestore";
 import { postsRef } from "@/scripts/firebase";
+import { getDocs, orderBy, query } from "firebase/firestore";
 
 import { ref } from "vue";
 
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import PostView from "./PostView.vue";
+import { postConverter } from "../classes/Post";
+import PostsView from "./PostsView.vue";
 
 //array of all the posts
 let posts = ref(await getPosts());
 
 async function getPosts() {
-	let q = query(postsRef, orderBy("votes", "desc"));
+	let q = query(postsRef, orderBy("votes", "desc")).withConverter(
+		postConverter
+	);
 	let querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
 }
@@ -19,5 +22,5 @@ async function getPosts() {
 
 <template>
 	<MenuBar />
-	<PostView :posts="posts" :key="posts" />
+	<PostsView :posts="posts" />
 </template>

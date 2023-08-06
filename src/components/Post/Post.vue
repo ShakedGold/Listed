@@ -1,22 +1,26 @@
 <script setup>
-import { getCurrentUserOrNew } from "@/scripts/auth.js"
+import { getCurrentUserOrNew } from "@/scripts/auth.js";
 
-import Sidebar from './Sidebar/Sidebar.vue';
-import Body from './Body/Body.vue';
+import Body from "./Body/Body.vue";
+import Sidebar from "./Sidebar/Sidebar.vue";
 
-import { ref } from 'vue';
+import { ref } from "vue";
+import { Post } from "../../classes/Post";
 
 const props = defineProps({
-    postObj: {},
+	post: {
+		type: Post,
+		required: true,
+	},
 });
 
 let user = ref(await getCurrentUserOrNew());
 </script>
 
 <template>
-    <div class="flex border-2 border-black">
-        <Sidebar :user="user" :post="postObj" />
+	<div class="flex border-2 border-black rounded-md shadow-2xl mb-10">
+		<Sidebar :user="user" :post="post" />
 
-        <Body :post="postObj" />
-    </div>
+		<Body :post="post" />
+	</div>
 </template>

@@ -15,20 +15,20 @@
 		<template #footer>
 			<div class="flex gap-2 sticky top-0 right-10 w-full justify-end">
 				<slot name="footer"></slot>
-				<div class="flex gap-1">
+				<div class="flex gap-1" v-if="showIcons">
+					<button @click="onCancel">
+						<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
+					</button>
+					<button @click="onConfirm">
+						<font-awesome-icon :icon="['far', 'check-circle']" />
+					</button>
+				</div>
+				<div v-else class="flex gap-1">
 					<div @click="onCancel">
-						<slot name="cancel">
-							<button v-if="showIcons">
-								<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
-							</button>
-						</slot>
+						<slot name="cancel">Cancel</slot>
 					</div>
 					<div @click="onConfirm">
-						<slot name="confirm">
-							<button v-if="showIcons">
-								<font-awesome-icon :icon="['far', 'check-circle']" />
-							</button>
-						</slot>
+						<slot name="confirm" @click="onConfirm">Confirm</slot>
 					</div>
 				</div>
 			</div>
