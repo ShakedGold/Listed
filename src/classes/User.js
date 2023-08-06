@@ -10,13 +10,15 @@ export class User {
 		username = "Listed",
 		following = [],
 		followers = [],
-		postInteractions = {}
+		postInteractions = {},
+		reportedPosts = {}
 	) {
 		this.email = email;
 		this.username = username;
 		this.following = following;
 		this.followers = followers;
 		this.postInteractions = postInteractions;
+		this.reportedPosts = reportedPosts;
 	}
 	toString() {
 		return (
@@ -28,7 +30,8 @@ export class User {
 			", " +
 			this.followers +
 			", " +
-			this.postInteractions
+			this.postInteractions +
+			", "
 		);
 	}
 	async UpdateUser(patch) {
@@ -78,7 +81,8 @@ export const userConverter = {
 			data.username,
 			data.following,
 			data.followers,
-			data.postInteractions
+			data.postInteractions,
+			data.reportedPosts
 		);
 	},
 };
