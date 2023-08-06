@@ -17,7 +17,10 @@
 				<slot name="footer"></slot>
 				<div class="flex gap-1" v-if="showIcons">
 					<button @click="onCancel">
-						<font-awesome-icon :icon="['far', 'circle-xmark']" class="text-red-700" />
+						<font-awesome-icon
+							:icon="['far', 'circle-xmark']"
+							class="text-red-700"
+						/>
 					</button>
 					<button @click="onConfirm">
 						<font-awesome-icon :icon="['far', 'check-circle']" />
@@ -25,10 +28,10 @@
 				</div>
 				<div v-else class="flex gap-1">
 					<div @click="onCancel">
-						<slot name="cancel">Cancel</slot>
+						<slot name="cancel"></slot>
 					</div>
 					<div @click="onConfirm">
-						<slot name="confirm" @click="onConfirm">Confirm</slot>
+						<slot name="confirm"></slot>
 					</div>
 				</div>
 			</div>
@@ -37,7 +40,7 @@
 </template>
 
 <script setup>
-import Modal from './Modal.vue';
+import Modal from "./Modal.vue";
 
 let props = defineProps({
 	open: {
@@ -46,11 +49,11 @@ let props = defineProps({
 	},
 	onCancel: {
 		type: Function,
-		default: () => { },
+		default: () => {},
 	},
 	onConfirm: {
 		type: Function,
-		default: () => { },
+		default: () => {},
 	},
 	showIcons: {
 		type: Boolean,
