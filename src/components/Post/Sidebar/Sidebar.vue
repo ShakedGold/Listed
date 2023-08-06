@@ -23,7 +23,7 @@ let props = defineProps({
 let open = ref(false);
 let reports = ref(ReportArray);
 let selectedReport = ref("");
-
+let Reported = ref(true);
 function interact(interaction) {
 	if (props.user.postInteractions[props.post.ID] === interaction) {
 		props.post.votes -= interaction;
@@ -66,15 +66,23 @@ async function update() {
 	await updateUser();
 }
 function Next() {
-	open.value = false;
-	alert("Post Reported thanks for your feedback");
+	Reported.value = false;
 	props.user.reportedPosts[props.post.ID] = selectedReport.value;
 	props.user.UpdateUser({ reportedPosts: props.user.reportedPosts });
+}
+function another() {
+	Reported.value = true;
+
+}
+function Done() {
+	open.value = false;
+	Reported.value = true;
+
 }
 </script>
 
 <template>
-	<ConfirmModal :open="open" :on-cancel="() => (open = false)" :show-icons="false">
+	<ConfirmModal :open="open" :on-cancel="() => (open = false)" :show-icons="false" v-if="Reported">
 		<template #header>
 			<h1 class="text-2xl">Report Post</h1>
 		</template>
@@ -101,6 +109,24 @@ function Next() {
 				Report
 			</button>
 		</template>
+	</ConfirmModal>
+
+
+	<ConfirmModal :open="open" :on-cancel="() => (open = false)" :show-icons="false" v-if="Reported === false">
+		<template #header>
+			<h1 class="text-2xl">Thank you for your report :)</h1>
+		</template>
+		<template #cancel>
+			<button class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full" @click="Done">
+				Done
+			</button>
+		</template>
+		<template #confirm>
+			<button class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-full" @click="another">
+				Report another
+			</button>
+		</template>
+
 	</ConfirmModal>
 	<div class="text-center border-black border-r-2 relative">
 		<Interaction class="object-cover w-[60px]" text="like"
