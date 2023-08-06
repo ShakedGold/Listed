@@ -42,6 +42,7 @@ export class User {
 	Follow(user) {
 		this.following.push(user.username);
 		user.followers.push(this.username);
+
 		user.UpdateUser({ followers: user.followers });
 		this.UpdateUser({ following: this.following });
 	}
