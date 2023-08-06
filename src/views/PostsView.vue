@@ -2,7 +2,7 @@
 import Post from "../components/Post/Post.vue";
 
 let props = defineProps({
-	posts: Object,
+	posts: Array,
 });
 </script>
 
@@ -11,7 +11,7 @@ let props = defineProps({
 		class="flex flex-col gap-24 justify-center align-middle items-center mt-4"
 		v-if="posts.length !== 0"
 	>
-		<Post v-for="post in posts" :postObj="post" :key="posts" />
+		<Post v-for="post in posts" :post="post" :key="posts" />
 	</div>
 	<div v-else class="grid place-items-center">
 		<h1 class="text-4xl">So Empty...</h1>
