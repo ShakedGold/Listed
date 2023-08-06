@@ -8,7 +8,6 @@ import ProfileDetails from "../components/Profile/ProfileDetails.vue";
 import { getUserFromUsername } from "../scripts/auth";
 import { postsRef } from "../scripts/firebase";
 
-import { ref, watch } from "vue";
 
 import PostsView from "./PostsView.vue";
 

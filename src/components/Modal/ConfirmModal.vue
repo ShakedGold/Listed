@@ -25,10 +25,10 @@
 				</div>
 				<div v-else class="flex gap-1">
 					<div @click="onCancel">
-						<slot name="cancel">Cancel</slot>
+						<slot name="cancel"></slot>
 					</div>
 					<div @click="onConfirm">
-						<slot name="confirm" @click="onConfirm">Confirm</slot>
+						<slot name="confirm"></slot>
 					</div>
 				</div>
 			</div>
