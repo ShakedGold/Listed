@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import router from "../../router";
-import { getCurrentUser } from "../../scripts/auth";
+import { getCurrentUser } from "../../services/auth";
 import ActionBar from "./ActionBar/ActionBar.vue";
 import Profile from "./Profile.vue";
 import Search from "./Search.vue";

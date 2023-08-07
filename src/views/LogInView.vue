@@ -6,14 +6,23 @@
 			<hr />
 		</div>
 		<div>
-			<input autofocus class="input-field" v-model="username" type="text" placeholder="Username" />
+			<input
+				autofocus
+				class="input-field"
+				v-model="username"
+				type="text"
+				placeholder="Username"
+			/>
 			<br />
-			<input class="input-field" v-model="password" type="password" placeholder="Password" />
+			<input
+				class="input-field"
+				v-model="password"
+				type="password"
+				placeholder="Password"
+			/>
 		</div>
 		<div class="flex gap-2">
-			<button class="button" @click="Login(username, password)">
-				Login
-			</button>
+			<button class="button" @click="Login(username, password)">Login</button>
 			<button class="button" @click="() => router.push('/signup')">
 				Signup
 			</button>
@@ -23,7 +32,7 @@
 
 <script setup>
 import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import { Login } from "@/scripts/auth.js";
+import { Login } from "@/services/auth.js";
 import { ref } from "vue";
 import router, { requestedPath } from "../router";
 

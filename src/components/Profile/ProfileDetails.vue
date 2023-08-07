@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { User } from "../../classes/User";
-import { getCurrentUser } from "../../scripts/auth";
+import { getCurrentUser } from "../../services/auth";
 
 let props = defineProps({
 	user: {

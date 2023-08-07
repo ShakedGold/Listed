@@ -1,5 +1,5 @@
 import { User, userConverter } from "@/classes/user.js";
-import { usersRef } from "@/scripts/firebase.js";
+import { usersRef } from "@/services/firebase.js";
 import {
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,

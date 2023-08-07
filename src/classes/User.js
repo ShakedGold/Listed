@@ -1,5 +1,5 @@
 import { doc, updateDoc } from "firebase/firestore";
-import { auth, usersRef } from "../scripts/firebase.js";
+import { auth, usersRef } from "../services/firebase.js";
 
 import { signOut } from "firebase/auth";
 import router from "../router/index.js";

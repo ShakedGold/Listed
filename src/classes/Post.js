@@ -1,7 +1,7 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { Interaction as InteractionEnum } from "../classes/Interaction.js";
 import { List } from "../classes/List.js";
-import { postsRef } from "../scripts/firebase.js";
+import { postsRef } from "../services/firebase.js";
 
 export class Post {
 	constructor(

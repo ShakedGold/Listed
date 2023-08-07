@@ -1,52 +1,48 @@
 <script setup>
-import { ref } from "vue";
-import { doc, getDocs, setDoc } from "firebase/firestore";
-import { listsRef } from "@/scripts/firebase";
+import { ref, computed, nextTick } from "vue";
+import { getDocs } from "firebase/firestore";
+import { listsRef } from "@/services/firebase";
+import { Search } from "../../services/Algorithm";
 
-let props = defineProps(["modelValue", "mode"]);
+let props = defineProps(["modelValue"]);
 defineEmits(["update:modelValue", "addNewList"]);
 
 let expandList = ref(false);
-let lists = ref(await getOptions());
-let options = ref(lists.value);
 
-async function getOptions() {
-	let lists = [];
-	const querySnapshot = await getDocs(listsRef);
-	querySnapshot.forEach((doc) => {
-		if (doc.data().name.includes(props.modelValue) || props.modelValue === "")
-			lists.push(doc.data().name);
-	});
-	return lists;
-}
+const querySnapshot = await getDocs(listsRef);
+let lists = ref(
+	querySnapshot.docs
+		.filter(
+			(doc) =>
+				doc.data().name.includes(props.modelValue) || props.modelValue === ""
+		)
+		.map((doc) => doc.data().name)
+);
 
-function Search(value = "") {
-	return lists.value.filter(
-		(option) =>
-			option.toLowerCase().includes(value.toLowerCase()) || value === ""
-	);
-}
+let options = computed(() => Search(props.modelValue, lists.value));
+
+// Add a method to handle the unfocus event
+const handleBlur = () => {
+	// Use a timeout to check if a button was clicked before hiding the list
+	setTimeout(() => {
+		// wait for the next tick to ensure the button click event is handled
+		nextTick(() => {
+			expandList.value = false;
+		});
+	}, 100);
+};
 </script>
 
 <template>
-	<div v-if="mode === 'regular'" class="relative">
+	<div class="relative">
 		<input
 			type="text"
 			placeholder="Search a list"
 			:value="modelValue"
 			class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
-			@input="
-				($event) => {
-					$emit('update:modelValue', $event.target.value);
-					options = Search($event.target.value);
-				}
-			"
-			@click="
-				() => {
-					expandList = !expandList;
-					options = Search();
-				}
-			"
+			@input="$emit('update:modelValue', $event.target.value)"
+			@focus="expandList = true"
+			@blur="handleBlur"
 		/>
 		<div
 			v-if="expandList"
@@ -65,7 +61,6 @@ function Search(value = "") {
 				{{ option }}
 			</button>
 			<button
-				v-if="options.length === 0"
 				class="hover:bg-neutral-200 rounded-md p-2 w-full text-left"
 				@click="
 					() => {
@@ -77,15 +72,5 @@ function Search(value = "") {
 				Add new list
 			</button>
 		</div>
-	</div>
-	<div v-if="mode === 'compact'">
-		<select
-			@change="$emit('update:modelValue', $event.target.value)"
-			:value="modelValue"
-			class="w-[20%] bg-transparent border-2 outline-none rounded-md p-2 cursor-pointer"
-		>
-			<option disabled>Select a list</option>
-			<option v-for="option in listOptions">{{ option }}</option>
-		</select>
 	</div>
 </template>

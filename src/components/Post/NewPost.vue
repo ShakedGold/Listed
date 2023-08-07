@@ -4,7 +4,7 @@ import Dropover from "@/components/Post/Dropover.vue";
 import ConfirmModal from "@/components/Modal/ConfirmModal.vue";
 import ListSearch from "./ListSearch.vue";
 
-import { listsRef, postsRef } from "@/scripts/firebase";
+import { listsRef, postsRef } from "@/services/firebase";
 import {
 	doc,
 	getDocs,
@@ -20,8 +20,8 @@ import { ref } from "vue";
 import { List, listConverter } from "@/classes/List";
 import { Post, postConverter } from "@/classes/Post";
 
-import { getCurrentUserOrNew } from "@/scripts/auth.js";
-import { storage } from "@/scripts/storage";
+import { getCurrentUserOrNew } from "@/services/auth.js";
+import { storage } from "@/services/storage";
 import {
 	ref as firebaseRef,
 	getDownloadURL,
@@ -97,6 +97,20 @@ function uploadfiles(e) {
 function AddNewListModal() {
 	mode.value = "list";
 	newList.value = new List(selectedList.value);
+}
+
+function submitList() {
+	if (newList.value.name === "") {
+		alert("Must enter a name");
+		return;
+	}
+
+	const ref = doc(listsRef).withConverter(listConverter);
+	newList.value.ID = ref.id;
+	setDoc(ref, newList.value);
+
+	selectedList.value = newList.value.name;
+	mode.value = "media";
 }
 </script>
 
@@ -179,7 +193,7 @@ function AddNewListModal() {
 				</div>
 				<div class="flex flex-col gap-2">
 					<ListSearch
-						mode="regular"
+						:key="mode"
 						v-model="selectedList"
 						@add-new-list="AddNewListModal"
 					/>

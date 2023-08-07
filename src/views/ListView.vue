@@ -1,5 +1,5 @@
 <script setup>
-import { postsRef } from "@/scripts/firebase";
+import { postsRef } from "@/services/firebase";
 import { getDocs, orderBy, query, where } from "firebase/firestore";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -13,7 +13,11 @@ let route = useRoute();
 let posts = ref(await getPosts());
 
 async function getPosts() {
-	let q = query(postsRef, orderBy("votes", "desc"), where("list.name", "==", route.params.name));
+	let q = query(
+		postsRef,
+		orderBy("votes", "desc"),
+		where("list.name", "==", route.params.name)
+	);
 	let querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { postsRef } from "@/scripts/firebase";
+import { postsRef } from "@/services/firebase";
 import { getDocs, orderBy, query } from "firebase/firestore";
 
 import { ref } from "vue";
