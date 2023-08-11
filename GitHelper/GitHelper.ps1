@@ -34,7 +34,7 @@ switch ($inp) {
   }
   2 {
     Write-Host "Fetching updates..."
-    git fetch
+    git fetch --prune
     Write-Host "Pulling updates"
     git pull
   }
