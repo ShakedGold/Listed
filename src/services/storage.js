@@ -1,4 +1,4 @@
-import { getStorage, ref } from "firebase/storage";
+import { getStorage } from 'firebase/storage';
 
 // Create a root reference
 export const storage = getStorage();
