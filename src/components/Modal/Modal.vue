@@ -33,16 +33,10 @@ defineProps({
 	},
 });
 
-/**
- 
- */
 function visible() {
 	return 'transform translate-y-0 opacity-100';
 }
 
-/**
- 
- */
 function invisible() {
 	return 'transform -translate-y-full opacity-0';
 }
