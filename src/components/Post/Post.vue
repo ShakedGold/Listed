@@ -1,5 +1,5 @@
 <script setup>
-import { getCurrentUserOrNew } from "@/scripts/auth.js";
+import { getCurrentUserOrNew } from "@/services/auth.js";
 
 import Body from "./Body/Body.vue";
 import Sidebar from "./Sidebar/Sidebar.vue";

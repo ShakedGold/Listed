@@ -5,8 +5,8 @@ import { useRoute } from "vue-router";
 import { postConverter } from "../classes/Post";
 import MenuBar from "../components/MenuBar/MenuBar.vue";
 import ProfileDetails from "../components/Profile/ProfileDetails.vue";
-import { getUserFromUsername } from "../scripts/auth";
-import { postsRef } from "../scripts/firebase";
+import { getUserFromUsername } from "../services/auth";
+import { postsRef } from "../services/firebase";
 import PostsView from "./PostsView.vue";
 
 let route = useRoute();

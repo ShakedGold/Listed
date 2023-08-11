@@ -1,8 +1,10 @@
 <script setup>
 import ProgressModal from "@/components/Modal/ProgressModal.vue";
 import Dropover from "@/components/Post/Dropover.vue";
+import ConfirmModal from "@/components/Modal/ConfirmModal.vue";
+import ListSearch from "./ListSearch.vue";
 
-import { listsRef, postsRef } from "@/scripts/firebase";
+import { listsRef, postsRef } from "@/services/firebase";
 import {
 	doc,
 	getDocs,
@@ -18,34 +20,21 @@ import { ref } from "vue";
 import { List, listConverter } from "@/classes/List";
 import { Post, postConverter } from "@/classes/Post";
 
-import { getCurrentUserOrNew } from "@/scripts/auth.js";
-import { storage } from "@/scripts/storage";
+import { getCurrentUserOrNew } from "@/services/auth.js";
+import { storage } from "@/services/storage";
 import {
 	ref as firebaseRef,
 	getDownloadURL,
 	uploadBytesResumable,
 } from "firebase/storage";
 
-let listOptions = ref(await getOptions());
-
 let newPost = ref(new Post("", "", new List(), "", 0, serverTimestamp(), ""));
 let file = ref({ name: "" });
-let selectedList = ref("Select a list");
+let selectedList = ref("");
 let newList = ref(new List(""));
-let newListCreation = ref(false);
 let uploadModal = ref(false);
 let percent = ref(0);
 let mode = ref("media");
-
-async function getOptions() {
-	let lists = [];
-	lists.push(new List("Add new list"));
-	const querySnapshot = await getDocs(listsRef);
-	querySnapshot.forEach((doc) => {
-		lists.push(new List(doc.data().name));
-	});
-	return lists;
-}
 
 async function post() {
 	if (selectedList.value === "Select a list") {
@@ -99,29 +88,68 @@ async function post() {
 		);
 	});
 }
-
-function onSelect(event) {
-	mode.value = event.target.value === "Add new list" ? "list" : mode.value;
-}
-
-async function submitList() {
-	mode.value = "media";
-
-	const ref = doc(listsRef).withConverter(listConverter);
-	await setDoc(ref, new List(newList.value.name));
-
-	selectedList.value = newList.value.name;
-	listOptions.value = await getOptions();
-}
-
 function uploadfiles(e) {
 	if (e.dataTransfer) file.value = e.dataTransfer.files[0];
 	else file.value = e.target.files[0];
 	newPost.value.imageName = file.value.name;
 }
+
+function AddNewListModal() {
+	mode.value = "list";
+	newList.value = new List(selectedList.value);
+}
+
+function submitList() {
+	if (newList.value.name === "") {
+		alert("Must enter a name");
+		return;
+	}
+
+	const ref = doc(listsRef).withConverter(listConverter);
+	newList.value.ID = ref.id;
+	setDoc(ref, newList.value);
+
+	selectedList.value = newList.value.name;
+	mode.value = "media";
+}
 </script>
 
 <template>
+	<ConfirmModal :open="mode === 'list'" :show-icons="false">
+		<template #header>
+			<h1>Create a new list</h1>
+		</template>
+		<template #body>
+			<input
+				v-model="newList.name"
+				type="text"
+				placeholder="List name"
+				class="border-2 border-neutral-300 rounded-md p-2 w-full"
+			/>
+		</template>
+		<template #confirm>
+			<button
+				@click="submitList"
+				class="bg-accent text-white rounded-md p-2 hover:bg-accent-hover"
+			>
+				Submit
+			</button>
+		</template>
+		<template #cancel>
+			<button
+				@click="
+					() => {
+						mode = 'media';
+						selectedList = '';
+					}
+				"
+				class="bg-accent text-white rounded-md p-2 hover:bg-accent-hover"
+			>
+				Cancel
+			</button>
+		</template>
+	</ConfirmModal>
+
 	<ProgressModal :open="uploadModal" :progress="percent">
 		<template #header>
 			<h1>Uploading post</h1>
@@ -164,14 +192,11 @@ function uploadfiles(e) {
 					</button>
 				</div>
 				<div class="flex flex-col gap-2">
-					<select
-						@change="onSelect($event)"
+					<ListSearch
+						:key="mode"
 						v-model="selectedList"
-						class="w-[20%] bg-transparent border-2 outline-none rounded-md p-2 cursor-pointer"
-					>
-						<option disabled>Select a list</option>
-						<option v-for="option in listOptions">{{ option }}</option>
-					</select>
+						@add-new-list="AddNewListModal"
+					/>
 					<input
 						type="text"
 						placeholder="Title"
@@ -208,21 +233,6 @@ function uploadfiles(e) {
 						<button @click="router.push('/')" class="button">Cancel</button>
 						<button @click="post" class="button">Post</button>
 					</div>
-				</div>
-				<div v-if="mode === 'list'">
-					<p>New List</p>
-					<input type="text" placeholder="List Name" v-model="newList.name" />
-					<button @click="submitList">Done</button>
-					<button
-						@click="
-							() => {
-								mode = 'media';
-								selectedList = 'Select a list';
-							}
-						"
-					>
-						Cancel
-					</button>
 				</div>
 			</div>
 		</div>
