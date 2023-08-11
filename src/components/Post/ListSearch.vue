@@ -73,7 +73,6 @@ const handleKeyDown = (event) => {
 			emit('addNewList');
 		 else
 			emit('update:modelValue', options.value[index]);
-		
 		expandList.value = false;
 		selected.value = 0;
 		break;
