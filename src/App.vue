@@ -1,7 +1,7 @@
 <template>
-	<Suspense>
-		<div class="font-primary">
-			<router-view></router-view>
-		</div>
-	</Suspense>
+  <Suspense>
+    <div class="font-primary">
+      <router-view />
+    </div>
+  </Suspense>
 </template>

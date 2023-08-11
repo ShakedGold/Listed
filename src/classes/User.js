@@ -1,13 +1,13 @@
-import { doc, updateDoc } from "firebase/firestore";
-import { auth, usersRef } from "../services/firebase.js";
+import { doc, updateDoc } from 'firebase/firestore';
+import { auth, usersRef } from '../services/firebase.js';
 
-import { signOut } from "firebase/auth";
-import router from "../router/index.js";
+import { signOut } from 'firebase/auth';
+import router from '../router/index.js';
 
 export class User {
 	constructor(
-		email = "",
-		username = "Listed",
+		email = '',
+		username = 'Listed',
 		following = [],
 		followers = [],
 		postInteractions = {},
@@ -23,15 +23,15 @@ export class User {
 	toString() {
 		return (
 			this.email +
-			", " +
+			', ' +
 			this.username +
-			", " +
+			', ' +
 			this.following +
-			", " +
+			', ' +
 			this.followers +
-			", " +
+			', ' +
 			this.postInteractions +
-			", "
+			', '
 		);
 	}
 	async UpdateUser(patch) {
@@ -61,7 +61,7 @@ export class User {
 	SignOut() {
 		signOut(auth)
 			.then(() => {
-				router.push({ name: "Login" });
+				router.push({ name: 'Login' });
 			})
 			.catch((error) => {
 				console.log(error);

@@ -3,29 +3,28 @@
  * @module
  */
 
-import { User, userConverter } from "@/classes/user.js";
-import { usersRef } from "@/services/firebase.js";
+import { User, userConverter } from '@/classes/user.js';
+import { usersRef } from '@/services/firebase.js';
 import {
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,
 	signInWithEmailAndPassword,
 	updateProfile,
-} from "firebase/auth";
-import { doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
-import router, { requestedPath } from "../router";
-import { auth } from "./firebase";
+} from 'firebase/auth';
+import { doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import router, { requestedPath } from '../router';
+import { auth } from './firebase';
 
 onAuthStateChanged(auth, (user) => {
-	if (user) {
-		router.push(requestedPath || "/");
-	}
+	if (user)
+		router.push(requestedPath || '/');
 });
 
 /**
- * Gets a user from firebase by the username
+ * Gets a user from firebase by the username.
+ * @param {string} username - The username of the user that will be returned from firebase.
+ * @returns {User} The user that was found in firebase.
  * @author ShakedGold <shakedgold@listed.com>
- * @param {string} username - the username of the user that will be returned from firebase
- * @return {User} - the user that was found in firebase
  */
 export async function getUserFromUsername(username) {
 	const userRef = doc(usersRef, username).withConverter(userConverter);
@@ -34,28 +33,30 @@ export async function getUserFromUsername(username) {
 }
 
 /**
- * Gets a user from firebase by the email address of the user
- * @return {User} the current authenticated user or null if the user is not authenticated
+ * Gets a user from firebase by the email address of the user.
+ * @returns {User} The current authenticated user or null if the user is not authenticated.
  */
 export function getCurrentUser() {
-	if (auth.currentUser == null) return null;
+	if (auth.currentUser == null)
+		return null;
 	return getUserFromUsername(auth.currentUser.displayName);
 }
 
 /**
- * Gets a user from firebase by the email address of the user
- * @return {User} the current authenticated user or a new user if the user is not authenticated
+ * Gets a user from firebase by the email address of the user.
+ * @returns {User} The current authenticated user or a new user if the user is not authenticated.
  */
 export function getCurrentUserOrNew() {
-	if (auth.currentUser === null) return new User();
+	if (auth.currentUser === null)
+		return new User();
 	return getUserFromUsername(auth.currentUser.displayName);
 }
 
 /**
- * Login the user with the username and password and redirects to the requested path or the home page if there is no requested path
- * @param {string} username - the username of the user that will be logged in
- * @param {string} password - the password of the user that will be logged in
- * @return {Promise} - a promise that resolves when the login is successful
+ * Login the user with the username and password and redirects to the requested path or the home page if there is no requested path.
+ * @param {string} username - The username of the user that will be logged in.
+ * @param {string} password - The password of the user that will be logged in.
+ * @returns {Promise} A promise that resolves when the login is successful.
  */
 export function Login(username, password) {
 	// when the email is returned we log in with the email and password and return a promise that resolves when the login is successful
@@ -64,28 +65,28 @@ export function Login(username, password) {
 			.then((email) => {
 				signInWithEmailAndPassword(auth, email, password)
 					.then(() => {
-						router.push(requestedPath || "/");
+						router.push(requestedPath || '/');
 						resolve();
 					})
 					.catch((error) => {
-						alert("Wrong username or password");
-						reject();
+						alert('Wrong username or password');
+						reject(error);
 					});
 			})
 			.catch((error) => {
-				alert("Wrong username or password");
-				reject();
+				alert('Wrong username or password');
+				reject(error);
 			});
 	});
 }
 
 /**
- * Signs up the user with the email, password and username and redirects to the requested path or the home page if there is no requested path
- * @param {string} email - the email of the user that will be signed up
- * @param {string} password - the password of the user that will be signed up
- * @param {string} username - the username of the user that will be signed up
- * @return {Promise} - a promise that resolves when the signup is successful
- * @todo check if username is already taken with a query
+ * Signs up the user with the email, password and username and redirects to the requested path or the home page if there is no requested path.
+ * @param {string} email - The email of the user that will be signed up.
+ * @param {string} password - The password of the user that will be signed up.
+ * @param {string} username - The username of the user that will be signed up.
+ * @returns {Promise} - A promise that resolves when the signup is successful.
+ * @todo Check if username is already taken with a query.
  */
 export function SignUp(email, password, username) {
 	// TODO check if username is already taken with a query
@@ -110,38 +111,37 @@ export function SignUp(email, password, username) {
 			})
 			.catch((error) => {
 				const errorCode = error.code;
-				const errorMessage = error.message;
-				if (errorCode == "auth/email-already-in-use") {
-					alert("Email already in use");
-				} else if (errorCode == "auth/invalid-email") {
-					alert("Invalid email");
-				} else if (errorCode == "auth/weak-password") {
-					alert("Password is too weak");
-				}
+				if (errorCode == 'auth/email-already-in-use')
+					alert('Email already in use');
+				 else if (errorCode == 'auth/invalid-email')
+					alert('Invalid email');
+				 else if (errorCode == 'auth/weak-password')
+					alert('Password is too weak');
 				reject();
 			});
 	});
 }
 
-/* 
-Explanation: 
+/*
+Explanation:
 we pass in a username but in order to log in we need the email that is corresponding to the username
 so we get the email by a query where the username is the username we passed in (there should only be one user with that username)
 then we get the email with a promise (getDocs returns a promise) and return the email in a promise when the getDocs finished successfully
 */
 /**
- * Gets the email of a user from firebase by the username
- * @param {string} username - the username of the user that will be returned from firebase
- * @return {Promise} - a promise that resolves when the email is returned from firebase
+ * Gets the email of a user from firebase by the username.
+ * @param {string} username - The username of the user that will be returned from firebase.
+ * @returns {Promise} A promise that resolves when the email is returned from firebase.
  */
 function getEmailFromUsername(username) {
-	const q = query(usersRef, where("username", "==", username)).withConverter(
+	const q = query(usersRef, where('username', '==', username)).withConverter(
 		userConverter
 	);
 	return new Promise((resolve, reject) => {
 		getDocs(q)
 			.then((querySnapshot) => {
-				if (querySnapshot.docs.length == 0) reject("No user found");
+				if (querySnapshot.docs.length == 0)
+					reject('No user found');
 				resolve(querySnapshot.docs[0].data().email);
 			})
 			.catch((error) => {

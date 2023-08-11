@@ -1,24 +1,26 @@
 <script setup>
-import { postsRef } from "@/services/firebase";
-import { getDocs, orderBy, query, where } from "firebase/firestore";
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { postConverter } from '@/classes/Post';
 
-import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import PostsView from "./PostsView.vue";
+import { postsRef } from '@/services/firebase';
+import { getDocs, orderBy, query, where } from 'firebase/firestore';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-let route = useRoute();
+import MenuBar from '@/components/MenuBar/MenuBar.vue';
+import PostsView from './PostsView.vue';
+
+const route = useRoute();
 
 //array of all the posts
-let posts = ref(await getPosts());
+const posts = ref(await getPosts());
 
 async function getPosts() {
-	let q = query(
+	const q = query(
 		postsRef,
-		orderBy("votes", "desc"),
-		where("list.name", "==", route.params.name)
-	);
-	let querySnapshot = await getDocs(q);
+		orderBy('votes', 'desc'),
+		where('list.name', '==', route.params.name)
+	).withConverter(postConverter);
+	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
 }
 
@@ -28,6 +30,6 @@ watch(route, async () => {
 </script>
 
 <template>
-	<MenuBar />
-	<PostsView :posts="posts" />
+  <MenuBar />
+  <PostsView :posts="posts" />
 </template>

@@ -1,10 +1,10 @@
 <script setup>
-import MenuBar from "@/components/MenuBar/MenuBar.vue";
-import NewPost from "@/components/Post/NewPost.vue"
+import MenuBar from '@/components/MenuBar/MenuBar.vue';
+import NewPost from '@/components/Post/NewPost.vue';
 </script>
 
 <template>
-    <MenuBar />
+  <MenuBar />
 
-    <NewPost />
+  <NewPost />
 </template>
