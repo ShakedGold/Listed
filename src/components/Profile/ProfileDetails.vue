@@ -18,7 +18,7 @@ let selection = ref("");
 
 let searchTerm = ref("");
 function searchUser(){
-	searchTerm.value=document.getElementById("userSearchBox").value;
+	searchTerm.value=document.getElementById("userSearchBox").value.toLowerCase();
 }
 </script>
 
@@ -68,12 +68,12 @@ function searchUser(){
 	<template #body>
 	<div class="flex flex-col" v-if="selection=='following'">
         <span class="flex gap-1" v-for="follow in user.following" :key="follow">
-          <label v-if="follow.includes(searchTerm)">{{ follow }}</label>
+          <label v-if="follow.toLowerCase().includes(searchTerm)">{{ follow }}</label>
         </span>
     </div>
 	<div class="flex flex-col" v-else>
         <span class="flex gap-1" v-for="follower in user.followers" :key="follower">
-          <label v-if="follower.includes(searchTerm)">{{ follower }}</label>
+          <label v-if="follower.toLowerCase().includes(searchTerm)">{{ follower }}</label>
         </span>
     </div>
 	</template>
