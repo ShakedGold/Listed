@@ -1,17 +1,17 @@
-import { doc, updateDoc } from "firebase/firestore";
-import { Interaction as InteractionEnum } from "../classes/Interaction.js";
-import { List } from "../classes/List.js";
-import { postsRef } from "../scripts/firebase.js";
+import { doc, updateDoc } from 'firebase/firestore';
+import { Interaction as InteractionEnum } from '../classes/Interaction.js';
+import { List } from '../classes/List.js';
+import { postsRef } from '../services/firebase.js';
 
 export class Post {
 	constructor(
-		title = "",
-		username = "",
+		title = '',
+		username = '',
 		list = new List(),
-		ID = "",
+		ID = '',
 		votes = 0,
 		time = undefined,
-		imageName = "",
+		imageName = '',
 		interactions = {},
 		reports = {}
 	) {
@@ -28,19 +28,19 @@ export class Post {
 	toString() {
 		return (
 			this.title +
-			", " +
+			', ' +
 			this.username +
-			", " +
+			', ' +
 			this.votes +
-			", " +
+			', ' +
 			this.time +
-			", " +
+			', ' +
 			this.list +
-			", " +
+			', ' +
 			this.ID +
-			", " +
+			', ' +
 			this.imageName +
-			", " +
+			', ' +
 			this.interactions
 		);
 	}
@@ -60,9 +60,8 @@ export class Post {
 			this.votes += interaction;
 		}
 
-		if (this.interactions[user.username] === InteractionEnum.None) {
+		if (this.interactions[user.username] === InteractionEnum.None)
 			delete this.interactions[user.username];
-		}
 
 		this.UpdatePost({ votes: this.votes, interactions: this.interactions });
 	}

@@ -6,7 +6,8 @@ Write-Host "3. Get updates from remote main branch (checkout)"
 Write-Host "4. Switch to branch"
 Write-Host "5. Pull updates from remote branch"
 Write-Host "7. List all branches"
-Write-Host "8. Exit"
+Write-Host "8. Fetch prune updates"
+Write-Host "9. Exit"
 
 Write-Host -NoNewline "Enter your choice: "
 $inp = Read-Host
@@ -83,6 +84,12 @@ switch ($inp) {
     git branch -a | ForEach-Object { $_.TrimStart("*").Trim() }
   }
   8 {
+    Write-Host "Fetching updates and pruning..."
+    git fetch --prune
+    Write-Host "Pulling updates"
+    git pull
+  }
+  9 {
     Write-Host "Exiting"
   }
   default {

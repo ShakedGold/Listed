@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from "vue";
-import { Post } from "../../classes/Post";
+import { ref } from 'vue';
+import { Post } from '../../classes/Post';
 
-let props = defineProps({
+const props = defineProps({
 	post: {
 		type: Post,
 		required: true,
@@ -11,7 +11,7 @@ let props = defineProps({
 const dragging = ref(false);
 const file = ref(undefined);
 
-let emits = defineEmits(["filesChange"]);
+defineEmits(['filesChange']);
 
 function drop(e) {
 	e.preventDefault();
@@ -30,46 +30,51 @@ function dragleave(e) {
 }
 
 function onChange(e) {
-	if (e.dataTransfer) file.value = e.dataTransfer.files[0];
-	else file.value = e.target.files[0];
-	props.post.imageName = file.value.name;
+	if (e.dataTransfer)
+		file.value = e.dataTransfer.files[0];
+	else
+		file.value = e.target.files[0];
+	props.post.UpdatePost({ imageName: file.value });
 }
 </script>
 
 <template>
-	<div class="flex text-center w-full">
-		<div
-			class="p-16 bg-[#f7fafc] w-full rounded-md b-1 border-solid border-2 border-[#e2e8f0]"
-			@dragover="dragover"
-			@dragleave="dragleave"
-			@drop="
-				(e) => {
-					drop(e);
-					$emit('filesChange', e);
-				}
-			"
-		>
-			<input
-				type="file"
-				name="file"
-				id="fileInput"
-				class="opacity-0 overflow-hidden position-absolute w-1 h-1"
-				@change="(e) => $emit('filesChange', e)"
-				ref="fileRef"
-				accept=".jpg,.jpeg,.png"
-			/>
+  <div class="flex text-center w-full">
+    <div
+      class="p-16 bg-[#f7fafc] w-full rounded-md b-1 border-solid border-2 border-[#e2e8f0]"
+      @dragover="dragover"
+      @dragleave="dragleave"
+      @drop="
+        (e) => {
+          drop(e);
+          $emit('filesChange', e);
+        }
+      "
+    >
+      <input
+        id="fileInput"
+        ref="fileRef"
+        type="file"
+        name="file"
+        class="opacity-0 overflow-hidden position-absolute w-1 h-1"
+        accept=".jpg,.jpeg,.png"
+        @change="(e) => $emit('filesChange', e)"
+      >
 
-			<label for="fileInput" class="text-xl block cursor-pointer">
-				<div v-if="dragging">Release to drop files here.</div>
-				<div v-else>Drop files here or <u>click here</u> to upload.</div>
-			</label>
+      <label
+        for="fileInput"
+        class="text-xl block cursor-pointer"
+      >
+        <div v-if="dragging">Release to drop files here.</div>
+        <div v-else>Drop files here or <u>click here</u> to upload.</div>
+      </label>
 
-			<p>
-				<span v-if="!post.imageName">No files selected.</span>
-				<span v-else>
-					{{ post.imageName }}
-				</span>
-			</p>
-		</div>
-	</div>
+      <p>
+        <span v-if="!post.imageName">No files selected.</span>
+        <span v-else>
+          {{ post.imageName }}
+        </span>
+      </p>
+    </div>
+  </div>
 </template>

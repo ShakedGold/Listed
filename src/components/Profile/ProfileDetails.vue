@@ -1,17 +1,17 @@
 <script setup>
-import { ref } from "vue";
-import { User } from "../../classes/User";
-import { getCurrentUser } from "../../scripts/auth";
+import { ref } from 'vue';
+import { User } from '../../classes/User';
+import { getCurrentUser } from '../../services/auth';
 import ConfirmModal from "../Modal/ConfirmModal.vue";
 
-let props = defineProps({
+defineProps({
 	user: {
 		type: User,
 		required: true,
 	},
 });
 
-let currentUser = ref(await getCurrentUser());
+const currentUser = ref(await getCurrentUser());
 
 let open = ref(false);
 let selection = ref("");
