@@ -65,7 +65,10 @@ switch ($inp) {
 	}
 	$json | ConvertTo-Json | Out-File 'TrelloDB.json'
 	createCard $list.id $cardName $cardDesc | Out-Null
-	git commit --quiet -m "Updated TrelloDB.json" TrelloDB.json
+
+	git reset HEAD
+	git add TrelloDB.json
+	git commit -m "Updated TrelloDB.json"
 	git push origin trello-db
 
 	Write-Host "would you like to create a branch for this card? (y/n)"
@@ -78,12 +81,12 @@ switch ($inp) {
 	$branch = $cardName.ToLower() -replace " \| ", "-"
 	$branch = $branch -replace " ", "-"
 	$branch
-    # Write-Host "Creating branch $branch"
-    # git branch $branch
-    # Write-Host "Checking out branch $branch"
-    # git checkout $branch
-    # Write-Host "Pushing branch $branch"
-    # git push --set-upstream origin $branch
+    Write-Host "Creating branch $branch"
+    git branch $branch
+    Write-Host "Checking out branch $branch"
+    git checkout $branch
+    Write-Host "Pushing branch $branch"
+    git push --set-upstream origin $branch
   }
   2 {
     Write-Host "Fetching updates..."
