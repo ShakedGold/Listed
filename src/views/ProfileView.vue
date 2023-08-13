@@ -7,6 +7,7 @@ import MenuBar from '../components/MenuBar/MenuBar.vue';
 import ProfileDetails from '../components/Profile/ProfileDetails.vue';
 import { getUserFromUsername } from '../services/auth';
 import { postsRef } from '../services/firebase';
+
 import PostsView from './PostsView.vue';
 
 const route = useRoute();
@@ -31,6 +32,7 @@ watch(route, async (newRoute) => {
 	user.value = await getUserFromUsername(newRoute.params.username);
 	posts.value = await getPosts();
 });
+
 </script>
 
 <template>
