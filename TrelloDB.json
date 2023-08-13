@@ -1,11 +1,11 @@
 {
-	"features": {
-		"latest": 13
-	},
-	"User Interface": {
-		"latest": 9
-	},
-	"Design": {
-		"latest": 3
-	}
+  "features": {
+    "latest": 14
+  },
+  "ui": {
+    "latest": 9
+  },
+  "design": {
+    "latest": 3
+  }
 }
