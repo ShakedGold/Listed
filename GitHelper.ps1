@@ -69,7 +69,8 @@ switch ($inp) {
 	git reset HEAD
 	git add TrelloDB.json
 	git commit -m "Updated TrelloDB.json"
-	git push origin trello-db
+	git checkout trello-db
+	git push --set-upstream origin trello-db
 
 	Write-Host "would you like to create a branch for this card? (y/n)"
 	$inp = Read-Host
@@ -80,7 +81,6 @@ switch ($inp) {
 
 	$branch = $cardName.ToLower() -replace " \| ", "-"
 	$branch = $branch -replace " ", "-"
-	$branch
     Write-Host "Creating branch $branch"
     git branch $branch
     Write-Host "Checking out branch $branch"
