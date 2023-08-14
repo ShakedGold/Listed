@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { User } from '../../classes/User';
 import { getCurrentUser } from '../../services/auth';
 import ConfirmModal from '../Modal/ConfirmModal.vue';
+import { Search } from '../../services/Algorithm';
 
-defineProps({
+const props = defineProps({
 	user: {
 		type: User,
 		required: true,
@@ -15,11 +16,15 @@ const currentUser = ref(await getCurrentUser());
 
 const open = ref(false);
 const selection = ref('');
+const userSearchBox = ref('');
 
-const searchTerm = ref('');
-function searchUser(){
-	searchTerm.value=document.getElementById('userSearchBox').value.toLowerCase();
-}
+const options = computed(() => {
+	if(selection.value=='following')
+		return Search(userSearchBox.value, props.user.following, userSearchBox.value==='');
+  
+	return Search(userSearchBox.value, props.user.followers, userSearchBox.value==='');
+});
+
 </script>
 
 <template>
@@ -95,40 +100,19 @@ function searchUser(){
       </h1>
       <input
         id="userSearchBox"
+        v-model="userSearchBox"
         type="text"
         class="border-2 border-black shadow-lg"
       >
-      <button
-        class="button"
-        @click="searchUser()"
-      >
-        search
-      </button>
     </template>
     <template #body>
-      <div
-        v-if="selection=='following'"
-        class="flex flex-col"
-      >
-        <span
-          v-for="follow in user.following"
-          :key="follow"
-          class="flex gap-1"
+      <div>
+        <p
+          v-for="option in options"
+          :key="option"
         >
-          <label v-if="follow.toLowerCase().includes(searchTerm)">{{ follow }}</label>
-        </span>
-      </div>
-      <div
-        v-else
-        class="flex flex-col"
-      >
-        <span
-          v-for="follower in user.followers"
-          :key="follower"
-          class="flex gap-1"
-        >
-          <label v-if="follower.toLowerCase().includes(searchTerm)">{{ follower }}</label>
-        </span>
+          {{ option }}
+        </p>
       </div>
     </template>
     <template #cancel>
