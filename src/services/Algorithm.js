@@ -7,19 +7,19 @@
  * Searches through the options for the term and returns a filtered and sorted list of options using Rank.
  * @param {string} term - The partial term to search for (e.g. "abc").
  * @param {Array} options - The options to search through (e.g. ["abcdef", "def", "ghi"]).
- * @param {boolean} dontUseFilter - If true, the filter will not be used, and all options will be returned.
+ * @param {boolean} useFilter - If true, the filter will be used.
  * @returns {Array} The options sorted by rank (e.g. ["abcdef", "ghi", "def"]).
  * @example Search("de", ["def", "abcdef", "ghi"]) -> ["def", "abcdef"];
  * @author ShakedGold <shakedgold@listed.com>
  */
-export function Search(term, options, dontUseFilter = false) {
+export function Search(term, options, useFilter = true) {
 	const bias = 0.5; // 0.5 is the default value
 	// functions to be used in the filter and sort
 	const rankBiasFunction = (term, option) => Rank(term, option) / term.length;
 	const sortCompareFunction = (optionA, optionB) =>
 		Rank(term, optionB) - Rank(term, optionA);
 	return options
-		.filter((option) => dontUseFilter || rankBiasFunction(term, option) >= bias)
+		.filter((option) => !useFilter || rankBiasFunction(term, option) >= bias)
 		.sort((optionA, optionB) => sortCompareFunction(optionA, optionB));
 }
 

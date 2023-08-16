@@ -87,6 +87,8 @@ switch ($inp) {
 
 	$branch = $cardName.ToLower() -replace " \| ", "-"
 	$branch = $branch -replace " ", "-"
+	$branch = $cardName.ToLower() -replace " \| ", "-"
+	$branch = $branch -replace " ", "-"
     Write-Host "Creating branch $branch"
     git branch $branch
     Write-Host "Checking out branch $branch"

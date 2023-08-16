@@ -1,3 +1,22 @@
+<script setup>
+import Modal from './Modal.vue';
+
+defineProps({
+	open: {
+		type: Boolean,
+		default: false,
+	},
+	showCircle: {
+		type: Boolean,
+		default: false,
+	},
+	progress: {
+		type: Number,
+		default: 0,
+	},
+});
+</script>
+
 <template>
   <Modal :open="open">
     <template #header>
@@ -56,22 +75,3 @@
     </template>
   </Modal>
 </template>
-
-<script setup>
-import Modal from './Modal.vue';
-
-defineProps({
-	open: {
-		type: Boolean,
-		default: false,
-	},
-	showCircle: {
-		type: Boolean,
-		default: false,
-	},
-	progress: {
-		type: Number,
-		default: 0,
-	},
-});
-</script>
