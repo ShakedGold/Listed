@@ -21,6 +21,13 @@ module.exports = {
 		fontFamily: {
 			primary: ['"Fira Sans Condensed Medium"'],
 		},
+		listStyleType: {
+			none: 'none',
+			disc: 'disc',
+			decimal: 'decimal',
+			square: 'square',
+			roman: 'upper-roman',
+		},
 	},
 	variants: {
 		extend: {},

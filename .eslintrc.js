@@ -49,6 +49,9 @@ module.exports = {
 			'error',
 			'always'
 		],
+		'vue/block-order': ['error', {
+			'order': [ 'script', 'template', 'style' ]
+		}],
 		'nonblock-statement-body-position': ['error', 'below'],
 		'no-multiple-empty-lines': ['error', { 'max': 1, 'maxEOF': 1 }],
 		'no-trailing-spaces': ['error', { 'skipBlankLines': true }],

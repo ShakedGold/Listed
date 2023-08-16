@@ -1,3 +1,34 @@
+<script setup>
+import Modal from './Modal.vue';
+
+defineProps({
+	open: {
+		type: Boolean,
+		default: false,
+	},
+	onCancel: {
+		type: Function,
+		default: () => {},
+	},
+	onConfirm: {
+		type: Function,
+		default: () => {},
+	},
+	showIcons: {
+		type: Boolean,
+		default: true,
+	},
+	showConfirmIcon: {
+		type: Boolean,
+		default: true,
+	},
+	showCancelIcon: {
+		type: Boolean,
+		default: true,
+	},
+});
+</script>
+
 <template>
   <Modal :open="open">
     <template #header>
@@ -19,13 +50,19 @@
           v-if="showIcons"
           class="flex gap-1"
         >
-          <button @click="onCancel">
+          <button
+            v-if="showCancelIcon"
+            @click="onCancel"
+          >
             <font-awesome-icon
               :icon="['far', 'circle-xmark']"
               class="text-red-700"
             />
           </button>
-          <button @click="onConfirm">
+          <button
+            v-if="showConfirmIcon"
+            @click="onConfirm"
+          >
             <font-awesome-icon :icon="['far', 'check-circle']" />
           </button>
         </div>
@@ -44,26 +81,3 @@
     </template>
   </Modal>
 </template>
-
-<script setup>
-import Modal from './Modal.vue';
-
-defineProps({
-	open: {
-		type: Boolean,
-		default: false,
-	},
-	onCancel: {
-		type: Function,
-		default: () => {},
-	},
-	onConfirm: {
-		type: Function,
-		default: () => {},
-	},
-	showIcons: {
-		type: Boolean,
-		default: true,
-	},
-});
-</script>

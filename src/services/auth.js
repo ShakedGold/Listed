@@ -17,7 +17,7 @@ import { auth } from './firebase';
 
 onAuthStateChanged(auth, (user) => {
 	if (user)
-		router.push(requestedPath || '/');
+		router.push(requestedPath || { name: 'Home' });
 });
 
 /**
@@ -27,6 +27,8 @@ onAuthStateChanged(auth, (user) => {
  * @author ShakedGold <shakedgold@listed.com>
  */
 export async function getUserFromUsername(username) {
+	if(!username)
+		return new User();
 	const userRef = doc(usersRef, username).withConverter(userConverter);
 	const userDoc = await getDoc(userRef);
 	return userDoc.data();
@@ -37,7 +39,7 @@ export async function getUserFromUsername(username) {
  * @returns {User} The current authenticated user or null if the user is not authenticated.
  */
 export function getCurrentUser() {
-	if (auth.currentUser == null)
+	if (!auth.currentUser)
 		return null;
 	return getUserFromUsername(auth.currentUser.displayName);
 }
@@ -69,12 +71,10 @@ export function Login(username, password) {
 						resolve();
 					})
 					.catch((error) => {
-						alert('Wrong username or password');
-						reject(error);
+						reject('Wrong email or password');
 					});
 			})
 			.catch((error) => {
-				alert('Wrong username or password');
 				reject(error);
 			});
 	});
@@ -83,12 +83,11 @@ export function Login(username, password) {
 /**
  * Signs up the user with the email, password and username and redirects to the requested path or the home page if there is no requested path.
  * @param {string} email - The email of the user that will be signed up.
- * @param {string} password - The password of the user that will be signed up.
  * @param {string} username - The username of the user that will be signed up.
- * @returns {Promise} - A promise that resolves when the signup is successful.
+ * @param {string} password - The password of the user that will be signed up.
  * @todo Check if username is already taken with a query.
  */
-export function SignUp(email, password, username) {
+export function SignUp(email, username, password) {
 	// TODO check if username is already taken with a query
 	return new Promise((resolve, reject) => {
 		createUserWithEmailAndPassword(auth, email, password)
@@ -96,28 +95,27 @@ export function SignUp(email, password, username) {
 				const user = userCredential.user;
 
 				// Update the user's display name directly during signup
-				await updateProfile(user, {
+				updateProfile(user, {
 					displayName: username,
-				})
-					.then(() => {
-						resolve();
-					})
-					.catch((error) => {
-						reject(error);
-					});
+				}).then(() => {
+					resolve();
+				}).catch((error) => {
+					reject(error);
+				});
 
 				const ref = doc(usersRef, username).withConverter(userConverter);
-				await setDoc(ref, new User(email, username, [], [], {}));
+				await setDoc(ref, new User(email, username));
 			})
 			.catch((error) => {
 				const errorCode = error.code;
 				if (errorCode == 'auth/email-already-in-use')
-					alert('Email already in use');
-				 else if (errorCode == 'auth/invalid-email')
-					alert('Invalid email');
-				 else if (errorCode == 'auth/weak-password')
-					alert('Password is too weak');
-				reject();
+					reject('Email already in use');
+				else if (errorCode == 'auth/invalid-email')
+					reject('Invalid email');
+				else if (errorCode == 'auth/weak-password')
+					reject('Password is too weak');
+				else
+					reject(errorCode);
 			});
 	});
 }
