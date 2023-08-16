@@ -87,22 +87,18 @@ export function Login(username, password) {
  * @param {string} password - The password of the user that will be signed up.
  * @todo Check if username is already taken with a query.
  */
-export function SignUp(email, username, password) {
-	// TODO check if username is already taken with a query
+export async function SignUp(email, username, password) {
+	const userDoc = await getDoc(doc(usersRef, username).withConverter(userConverter));
+	if (userDoc.exists())
+		return Promise.reject('Username already taken');
+
 	return new Promise((resolve, reject) => {
 		createUserWithEmailAndPassword(auth, email, password)
 			.then(async (userCredential) => {
 				const user = userCredential.user;
 
 				// Update the user's display name directly during signup
-				updateProfile(user, {
-					displayName: username,
-				}).then(() => {
-					resolve();
-				}).catch((error) => {
-					reject(error);
-				});
-
+				updateProfile(user, { displayName: username }).catch(error => reject(error));
 				const ref = doc(usersRef, username).withConverter(userConverter);
 				await setDoc(ref, new User(email, username));
 			})

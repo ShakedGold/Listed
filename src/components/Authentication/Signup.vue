@@ -1,11 +1,15 @@
 <script setup>
 import { SignUp } from '../../services/auth';
 import { ref, computed } from 'vue';
+import ConfirmModal from '../Modal/ConfirmModal.vue';
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+
+const open = ref(false);
+const error = ref('');
 
 const confirmation = computed(() => {
 	const doesPasswordMatch = password.value === confirmPassword.value && password.value !== '';
@@ -46,11 +50,26 @@ const allChecksConfirmed = computed(() => {
 });
 
 const signup = () => {
-	SignUp(email.value, username.value, password.value);
+	SignUp(email.value, username.value, password.value).catch(errorMessage => {
+		error.value = errorMessage;
+		open.value = true;
+	});
 };
 </script>
 
 <template>
+  <ConfirmModal
+    :show-confirm-icon="false"
+    :on-cancel="() => open = false"
+    :open="open"
+  >
+    <template #header>
+      <h2>Error while signing up</h2>
+    </template>
+    <template #body>
+      <p><b>{{ error }}</b></p>
+    </template>
+  </ConfirmModal>
   <div class="flex-col gap-2 grid place-items-center w-full">
     <div class="flex flex-col gap-3 w-[20%]">
       <h2 class="text-5xl w-full text-center select-none">

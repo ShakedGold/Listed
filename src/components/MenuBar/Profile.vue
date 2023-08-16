@@ -1,8 +1,10 @@
 <script setup>
 import router from '../../router/index.js';
+import { User } from '../../classes/User.js';
+
 const props = defineProps({
 	user: {
-		type: Object,
+		type: User,
 		required: false,
 		default: null,
 	},
