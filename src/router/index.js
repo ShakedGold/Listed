@@ -45,10 +45,10 @@ const router = createRouter({
 export let requestedPath = null; // Variable to store the requested path
 
 // check if user is authenticated
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
 	let isAuthenticated = false;
-	const currentUser = getCurrentUser();
-	isAuthenticated = currentUser != null;
+	const currentUser = await getCurrentUser();
+	isAuthenticated = !!currentUser;
 	if (to.meta.requiresAuth && !isAuthenticated) {
 		// Redirect the user to the login page
 		requestedPath = to.path;

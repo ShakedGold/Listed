@@ -18,14 +18,8 @@ const isHovering = ref(false);
 
 const querySnapshot = await getDocs(listsRef);
 
-const lists = ref(
-	querySnapshot.docs
-		.filter((doc) => doc.data().name.includes(props.modelValue) || props.modelValue === '')
-		.map((doc) => doc.data().name)
-);
-const options = computed(() =>
-	Search(props.modelValue, lists.value, props.modelValue === '').concat('Add new list')
-);
+const lists = ref(querySnapshot.docs.map((doc) => doc.data().name));
+const options = computed(() => Search(props.modelValue, lists.value, props.modelValue !== '').concat('Add new list'));
 
 const handleBlur = () => {
 	// Use a timeout to check if a button was clicked before hiding the list
