@@ -1,6 +1,10 @@
+if(-not(Test-Path -Path trello.env)) {
+	exit 2;
+}
+
 Get-Content trello.env | foreach {
 	$name, $value = $_.split('=')
-	if ([string]::IsNullOrWhiteSpace($name) || $name.Contains('#')) {
+	if ([string]::IsNullOrWhiteSpace($name) -Or $name.Contains('#')) {
 	  continue
 	}
 	Set-Content env:\$name $value
@@ -94,5 +98,3 @@ function readFromTrelloBranchGithub() {
 	$json | ConvertTo-Json | Out-File 'TrelloDB.json'
 	exit 0;
 }
-
-getCardFromName "Kanban" "UI-1"

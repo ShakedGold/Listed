@@ -1,9 +1,14 @@
 . ./Trello.ps1
+if($LASTEXITCODE -eq 2) {
+	Write-Host "trello.env file not found."
+	exit 1
+}
 
 $currentBranch = git branch | Select-String "\*" | ForEach-Object { $_.ToString().Split(" ")[-1] }
 $options = @(
 	"Create trello card",
-	"Create branch form trello URL",
+	"Create branch from trello URL",
+	"Create branch from card name",
 	"Get updates from current branch ($currentBranch -> pull)",
 	"Get updates from remote main branch (checkout)",
 	"Switch to branch",
@@ -19,8 +24,9 @@ for ($i = 0; $i -lt $options.Length; $i++) {
 
 Write-Host -NoNewline "Enter your choice: "
 $inp = Read-Host
-switch ($inp) {
-  1 {
+
+switch ($($options[$inp - 1])) {
+  "Create trello card" {
 	Write-Host "In what list would you like to create a card?"
 	Write-Host "1. Backlog"
 	Write-Host "2. Design"
@@ -50,7 +56,7 @@ switch ($inp) {
 	Write-Host -NoNewline "Enter your choice: "
 	$inp = Read-Host
 	git fetch --quiet
-	git pull origin trello-db --quiet
+	git checkout main -- TrelloDB.json
 	$json = Get-Content -Path 'TrelloDB.json' | ConvertFrom-Json
 	switch ($inp) {
 		1 {
@@ -94,7 +100,7 @@ switch ($inp) {
     Write-Host "Pushing branch $branch"
     git push --set-upstream origin $branch
   }
-  2 {
+  "Create branch from trello URL" {
 	Write-Host -NoNewline "Enter trello URL: "
 	$url = Read-Host
 	# select the string excluding the first numbers until -, regex = [0-9]+-
@@ -114,13 +120,38 @@ switch ($inp) {
 	Write-Host "Pushing branch $branch"
 	git push --set-upstream origin $branch
   }
-  3 {
+	"Create branch from card name" {
+		Write-Host -NoNewline "Enter card name: "
+		$cardName = Read-Host
+		
+		$card = getCardFromName "Kanban" $cardName
+		if($card -eq $null) {
+			Write-Host "Card $cardName does not exist"
+			exit 1
+		}
+		$branch = $card.name.ToLower() -replace " \| ", "-"
+		$branch = $branch -replace " ", "-"
+
+		Write-Host -NoNewline "Is $branch the correct branch name? (Y/n): "
+		$inp = Read-Host
+		if($inp -like "n") {
+			exit 0;
+		}
+
+		Write-Host "Creating branch $branch"
+		git branch $branch
+		Write-Host "Checking out branch $branch"
+		git checkout $branch
+		Write-Host "Pushing branch $branch"
+		git push --set-upstream origin $branch
+	}
+  "Get updates from current branch ($currentBranch -> pull)" {
     Write-Host "Fetching updates..."
     git fetch
     Write-Host "Pulling updates"
     git pull
   }
-  4 {
+  "Get updates from remote main branch (checkout)" {
     Write-Host "Fetching updates..."
     git fetch
     Write-Host "Checking out main"
@@ -128,7 +159,7 @@ switch ($inp) {
     Write-Host "Pulling updates"
     git pull
   }
-  5 {
+  "Switch to branch" {
     Write-Host -NoNewline "Enter branch name: "
     $branchName = Read-Host
     $branch = git branch -a | Where-Object { $_ -like "*$branchName*" } | Select-Object -First 1
@@ -149,7 +180,7 @@ switch ($inp) {
     Write-Host "Checking out branch $branch"
     git checkout $branch
   }
-  6 {
+  "Pull updates from remote branch" {
     Write-Host "Fetching updates..."
     git fetch
     Write-Host "Enter name of branch"
@@ -158,19 +189,19 @@ switch ($inp) {
     Write-Host "Pulling updates"
     git pull origin $branch
   }
-  7 {
+  "List all branches" {
     Write-Host "Fetching updates..."
     git fetch --prune
     Write-Host "All of the git branches are:"
     git branch -a | ForEach-Object { $_.TrimStart("*").Trim() }
   }
-  8 {
+  "Fetch prune updates" {
     Write-Host "Fetching updates and pruning..."
     git fetch --prune
     Write-Host "Pulling updates"
     git pull
   }
-  9 {
+  "Exit" {
     Write-Host "Exiting"
   }
   default {
