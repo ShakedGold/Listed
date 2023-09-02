@@ -57,7 +57,7 @@ function goToImage() {
       <div class="flex gap-2 text-gray-500 text-sm select-none">
         <router-link
           class="text-slate-950 hover:underline"
-          :to="{ name: 'List', params: { name: post.list.name } }"
+          :to="{ name: 'List', params: { name: 'awesome' } }"
         >
           {{ post.list.name }}
         </router-link>
