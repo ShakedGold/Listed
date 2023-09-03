@@ -10,7 +10,6 @@ import PostsView from './PostsView.vue';
 
 //array of all the posts
 const posts = ref(await getPosts());
-
 async function getPosts() {
 	const q = query(postsRef, orderBy('votes', 'desc')).withConverter(
 		postConverter
