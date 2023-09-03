@@ -21,13 +21,11 @@ const userSearchBox = ref('');
 
 const options = computed(() => {
 	if(selection.value=='following')
-		return Search(userSearchBox.value, props.user.following, userSearchBox.value==='');
+		return Search(userSearchBox.value, props.user.following, userSearchBox.value!=='');
   
-	return Search(userSearchBox.value, props.user.followers, userSearchBox.value==='');
+	return Search(userSearchBox.value, props.user.followers, userSearchBox.value!=='');
 });
 
-const users = ref(options.value.map(async(username) => getUserFromUsername(username)));
-console.log(users.value);
 </script>
 
 <template>
@@ -112,9 +110,9 @@ console.log(users.value);
     </template>
     <template #body>
       <UserCard
-        v-for="user in users"
-        :key="user"
-        :user="user"
+        v-for="username in options"
+        :key="username"
+        :username="username"
       />
     </template>
   </ConfirmModal>
