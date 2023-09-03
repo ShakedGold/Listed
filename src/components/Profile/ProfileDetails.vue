@@ -86,18 +86,20 @@ const options = computed(() => {
     :show-icons="false"
   >
     <template #header>
-      <h1
-        v-if="selection=='following'"
-        class="text-2xl"
-      >
-        Following
-      </h1>
-      <h1
-        v-else
-        class="text-2xl"
-      >
-        Followers
-      </h1>
+      <div @click="() => open=false">
+        <h1
+          v-if="selection=='following'"
+          class="text-2xl"
+        >
+          Following
+        </h1>
+        <h1
+          v-else
+          class="text-2xl"
+        >
+          Followers
+        </h1>
+      </div>
       <input
         id="userSearchBox"
         v-model="userSearchBox"
@@ -114,11 +116,6 @@ const options = computed(() => {
           {{ option }}
         </p>
       </div>
-    </template>
-    <template #cancel>
-      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
-        Close
-      </button>
     </template>
   </ConfirmModal>
 </template>
