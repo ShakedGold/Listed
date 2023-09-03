@@ -1,5 +1,6 @@
 <script setup>
 import router from '../../router/index.js';
+import { ref } from 'vue';
 import { User } from '../../classes/User';
 import { getCurrentUser } from '../../services/auth';
 
@@ -17,26 +18,7 @@ function goToProfile() {
 }
 </script>
 <template>
-    <div> <!--user card-->
-        <div></div> <!--profile picture-->
-        <div>{{ user.username }}</div> <!--User name-->
-        <div>
-            <div v-if="currentUser.IsFollowing(user)">
-            <button
-              class="button w-full"
-              @click="currentUser.UnFollow(user)"
-            >
-              UnFollow
-            </button>
-          </div>
-          <div v-else>
-            <button
-              class="button w-full"
-              @click="currentUser.Follow(user)"
-            >
-              Follow
-            </button>
-          </div>
-        </div> <!--Follow button-->
-    </div>
+  <div /> <!--Picture-->
+  <div>{{ user.username }}</div> <!--UserName-->
+  <div /> <!--Follow/Unfollow-->
 </template>

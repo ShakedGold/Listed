@@ -1,9 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { User } from '../../classes/User';
-import { getCurrentUser } from '../../services/auth';
+import { getCurrentUser, getUserFromUsername } from '../../services/auth';
 import ConfirmModal from '../Modal/ConfirmModal.vue';
 import { Search } from '../../services/Algorithm';
+import UserCard from './UserCard.vue';
 
 const props = defineProps({
 	user: {
@@ -25,6 +26,8 @@ const options = computed(() => {
 	return Search(userSearchBox.value, props.user.followers, userSearchBox.value==='');
 });
 
+const users = ref(options.value.map(async(username) => getUserFromUsername(username)));
+console.log(users.value);
 </script>
 
 <template>
@@ -104,18 +107,15 @@ const options = computed(() => {
         id="userSearchBox"
         v-model="userSearchBox"
         type="text"
-        class="border-2 border-black shadow-lg"
+        class="input"
       >
     </template>
     <template #body>
-      <div>
-        <p
-          v-for="option in options"
-          :key="option"
-        >
-          {{ option }}
-        </p>
-      </div>
+      <UserCard
+        v-for="user in users"
+        :key="user"
+        :user="user"
+      />
     </template>
   </ConfirmModal>
 </template>
