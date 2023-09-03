@@ -2,18 +2,18 @@
 import { onMounted, ref } from 'vue';
 import { storage } from '../../../services/storage';
 import { ref as firebaseRef, getDownloadURL } from 'firebase/storage';
-
 import router from '../../../router';
+import { Post } from '../../../classes/Post';
 
 const props = defineProps({
 	post: {
-		type: Object,
+		type: Post,
 		required: true,
 	},
 });
 
 function convertTime(time) {
-	const elapsedTime = Math.floor(Date.now() / 1000 - time.seconds);
+	const elapsedTime = Math.floor(Date.now() / 1000 - time);
 	const minutes = Math.floor(elapsedTime / 60);
 	const hours = Math.floor(minutes / 60);
 	const days = Math.floor(hours / 24);
@@ -56,10 +56,12 @@ function goToImage() {
     <div class="pl-2">
       <div class="flex gap-2 text-gray-500 text-sm select-none">
         <router-link
+          v-for="list in post.lists"
+          :key="list"
           class="text-slate-950 hover:underline"
-          :to="{ name: 'List', params: { name: post.list.name } }"
+          :to="{ name: 'List', params: { name: list } }"
         >
-          {{ post.list.name }}
+          {{ list }}
         </router-link>
         <p>
           Uploaded by
@@ -70,7 +72,7 @@ function goToImage() {
             {{ post.username }}
           </router-link>
           -
-          {{ convertTime(post.time) }} ago
+          {{ convertTime(post.created.seconds) }} ago
         </p>
       </div>
       <p>{{ post.title }}</p>

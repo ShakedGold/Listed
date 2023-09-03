@@ -4,28 +4,22 @@ import { getDocs } from 'firebase/firestore';
 import { listsRef } from '@/services/firebase';
 import { Search } from '../../services/Algorithm';
 
-const props = defineProps({
+defineProps({
 	modelValue: {
-		type: String,
+		type: Set,
 		required: true,
 	},
 });
-const emit = defineEmits(['update:modelValue', 'addNewList']);
+defineEmits(['update:modelValue', 'addNewList']);
 
 const expandList = ref(false);
-const selected = ref(0);
-const isHovering = ref(false);
+const searchTerm = ref('');
+const selectedLists = ref(new Set());
 
 const querySnapshot = await getDocs(listsRef);
 
-const lists = ref(
-	querySnapshot.docs
-		.filter((doc) => doc.data().name.includes(props.modelValue) || props.modelValue === '')
-		.map((doc) => doc.data().name)
-);
-const options = computed(() =>
-	Search(props.modelValue, lists.value, props.modelValue === '').concat('Add new list')
-);
+const lists = ref(querySnapshot.docs.map((doc) => doc.data().name));
+const options = computed(() => Search(searchTerm.value, lists.value, searchTerm.value !== '').concat('Add new list'));
 
 const handleBlur = () => {
 	// Use a timeout to check if a button was clicked before hiding the list
@@ -33,69 +27,20 @@ const handleBlur = () => {
 		// wait for the next tick to ensure the button click event is handled
 		nextTick(() => {
 			expandList.value = false;
-			selected.value = 0;
 		});
 	}, 100);
-};
-
-const handleKeyDown = (event) => {
-	const index = selected.value || 0;
-	isHovering.value = false;
-	switch (event.key) {
-	case 'ArrowDown':
-		event.preventDefault();
-		// if the current selected item is the last item in the list, select the first item
-		if (index + 1 >= options.value.length) {
-			//emit("update:modelValue", options.value[0]);
-			selected.value = 0;
-		} else {
-			// select the next item in the list
-			//emit("update:modelValue", options.value[index + 1]);
-			selected.value = index + 1;
-		}
-		break;
-	case 'ArrowUp':
-		event.preventDefault();
-		// if the current selected item is the last item in the list, select the first item
-		if (index - 1 < 0) {
-			// select the next item in the list
-			//emit("update:modelValue", options.value[index + 1]);
-			selected.value = options.value.length - 1;
-		} else {
-			// select the next item in the list
-			//emit("update:modelValue", options.value[index + 1]);
-			selected.value = index - 1;
-		}
-		break;
-	case 'Enter':
-		event.preventDefault();
-		if (options.value[index] === 'Add new list')
-			emit('addNewList');
-		 else
-			emit('update:modelValue', options.value[index]);
-		expandList.value = false;
-		selected.value = 0;
-		break;
-	}
 };
 </script>
 
 <template>
   <div
     class="relative"
-    @keydown="handleKeyDown"
   >
     <input
+      v-model="searchTerm"
       type="text"
       placeholder="Search a list"
-      :value="modelValue"
       class="border-2 border-gray-300 rounded-md p-2 outline-none focus:border-accent"
-      @input="
-        ($event) => {
-          $emit('update:modelValue', $event.target.value);
-          expandList = true;
-        }
-      "
       @focus="expandList = true"
       @blur="handleBlur"
     >
@@ -103,42 +48,26 @@ const handleKeyDown = (event) => {
       v-if="expandList"
       class="bg-white absolute top-11 left-0 border-2 p-2 rounded-md grid place-items-start"
     >
-      <button
+      <div
         v-for="option in options"
         :key="option"
-        class="rounded-md p-2 w-full text-left"
-        :class="{
-          'bg-neutral-200': option === options[selected] && !isHovering,
-          'hover:bg-neutral-200': isHovering,
-        }"
-        @mouseenter="
-          () => {
-            isHovering = true;
-            selected = options.indexOf(option);
-          }
-        "
-        @mouseleave="isHovering = false"
-        @mousemove="
-          () => {
-            if (!isHovering) {
-              selected = options.indexOf(option);
-            }
-          }
-        "
-        @click="
-          ($event) => {
-            $emit(
-              'update:modelValue',
-              $event.target.textContent === 'Add new list'
-                ? $emit('addNewList')
-                : option
-            );
-            expandList = false;
-          }
-        "
+        class="rounded-md w-full text-left flex gap-2"
       >
-        {{ option }}
-      </button>
+        <button
+          class="rounded-md p-2 w-full text-left hover:bg-gray-200"
+          @click="() => {
+            if(option === 'Add new list') {
+              $emit('addNewList', searchTerm);
+            } else {
+              selectedLists = new Set([...modelValue]);
+              selectedLists.add(option);
+              $emit('update:modelValue', selectedLists);
+            }
+          }"
+        >
+          {{ option }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
