@@ -57,7 +57,7 @@ function onChange(e) {
         type="file"
         name="file"
         class="opacity-0 overflow-hidden position-absolute w-1 h-1"
-        accept=".jpg,.jpeg,.png"
+        accept=".jpg,.jpeg,.png,.webp,.gif"
         @change="(e) => $emit('filesChange', e)"
       >
 

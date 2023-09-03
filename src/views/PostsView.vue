@@ -1,5 +1,8 @@
 <script setup>
 import Post from '../components/Post/Post.vue';
+import SortBy from '../components/SortBy.vue';
+
+defineEmits(['sortChanged']);
 
 defineProps({
 	posts: {
@@ -10,8 +13,10 @@ defineProps({
 </script>
 
 <template>
+  <SortBy @sort-changed="(sortBy) => $emit('sortChanged', sortBy)" />
   <div
     v-if="posts.length !== 0"
+    :key="posts"
     class="flex flex-col gap-24 justify-center align-middle items-center mt-4"
   >
     <Post
