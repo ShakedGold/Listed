@@ -18,7 +18,7 @@ async function getPosts() {
 	const q = query(
 		postsRef,
 		orderBy('votes', 'desc'),
-		where('list.name', '==', route.params.name)
+		where('lists', 'array-contains', route.params.name)
 	).withConverter(postConverter);
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());

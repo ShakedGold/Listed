@@ -1,25 +1,24 @@
 import { doc, updateDoc } from 'firebase/firestore';
 import { Interaction as InteractionEnum } from '../classes/Interaction.js';
-import { List } from '../classes/List.js';
 import { postsRef } from '../services/firebase.js';
 
 export class Post {
 	constructor(
 		title = '',
 		username = '',
-		list = new List(),
+		lists = [],
 		ID = '',
 		votes = 0,
-		time = undefined,
+		created = undefined,
 		imageName = '',
 		interactions = {},
 		reports = {}
 	) {
 		this.title = title;
 		this.username = username;
-		this.list = list;
+		this.lists = lists;
 		this.votes = votes;
-		this.time = time;
+		this.created = created;
 		this.ID = ID;
 		this.imageName = imageName;
 		this.interactions = interactions;
@@ -33,7 +32,7 @@ export class Post {
 			', ' +
 			this.votes +
 			', ' +
-			this.time +
+			this.created +
 			', ' +
 			this.list +
 			', ' +
@@ -87,10 +86,10 @@ export const postConverter = {
 		return new Post(
 			data.title,
 			data.username,
-			data.list,
+			data.lists,
 			data.ID,
 			data.votes,
-			data.time,
+			data.created,
 			data.imageName,
 			data.interactions,
 			data.reports

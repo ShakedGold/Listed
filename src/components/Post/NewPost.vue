@@ -7,11 +7,9 @@ import ListSearch from './ListSearch.vue';
 import { listsRef, postsRef } from '@/services/firebase';
 import {
 	doc,
-	getDocs,
-	query,
-	serverTimestamp,
 	setDoc,
-	where,
+	serverTimestamp,
+	updateDoc,
 } from 'firebase/firestore';
 
 import router from '@/router';
@@ -27,27 +25,26 @@ import {
 	getDownloadURL,
 	uploadBytesResumable,
 } from 'firebase/storage';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-const newPost = ref(new Post('', '', new List(), '', 0, serverTimestamp(), ''));
+const newPost = ref(new Post());
 const file = ref({ name: '' });
-const selectedList = ref('');
+const selectedLists = ref(new Set());
 const newList = ref(new List(''));
 const uploadModal = ref(false);
 const percent = ref(0);
 const mode = ref('media');
 
 async function post() {
-	if (selectedList.value === 'Select a list') {
+	if (selectedLists.value.has('Select a list')) {
 		alert('Must select a list or create a new one');
 		return;
 	} else if (newPost.value.title === '') {
 		alert('Must enter a title');
 		return;
 	}
-
-	const q = query(listsRef, where('name', '==', selectedList.value));
-	const querySnapshot = await getDocs(q);
-	newPost.value.list = querySnapshot.docs[0].data();
+	
+	newPost.value.lists = [...selectedLists.value];
 
 	// get user
 	getCurrentUserOrNew().then((user) => {
@@ -80,6 +77,9 @@ async function post() {
 				// download url
 				getDownloadURL(uploadTask.snapshot.ref).then(async (/* url */) => {
 					await setDoc(ref, newPost.value);
+					await updateDoc(ref, {
+						created: serverTimestamp()
+					});
 
 					// move to HomeView
 					router.push('/');
@@ -99,9 +99,9 @@ function uploadfiles(e) {
 	newPost.value.imageName = file.value.name;
 }
 
-function AddNewListModal() {
+function AddNewListModal(searchTerm) {
 	mode.value = 'list';
-	newList.value = new List(selectedList.value);
+	newList.value = new List(searchTerm);
 }
 
 function submitList() {
@@ -114,7 +114,7 @@ function submitList() {
 	newList.value.ID = ref.id;
 	setDoc(ref, newList.value);
 
-	selectedList.value = newList.value.name;
+	selectedLists.value.add(newList.value.name);
 	mode.value = 'media';
 }
 </script>
@@ -146,12 +146,7 @@ function submitList() {
     <template #cancel>
       <button
         class="bg-accent text-white rounded-md p-2 hover:bg-accent-hover"
-        @click="
-          () => {
-            mode = 'media';
-            selectedList = '';
-          }
-        "
+        @click="mode = 'media'"
       >
         Cancel
       </button>
@@ -196,20 +191,30 @@ function submitList() {
           >
             Text
           </button>
-          <button
-            class="border-l-2 p-2 hover:bg-neutral-200 rounded-br-[0.2rem]"
-            :class="mode === 'files' ? 'border-b-4 border-b-accent' : ''"
-            @click="mode = 'files'"
-          >
-            Files
-          </button>
         </div>
         <div class="flex flex-col gap-2">
           <ListSearch
             :key="mode"
-            v-model="selectedList"
+            v-model="selectedLists"
             @add-new-list="AddNewListModal"
           />
+          <div class="flex gap-2">
+            <div
+              v-for="list in selectedLists"
+              :key="list"
+            >
+              <button
+                class="border-2 border-gray-300 rounded-md p-2 flex gap-2 items-center bg-gray-100 hover:bg-gray-200"
+                @click="() => selectedLists.delete(list)"
+              >
+                <FontAwesomeIcon
+                  icon="times"
+                  class="text-red-500"
+                />
+                {{ list }}
+              </button>
+            </div>
+          </div>
           <input
             v-model="newPost.title"
             type="text"
