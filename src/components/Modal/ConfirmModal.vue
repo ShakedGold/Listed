@@ -27,10 +27,15 @@ defineProps({
 		default: true,
 	},
 });
+
+defineEmits(['update:open']);
 </script>
 
 <template>
-  <Modal :open="open">
+  <Modal
+    :open="open"
+    @update:open="(openVal) => $emit('update:open', openVal)"
+  >
     <template #header>
       <span class="text-2xl font-bold">
         <slot name="header" />

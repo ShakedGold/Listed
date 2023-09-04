@@ -19,7 +19,7 @@ const login = () => {
 
 <template>
   <ConfirmModal
-    :open="open"
+    v-model:open="open"
     :show-confirm-icon="false"
     :on-cancel="() => open = false"
   >

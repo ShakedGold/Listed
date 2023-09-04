@@ -76,7 +76,7 @@ function searchUser(){
     </div>
   </div>
   <ConfirmModal
-    :open="open"
+    v-model:open="open"
     :on-cancel="() => open=false"
     :show-icons="false"
   >

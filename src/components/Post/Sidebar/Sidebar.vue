@@ -50,7 +50,7 @@ function Done() {
 <template>
   <ConfirmModal
     v-if="!Reported"
-    :open="open"
+    v-model:open="open"
     :on-cancel="() => (open = false)"
     :show-icons="false"
   >
