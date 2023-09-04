@@ -34,6 +34,7 @@ const newList = ref(new List(''));
 const uploadModal = ref(false);
 const percent = ref(0);
 const mode = ref('media');
+const open = ref(false);
 
 async function post() {
 	if (selectedLists.value.has('Select a list')) {
@@ -101,6 +102,7 @@ function uploadfiles(e) {
 
 function AddNewListModal(searchTerm) {
 	mode.value = 'list';
+	open.value = true;
 	newList.value = new List(searchTerm);
 }
 
@@ -121,7 +123,7 @@ function submitList() {
 
 <template>
   <ConfirmModal
-    :open="mode === 'list'"
+    v-model:open="open"
     :show-icons="false"
   >
     <template #header>

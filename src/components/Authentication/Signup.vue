@@ -59,9 +59,9 @@ const signup = () => {
 
 <template>
   <ConfirmModal
+    v-model:open="open"
     :show-confirm-icon="false"
     :on-cancel="() => open = false"
-    :open="open"
   >
     <template #header>
       <h2>Error while signing up</h2>
