@@ -2,10 +2,10 @@
   "features": {
     "latest": 13
   },
-  "User Interface": {
+  "ui": {
     "latest": 9
   },
-  "Design": {
+  "design": {
     "latest": 3
   }
 }
