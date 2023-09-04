@@ -23,29 +23,49 @@ function goToProfile() {
 }
 </script>
 <template>
-  <div v-if="currentUser===user">
-    <div /> <!--Picture-->
-    <div>{{ user.username }}</div> <!--UserName-->
-  </div>
-  <div v-else>
-    <div /> <!--Picture-->
-    <div>{{ user.username }}</div> <!--UserName-->
-    <!--Follow/Unfollow-->
-    <div v-if="currentUser.IsFollowing(user)">
-      <button
-        class="button w-full"
-        @click="currentUser.UnFollow(user)"
-      >
-        Unfollow
-      </button>
+  <div class="grid grid-flow-col gap-4">
+    <div
+      v-if="currentUser.username===user.username"
+      class="flex items-center"
+    >
+      <div /> <!--Picture-->
+      <div class="w-full">
+        {{ user.username }}
+      </div> <!--UserName-->
+      <div>
+        <button
+          class="button float-right"
+          :disabled="true"
+        >
+          You
+        </button>
+      </div>
     </div>
-    <div v-else>
-      <button
-        class="button w-full"
-        @click="currentUser.Follow(user)"
-      >
-        Follow
-      </button>
+    <div
+      v-else
+      class="flex items-center"
+    >
+      <div /> <!--Picture-->
+      <div class="w-full">
+        {{ user.username }}
+      </div> <!--UserName-->
+      <!--Follow/Unfollow-->
+      <div v-if="currentUser.IsFollowing(user)">
+        <button
+          class="button float-right"
+          @click="currentUser.UnFollow(user)"
+        >
+          Unfollow
+        </button>
+      </div>
+      <div v-else>
+        <button
+          class="button"
+          @click="currentUser.Follow(user)"
+        >
+          Follow
+        </button>
+      </div>
     </div>
   </div>
 </template>
