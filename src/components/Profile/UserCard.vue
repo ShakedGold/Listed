@@ -9,6 +9,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	selction: {
+		type: String,
+		required: true,
+	},
 });
 
 const user = ref(await getUserFromUsername(props.username));
@@ -19,7 +23,29 @@ function goToProfile() {
 }
 </script>
 <template>
-  <div /> <!--Picture-->
-  <div>{{ user.username }}</div> <!--UserName-->
-  <div /> <!--Follow/Unfollow-->
+  <div v-if="currentUser===user">
+    <div /> <!--Picture-->
+    <div>{{ user.username }}</div> <!--UserName-->
+  </div>
+  <div v-else>
+    <div /> <!--Picture-->
+    <div>{{ user.username }}</div> <!--UserName-->
+    <!--Follow/Unfollow-->
+    <div v-if="currentUser.IsFollowing(user)">
+      <button
+        class="button w-full"
+        @click="currentUser.UnFollow(user)"
+      >
+        Unfollow
+      </button>
+    </div>
+    <div v-else>
+      <button
+        class="button w-full"
+        @click="currentUser.Follow(user)"
+      >
+        Follow
+      </button>
+    </div>
+  </div>
 </template>

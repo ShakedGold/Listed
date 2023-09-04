@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { User } from '../../classes/User';
-import { getCurrentUser, getUserFromUsername } from '../../services/auth';
+import { getCurrentUser } from '../../services/auth';
 import ConfirmModal from '../Modal/ConfirmModal.vue';
 import { Search } from '../../services/Algorithm';
 import UserCard from './UserCard.vue';
@@ -113,6 +113,7 @@ const options = computed(() => {
         v-for="username in options"
         :key="username"
         :username="username"
+        :selction="selection"
       />
     </template>
   </ConfirmModal>
