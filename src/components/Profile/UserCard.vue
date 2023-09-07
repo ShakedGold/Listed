@@ -1,7 +1,6 @@
 <script setup>
 import router from '../../router/index.js';
 import { ref } from 'vue';
-import { User } from '../../classes/User';
 import { getCurrentUser, getUserFromUsername } from '../../services/auth';
 
 const props = defineProps({
@@ -19,17 +18,20 @@ const user = ref(await getUserFromUsername(props.username));
 const currentUser = ref(await getCurrentUser());
 
 function goToProfile() {
-	router.push({ name: 'User', params: { username: props.user.username } });
+	router.push({ name: 'User', params: { username: props.username } });
 }
 </script>
 <template>
-  <div class="grid grid-flow-col gap-4">
+  <div class="my-3 p-2 rounded-lg hover:bg-slate-200">
     <div
       v-if="currentUser.username===user.username"
       class="flex items-center"
     >
       <div /> <!--Picture-->
-      <div class="w-full">
+      <div
+        class="w-full"
+        @click="goToProfile()"
+      >
         {{ user.username }}
       </div> <!--UserName-->
       <div>
@@ -46,7 +48,10 @@ function goToProfile() {
       class="flex items-center"
     >
       <div /> <!--Picture-->
-      <div class="w-full">
+      <div
+        class="w-full"
+        @click="goToProfile()"
+      >
         {{ user.username }}
       </div> <!--UserName-->
       <!--Follow/Unfollow-->
