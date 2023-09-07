@@ -14,11 +14,14 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits(['closeModal']);
+
 const user = ref(await getUserFromUsername(props.username));
 const currentUser = ref(await getCurrentUser());
 
 function goToProfile() {
 	router.push({ name: 'User', params: { username: props.username } });
+	emit('closeModal');
 }
 </script>
 <template>

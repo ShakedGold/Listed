@@ -114,6 +114,7 @@ const options = computed(() => {
         :key="username"
         :username="username"
         :selction="selection"
+        @close-modal="() => open=false"
       />
     </template>
   </ConfirmModal>
