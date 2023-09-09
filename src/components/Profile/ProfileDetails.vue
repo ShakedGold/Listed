@@ -44,7 +44,7 @@ const options = computed(() => {
       <h4 v-if="user.username === currentUser.username">
         {{ user.email }}
       </h4>
-      <div class="grid grid-flow-col gap-5">
+      <div class="grid grid-flow-col gap-5 cursor-pointer">
         <h4 @click="() => {open = true; selection='following'}">
           Following: {{ user.following.length }}
         </h4>
@@ -87,16 +87,33 @@ const options = computed(() => {
     :show-icons="false"
   >
     <template #header>
-      <div @click="() => open=false">
+      <div
+        class="flex gap-2 items-center cursor-pointer hover:bg-gray-200 rounded-md p-2 w-36"
+        @click="() => open=false"
+      >
+        <div>
+          <svg
+            width="11"
+            height="18"
+            viewBox="0 0 11 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.29169 8.3003L8.35855 0.289671C8.74747 -0.096557 9.37838 -0.096557 9.7673 0.289671L10.7083 1.22412C11.0968 1.60994 11.0972 2.23483 10.7099 2.62147L4.31661 8.99979L10.7095 15.3785C11.0972 15.7652 11.0963 16.3901 10.7078 16.7759L9.76688 17.7103C9.37796 18.0966 8.74706 18.0966 8.35814 17.7103L0.29169 9.69929C-0.0972299 9.31306 -0.0972299 8.68652 0.29169 8.3003Z"
+              fill="black"
+            />
+          </svg>
+        </div>
         <h1
           v-if="selection=='following'"
-          class="text-2xl"
+          class="text-2xl cursor-pointer"
         >
           Following
         </h1>
         <h1
           v-else
-          class="text-2xl"
+          class="text-2xl cursor-pointer"
         >
           Followers
         </h1>

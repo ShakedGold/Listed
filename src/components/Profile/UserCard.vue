@@ -25,7 +25,7 @@ function goToProfile() {
 }
 </script>
 <template>
-  <div class="my-3 p-2 rounded-lg hover:bg-slate-200">
+  <div class="my-3 p-2 hover:bg-gray-200 rounded-md cursor-pointer">
     <div
       v-if="currentUser.username===user.username"
       class="flex items-center"
