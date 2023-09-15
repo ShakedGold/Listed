@@ -2,14 +2,13 @@
 import { postsRef } from '@/services/firebase';
 import { getDocs, orderBy, query, where } from 'firebase/firestore';
 
-import { ref, toRaw } from 'vue';
+import { toRaw } from 'vue';
 
 import MenuBar from '@/components/MenuBar/MenuBar.vue';
 import { postConverter } from '../classes/Post';
 import PostsView from './PostsView.vue';
 
 //array of all the posts
-const posts = ref(await getPosts({ By: 'Hot', Of: 'Week' }));
 async function getPosts(sortBy) {
 	const sort = toRaw(sortBy);
 	const translation = {
@@ -43,16 +42,9 @@ async function getPosts(sortBy) {
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
 }
-
-async function sortChanged(sortBy) {
-	posts.value = await getPosts(sortBy);
-}
 </script>
 
 <template>
   <MenuBar />
-  <PostsView
-    :posts="posts"
-    @sort-changed="sortChanged"
-  />
+  <PostsView :get-posts="getPosts" />
 </template>

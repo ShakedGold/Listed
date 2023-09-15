@@ -12,7 +12,8 @@ export class Post {
 		created = undefined,
 		imageName = '',
 		interactions = {},
-		reports = {}
+		reports = {},
+		color = '',
 	) {
 		this.title = title;
 		this.username = username;
@@ -23,6 +24,7 @@ export class Post {
 		this.imageName = imageName;
 		this.interactions = interactions;
 		this.reports = reports;
+		this.color = color;
 	}
 	toString() {
 		return (
@@ -40,7 +42,11 @@ export class Post {
 			', ' +
 			this.imageName +
 			', ' +
-			this.interactions
+			this.interactions +
+			', ' +
+			this.reports +
+			', ' +
+			this.color
 		);
 	}
 
@@ -92,7 +98,8 @@ export const postConverter = {
 			data.created,
 			data.imageName,
 			data.interactions,
-			data.reports
+			data.reports,
+			data.color,
 		);
 	},
 };

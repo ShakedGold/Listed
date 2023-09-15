@@ -58,25 +58,49 @@ switch ($($options[$inp - 1])) {
 	git fetch --quiet
 	git checkout main -- TrelloDB.json
 	$json = Get-Content -Path 'TrelloDB.json' | ConvertFrom-Json
+
 	switch ($inp) {
 		1 {
 			$latestFeature = $json.features.latest
 			$cardName = "F-$latestFeature | $cardName"
-			$json.features.latest = $json.features.latest + 1
+			$json.features.latest = $latestFeature + 1
 		}
 		2 {
 			$latestUI = $json.ui.latest
-			$cardName = "U-$latestUI | $cardName"
-			$json.ui.latest = $json.ui.latest + 1
+			$cardName = "UI-$latestUI | $cardName"
+			$json.ui.latest = $latestUI + 1
 		}
 		3 {
 			$latestDesign = $json.design.latest
 			$cardName = "D-$latestDesign | $cardName"
-			$json.design.latest = $json.design.latest + 1
+			$json.design.latest = $latestDesign + 1
 		}
 	}
-	$json | ConvertTo-Json | Out-File 'TrelloDB.json'
+	Write-Host -NoNewline "Is $cardName the correct card name? (Y/n): "
+	$inp = Read-Host
+	if ($inp -like "n") {
+		exit 0
+	}
 	createCard $list.id $cardName $cardDesc | Out-Null
+	Write-Host "successfully created card $cardName"
+	
+	Write-Host "What label would you like to add?"
+	$labels = getLabelsFromBoard "Kanban"
+	$labels = $labels.name
+	for ($i = 0; $i -lt $labels.Length; $i++) {
+		Write-Host "$($i + 1). $($labels[$i])"
+	}
+	Write-Host -NoNewline "Enter your choice: "
+	$inp = Read-Host
+	$label = $labels[$inp - 1]
+	getLabelFromName "Kanban" $label
+	if ($LASTEXITCODE -eq 1) {
+		exit 1
+	}
+	Write-Host "successfully added label $label to card $cardName"
+	exit 0
+
+	$json | ConvertTo-Json | Out-File 'TrelloDB.json'
 
 	Write-Host "commiting changes to TrelloDB.json"
 	git commit -m "Updated TrelloDB.json" TrelloDB.json --quiet

@@ -20,6 +20,8 @@ module.exports = {
 		},
 		fontFamily: {
 			primary: ['"Fira Sans Condensed Medium"'],
+			roboto: ['"Roboto"'],
+			'roboto-md': ['"Roboto Medium"'],
 		},
 		listStyleType: {
 			none: 'none',
