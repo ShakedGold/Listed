@@ -98,3 +98,32 @@ function readFromTrelloBranchGithub() {
 	$json | ConvertTo-Json | Out-File 'TrelloDB.json'
 	exit 0;
 }
+
+function setLabel() {
+	param (
+		[string]$cardName,
+		[string]$label
+	)
+	$card = getCardFromName "Kanban" $cardName
+	$uri = "https://api.trello.com/1/cards/${card.id}/idLabels?key=${apikey}&token=${apiToken}"
+	Invoke-RestMethod -Uri $uri -Method Post
+}
+function getLabelsFromBoard() {
+	param (
+		[string]$boardName
+	)
+	$board = getBoardFromName $boardName
+	$boardID = $board.id
+	$uri = "https://api.trello.com/1/boards/${boardID}/labels?key=${apiKey}&token=${apiToken}"
+	Write-Host $uri
+	Invoke-RestMethod -Uri $uri | Where-Object { $_ -ne "" }
+}
+
+function getLabelFromName() {
+	param (
+		[string]$boardName,
+		[string]$labelName
+	)
+	$labels = getLabelsFromBoard $boardName
+	$labels | Where-Object { $_.name -like $labelName }
+}

@@ -1,19 +1,30 @@
 <script setup>
 import Post from '../components/Post/Post.vue';
 import SortBy from '../components/SortBy.vue';
+import { useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
 
-defineEmits(['sortChanged']);
-
-defineProps({
-	posts: {
-		type: Array,
+const route = useRoute();
+const props = defineProps({
+	getPosts: {
+		type: Function,
 		required: true,
 	},
+});
+const posts = ref(await props.getPosts({ By: 'Hot', Of: 'Week' }));
+const sortBy = ref({ By: 'Hot', Of: 'Week' });
+const sortChanged = async (sort) => {
+	sortBy.value = sort;
+	posts.value = await props.getPosts(sortBy.value);
+};
+
+watch(route, async () => {
+	posts.value = await props.getPosts(sortBy.value);
 });
 </script>
 
 <template>
-  <SortBy @sort-changed="(sortBy) => $emit('sortChanged', sortBy)" />
+  <SortBy @sort-changed="sortChanged" />
   <div
     v-if="posts.length !== 0"
     :key="posts"

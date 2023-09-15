@@ -14,6 +14,7 @@
 		"@fortawesome/free-regular-svg-icons": "^6.4.0",
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
 		"@fortawesome/vue-fontawesome": "^3.0.3",
+		"fast-average-color": "^9.4.0",
 		"firebase": "^10.1.0",
 		"lodash": "^4.17.21",
 		"protobufjs": "^7.2.4",

@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <div class="font-primary">
+    <div class="font-roboto">
       <router-view />
     </div>
   </Suspense>

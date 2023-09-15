@@ -1,6 +1,6 @@
 <script setup>
 import { getDocs, orderBy, query, where } from 'firebase/firestore';
-import { ref, watch } from 'vue';
+import { ref, watch, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { postConverter } from '../classes/Post';
 import MenuBar from '../components/MenuBar/MenuBar.vue';
@@ -12,13 +12,43 @@ import PostsView from './PostsView.vue';
 
 const route = useRoute();
 const user = ref(await getUserFromUsername(route.params.username));
-const posts = ref(await getPosts());
 
-async function getPosts() {
+async function getPosts(sortBy) {
+	const sort = toRaw(sortBy);
+	const translation = {
+		Hot: 'votes',
+		New: 'created',
+		Top: 'votes',
+	};
+	if(sort.By === 'Top'){
+		const MILLISECOND = 1;
+		const SECOND = 1000 * MILLISECOND;
+		const MINUTE = 60 * SECOND;
+		const HOUR = 60 * MINUTE;
+		const DAY = 24 * HOUR;
+		const WEEK = 7 * DAY;
+		const MONTH = 30 * DAY;
+		const YEAR = 365 * DAY;
+		const timeRangeDate = {
+			Hour: new Date(Date.now() - HOUR),
+			Day: new Date(Date.now() - DAY),
+			Week: new Date(Date.now() - WEEK),
+			Month: new Date(Date.now() - MONTH),
+			Year: new Date(Date.now() - YEAR),
+			'All Time': new Date(0),
+		};
+		const q = query(
+			postsRef,
+			where('username', '==', user.value.username),
+			where('created', '>', timeRangeDate[sort.Of]),
+		).withConverter(postConverter);
+		const querySnapshot = await getDocs(q);
+		return querySnapshot.docs.sort((a, b) => b.data().votes - a.data().votes).map((doc) => doc.data());
+	}
 	const q = query(
 		postsRef,
 		where('username', '==', user.value.username),
-		orderBy('time', 'desc')
+		orderBy(translation[sort.By], 'desc')
 	).withConverter(postConverter);
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
@@ -30,7 +60,6 @@ user's profile and then his own so we need to update the user object
 */
 watch(route, async (newRoute) => {
 	user.value = await getUserFromUsername(newRoute.params.username);
-	posts.value = await getPosts();
 });
 
 </script>
@@ -43,8 +72,8 @@ watch(route, async (newRoute) => {
       :user="user"
     />
     <PostsView
-      :key="posts"
-      :posts="posts"
+      :key="getPosts({By: 'Hot', Of: 'Week'})"
+      :get-posts="getPosts"
     />
   </div>
 </template>

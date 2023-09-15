@@ -3,6 +3,7 @@ import ProgressModal from '@/components/Modal/ProgressModal.vue';
 import Dropover from '@/components/Post/Dropover.vue';
 import ConfirmModal from '@/components/Modal/ConfirmModal.vue';
 import ListSearch from './ListSearch.vue';
+import { FastAverageColor } from 'fast-average-color';
 
 import { listsRef, postsRef } from '@/services/firebase';
 import {
@@ -59,6 +60,11 @@ async function post() {
 
 		// show upload modal
 		uploadModal.value = true;
+
+		// set average color
+		getAverageColor(file.value).then((color) => {
+			newPost.value.color = color;
+		});
 
 		const storageRef = firebaseRef(
 			storage,
@@ -118,6 +124,15 @@ function submitList() {
 
 	selectedLists.value.add(newList.value.name);
 	mode.value = 'media';
+}
+function getAverageColor(file) {
+	const path = URL.createObjectURL(file);
+	const fac = new FastAverageColor();
+	return new Promise((resolve) => {
+		fac.getColorAsync(path, { algorithm: 'sqrt' }).then((color) => {
+			resolve(color);
+		});
+	});
 }
 </script>
 
