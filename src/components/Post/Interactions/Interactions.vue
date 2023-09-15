@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Post } from '../../../classes/Post';
 import { Interaction as InteractionEnum } from '../../../classes/Interaction';
 import { User } from '../../../classes/User';
+import router from '../../../router';
 
 const props = defineProps({
 	post: {
@@ -32,7 +33,14 @@ const hoverState = ref({
 	share: false,
 	comment: false,
 });
-
+function goToPost() {
+	router.push({
+		name: 'Post',
+		params: {
+			id: props.post.ID,
+		},
+	});
+}
 </script>
 
 <template>
@@ -198,6 +206,7 @@ const hoverState = ref({
         backgroundColor: bg,
       }"
     >
+      <!--Share-->
       <div
         class="cursor-pointer"
         @mouseenter="hoverState.share = true"
@@ -240,10 +249,12 @@ const hoverState = ref({
           </svg>
         </div>
       </div>
+      <!--Comment-->
       <div
         class="cursor-pointer"
         @mouseenter="hoverState.comment = true"
         @mouseleave="hoverState.comment = false"
+        @click="goToPost"
       >
         <div v-if="!hoverState.comment">
           <svg

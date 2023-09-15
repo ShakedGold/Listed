@@ -49,7 +49,7 @@ onMounted(() => {
     :rows="chunks.length"
     readonly
     style="overflow:hidden;resize:none;"
-    class="rounded-[0.6rem] cursor-pointer bg-gray-200 w-[800px] select-none resize-none p-2 min-h-[150px] mb-[-0.2rem] max-h-[450px] transition-all duration-150 ease-in-out outline-none"
+    class="rounded-[0.6rem] cursor-pointer bg-gray-200 w-[800px] select-none resize-none p-2 min-h-[150px] mb-[-0.2rem] max-h-[300px] transition-all duration-150 ease-in-out outline-none"
     :style="{
       'background-color': isHovering ? hex : '#E2E2E2',
       'color': isHovering && post.color.isDark ? '#fff' : '#000',

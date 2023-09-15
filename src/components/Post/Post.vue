@@ -55,15 +55,18 @@ function goToPost() {
     @mouseenter="isHovering = true"
     @mousemove="isHovering = true"
     @mouseleave="stopHovering"
-    @click="goToPost"
   >
-    <Title :post="post" />
+    <Title
+      :post="post"
+      @click="goToPost"
+    />
     <div class="relative z-0">
       <Body
         :post="post"
         :is-hovering="isHovering"
         :hex="hex"
         :chunks="chunks"
+        @click="goToPost"
       />
       <Interactions
         :is-hovering="isHovering"
