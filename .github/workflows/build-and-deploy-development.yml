@@ -20,9 +20,6 @@ jobs:
 
     - name: Deploy to gh-pages
       run: |
-        git checkout --orphan gh-pages
-        git rm -rf .
-        mv dist/* .
-        git add .
+        git add dist -f
         git -c user.name='GitHub Actions' -c user.email='<your-email>@example.com' commit -m 'Auto deploy to gh-pages'
-        git push -f origin gh-pages
+        git subtree push --prefix dist origin gh-pages
