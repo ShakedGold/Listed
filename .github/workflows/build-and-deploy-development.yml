@@ -20,6 +20,9 @@ jobs:
 
     - name: Deploy to gh-pages
       run: |
-        git add dist -f
-        git -c user.name='GitHub Actions' -c user.email='<your-email>@example.com' commit -m 'Auto deploy to gh-pages'
-        git subtree push --prefix dist origin gh-pages
+	  	git config --global user.name 'GitHub Actions'
+		git config --global user.email '
+		git checkout -b gh-pages
+		git add -f dist
+		git commit -m "Deploy to gh-pages"
+		git push -f origin gh-pages
