@@ -3,7 +3,7 @@
  * @module
  */
 
-import { User, userConverter } from '@/classes/user.js';
+import { User, userConverter } from '@/classes/User.js';
 import { usersRef } from '@/services/firebase.js';
 import {
 	createUserWithEmailAndPassword,
