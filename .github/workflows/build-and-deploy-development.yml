@@ -1,4 +1,4 @@
-name: Build and Deploy to gh-pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - development
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +18,8 @@ jobs:
         npm install
         npm run build
 
-    - name: Deploy to gh-pages
-      run: |
-	  	git config --global user.name 'GitHub Actions'
-		git config --global user.email '
-		git checkout -b gh-pages
-		git add -f dist
-		git commit -m "Deploy to gh-pages"
-		git push -f origin gh-pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
