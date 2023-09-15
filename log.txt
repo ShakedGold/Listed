@@ -1,0 +1,2 @@
+DEBUG|005.082|FirefoxDebugSession: Trying to kill Firefox using a SIGTERM signal
+WARN |005.131|FirefoxDebugSession: Couldn't terminate Firefox

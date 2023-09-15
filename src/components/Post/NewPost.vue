@@ -3,29 +3,20 @@ import ProgressModal from '@/components/Modal/ProgressModal.vue';
 import Dropover from '@/components/Post/Dropover.vue';
 import ConfirmModal from '@/components/Modal/ConfirmModal.vue';
 import ListSearch from './ListSearch.vue';
-import { FastAverageColor } from 'fast-average-color';
 
-import { listsRef, postsRef } from '@/services/firebase';
+import { listsRef, } from '@/services/firebase';
 import {
 	doc,
 	setDoc,
-	serverTimestamp,
-	updateDoc,
 } from 'firebase/firestore';
 
 import router from '@/router';
 import { ref } from 'vue';
 
 import { List, listConverter } from '@/classes/List';
-import { Post, postConverter } from '@/classes/Post';
+import { Post } from '@/classes/Post';
 
 import { getCurrentUserOrNew } from '@/services/auth.js';
-import { storage } from '@/services/storage';
-import {
-	ref as firebaseRef,
-	getDownloadURL,
-	uploadBytesResumable,
-} from 'firebase/storage';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const newPost = ref(new Post());
@@ -45,55 +36,21 @@ async function post() {
 		alert('Must enter a title');
 		return;
 	}
-	
-	newPost.value.lists = [...selectedLists.value];
+	// show upload modal
+	uploadModal.value = true;
+	const user = await getCurrentUserOrNew();
 
-	// get user
-	getCurrentUserOrNew().then((user) => {
-		newPost.value.username = user.username;
-
-		// create post
-		const ref = doc(postsRef).withConverter(postConverter);
-
-		// set post ID to doc ID
-		newPost.value.ID = ref.id;
-
-		// show upload modal
-		uploadModal.value = true;
-
-		// set average color
-		getAverageColor(file.value).then((color) => {
-			newPost.value.color = color;
-		});
-
-		const storageRef = firebaseRef(
-			storage,
-			`/uploads/${newPost.value.ID}/${file.value.name}`
-		);
-		const uploadTask = uploadBytesResumable(storageRef, file.value);
-
-		uploadTask.on(
-			'state_changed',
-			(snapshot) => {
-				percent.value = Math.round(
-					(snapshot.bytesTransferred / snapshot.totalBytes) * 100
-				);
-			},
-			(err) => console.log(err),
-			() => {
-				// download url
-				getDownloadURL(uploadTask.snapshot.ref).then(async (/* url */) => {
-					await setDoc(ref, newPost.value);
-					await updateDoc(ref, {
-						created: serverTimestamp()
-					});
-
-					// move to HomeView
-					router.push('/');
-				});
-			}
-		);
-	});
+	const post = new Post(
+		{
+			title: newPost.value.title,
+			username: user.username,
+			lists: [...selectedLists.value],
+			type: mode.value === 'media' ? 'image' : 'text',
+			imageName: file.value.name,
+			text: newPost.value.text,
+		}
+	);
+	await post.post(file.value, percent);
 }
 /**
  * @param {DragEvent} e the event
@@ -124,15 +81,6 @@ function submitList() {
 
 	selectedLists.value.add(newList.value.name);
 	mode.value = 'media';
-}
-function getAverageColor(file) {
-	const path = URL.createObjectURL(file);
-	const fac = new FastAverageColor();
-	return new Promise((resolve) => {
-		fac.getColorAsync(path, { algorithm: 'sqrt' }).then((color) => {
-			resolve(color);
-		});
-	});
 }
 </script>
 
