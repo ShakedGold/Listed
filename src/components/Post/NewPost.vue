@@ -241,7 +241,7 @@ function submitList() {
               class="button"
               @click="post"
             >
-              Submit
+              Post
             </button>
           </div>
         </div>
