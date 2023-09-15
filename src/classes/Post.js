@@ -1,19 +1,38 @@
-import { doc, updateDoc } from 'firebase/firestore';
+import { storage } from '@/services/storage';
+import { FastAverageColor } from 'fast-average-color';
+import {
+	doc,
+	serverTimestamp,
+	setDoc,
+	updateDoc
+} from 'firebase/firestore';
+import {
+	ref as firebaseRef,
+	uploadBytesResumable,
+} from 'firebase/storage';
 import { Interaction as InteractionEnum } from '../classes/Interaction.js';
+import router from '../router/index.js';
 import { postsRef } from '../services/firebase.js';
 
 export class Post {
 	constructor(
-		title = '',
-		username = '',
-		lists = [],
-		ID = '',
-		votes = 0,
-		created = undefined,
-		imageName = '',
-		interactions = {},
-		reports = {},
-		color = '',
+		{
+			title = '',
+			username = '',
+			lists = [],
+			ID = '',
+			votes = 0,
+			created = undefined,
+			imageName = '',
+			interactions = {},
+			reports = {},
+			color = {
+				hex: '#162997',
+				isDark: true,
+			},
+			type = 'image',
+			text = '',
+		} = {},
 	) {
 		this.title = title;
 		this.username = username;
@@ -25,6 +44,8 @@ export class Post {
 		this.interactions = interactions;
 		this.reports = reports;
 		this.color = color;
+		this.type = type;
+		this.text = text;
 	}
 	toString() {
 		return (
@@ -46,7 +67,11 @@ export class Post {
 			', ' +
 			this.reports +
 			', ' +
-			this.color
+			this.color +
+			', ' +
+			this.type +
+			', ' +
+			this.text
 		);
 	}
 
@@ -80,6 +105,49 @@ export class Post {
 		const postDocRef = doc(postsRef, this.ID);
 		await updateDoc(postDocRef, patch);
 	}
+
+	async post(file, percent) {
+		// create post
+		const ref = doc(postsRef).withConverter(postConverter);
+		this.ID = ref.id;
+		if(this.type === 'image') {
+			this.color = await getAverageColor(file);
+			const storageRef = firebaseRef(
+				storage,
+				`/uploads/${this.ID}/${file.name}`
+			);
+			const uploadTask = uploadBytesResumable(storageRef, file);
+			uploadTask.on(
+				'state_changed',
+				(snapshot) => percent.value = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100),
+				(err) => console.log(err),
+				async () => {
+					await setDoc(ref, this);
+					await updateDoc(ref, {
+						created: serverTimestamp()
+					});
+
+					// move to HomeView
+					router.push('/');
+				}
+			);
+		}
+		else if (this.type === 'text') {
+			await setDoc(ref, this);
+			await updateDoc(ref, {
+				created: serverTimestamp()
+			});
+
+			// move to HomeView
+			router.push('/');
+		}
+	}
+}
+
+async function getAverageColor(file) {
+	const path = URL.createObjectURL(file);
+	const fac = new FastAverageColor();
+	return fac.getColorAsync(path, { algorithm: 'sqrt' });
 }
 
 // Firestore data converter
@@ -90,16 +158,7 @@ export const postConverter = {
 	fromFirestore: (snapshot, options) => {
 		const data = snapshot.data(options);
 		return new Post(
-			data.title,
-			data.username,
-			data.lists,
-			data.ID,
-			data.votes,
-			data.created,
-			data.imageName,
-			data.interactions,
-			data.reports,
-			data.color,
+			JSON.parse(JSON.stringify(data))
 		);
 	},
 };

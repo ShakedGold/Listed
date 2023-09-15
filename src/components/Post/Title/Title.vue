@@ -90,7 +90,7 @@ function convertTime(time) {
         </h3>
       </div>
     </div>
-    <div class="pl-2">
+    <div class="pl-2 text-2xl">
       {{ post.title }}
     </div>
   </div>

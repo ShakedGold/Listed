@@ -24,24 +24,26 @@ watch(route, async () => {
 </script>
 
 <template>
-  <SortBy @sort-changed="sortChanged" />
-  <div
-    v-if="posts.length !== 0"
-    :key="posts"
-    class="flex flex-col gap-24 justify-center align-middle items-center mt-4"
-  >
-    <Post
-      v-for="post in posts"
-      :key="post"
-      :post="post"
-    />
-  </div>
-  <div
-    v-else
-    class="grid place-items-center"
-  >
-    <h1 class="text-4xl">
-      So Empty...
-    </h1>
+  <div class="flex flex-col gap-4">
+    <SortBy @sort-changed="sortChanged" />
+    <div
+      v-if="posts.length !== 0"
+      :key="posts"
+      class="flex flex-col justify-center align-middle items-center gap-6"
+    >
+      <Post
+        v-for="post in posts"
+        :key="post"
+        :post="post"
+      />
+    </div>
+    <div
+      v-else
+      class="grid place-items-center"
+    >
+      <h1 class="text-4xl">
+        So Empty...
+      </h1>
+    </div>
   </div>
 </template>

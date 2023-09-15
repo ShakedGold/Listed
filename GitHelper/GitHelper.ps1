@@ -131,7 +131,7 @@ switch ($($options[$inp - 1])) {
 	$url = Read-Host
 	# select the string excluding the first numbers until -, regex = [0-9]+-
 	$branch = $url.Split("/")[-1]
-	$branch = $url -replace "^[0-9]+-", ""
+	$branch = $branch -replace "^[0-9]+-", ""
 	
 	Write-Host -NoNewline "Is $branch the correct branch name? (Y/n): "
 	$inp = Read-Host
