@@ -1,0 +1,15 @@
+on:
+  issues:
+    types:
+      - opened
+      - assigned
+
+jobs:
+  issue_opened_or_reopened:
+    name: issue_opened_or_assigned
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Issue Branch
+        uses: robvanderleek/create-issue-branch@v1.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
