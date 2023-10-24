@@ -14,7 +14,7 @@ on:
 
 # map fields with customized labels
 env:
-  todo: 📋 Backlog
+  todo: 🏗️ In progress
   done: ✅ Done
   in_progress: 🏗️ In progress
   user: ShakedGold
