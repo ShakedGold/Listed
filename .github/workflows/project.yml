@@ -16,6 +16,7 @@ on:
 env:
   done: ✅ Done
   in_progress: 🏗️ In progress
+  to_do: ✏️ To Do
   user: ShakedGold
 
 jobs:
@@ -24,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
-      - name: Move issue to ${{ env.in_progress }}
+      - name: Move issue to ${{ env.to_do }}
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
         with:
           gh_token: ${{ secrets.ACCESS_TOKEN }}
@@ -32,7 +33,7 @@ jobs:
           # organization: sample-org
           project_id: 1
           resource_node_id: ${{ github.event.issue.node_id }}
-          status_value: ${{ env.in_progress }} # Target status
+          status_value: ${{ env.to_do }} # Target status
       - name: Create Issue Branch
         uses: robvanderleek/create-issue-branch@v1.5
         env:
