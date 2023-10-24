@@ -24,6 +24,7 @@ const stopHovering = () => {
   isHovering.value = false;
 };
 
+// TODO: make this a computed property, and split via words, not spaces
 const chunks = props.post.text.split(' ').reduce((acc, cur) => {
   if (acc.length === 0)
     acc.push(cur);
@@ -46,12 +47,10 @@ function goToPost() {
 </script>
 
 <template>
-  <div
-    class="font-roboto-md flex flex-col transition-all duration-150 ease-in-out rounded-xl gap-3 text-lg cursor-pointer"
-    :style="{
-      'background-color': isHovering ? hex : '#E2E2E2',
-      'color': isHovering && post.color.isDark ? '#fff' : '#000',
-    }" @mouseenter="isHovering = true" @mousemove="isHovering = true" @mouseleave="stopHovering">
+  <div class="flex flex-col transition-all duration-150 ease-in-out rounded-xl gap-3 text-lg cursor-pointer" :style="{
+    'background-color': isHovering ? hex : '#E2E2E2',
+    'color': isHovering && post.color.isDark ? '#fff' : '#000',
+  }" @mouseenter="isHovering = true" @mousemove="isHovering = true" @mouseleave="stopHovering">
     <Title :post="post" />
     <div class="relative z-0">
 

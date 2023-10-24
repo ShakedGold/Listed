@@ -26,7 +26,7 @@ const props = defineProps({
 const postImageUrl = ref('');
 const text = ref(props.post.text);
 onMounted(() => {
-	if(props.post.type === 'image') {
+	if (props.post.type === 'image') {
 		const storageRef = firebaseRef(storage, `/uploads/${props.post.ID}/${props.post.imageName}`);
 		getDownloadURL(storageRef).then((url) => {
 			postImageUrl.value = url;
@@ -36,23 +36,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="post.type === 'image'">
-    <img
-      class="object-cover w-[800px] h-[450px] rounded-[0.6rem]"
-      :src="postImageUrl"
-      :alt="post.title"
-    >
-  </div>
-  <textarea
-    v-else-if="post.type === 'text'"
-    v-model="text"
-    :rows="chunks.length"
-    readonly
-    style="overflow:hidden;resize:none;"
-    class="rounded-[0.6rem] cursor-pointer bg-gray-200 w-[800px] select-none resize-none p-2 min-h-[150px] mb-[-0.2rem] max-h-[300px] transition-all duration-150 ease-in-out outline-none"
-    :style="{
-      'background-color': isHovering ? hex : '#E2E2E2',
-      'color': isHovering && post.color.isDark ? '#fff' : '#000',
-    }"
-  />
+	<div v-if="post.type === 'image'">
+		<img class="object-cover w-[800px] h-[450px] rounded-[0.6rem]" :src="postImageUrl" :alt="post.title">
+	</div>
+	<textarea v-else-if="post.type === 'text'" v-model="text" :rows="chunks.length" readonly
+		style="overflow:hidden;resize:none;"
+		class="rounded-[0.6rem] cursor-pointer bg-gray-200 w-[800px] select-none resize-none p-2 min-h-[150px] mb-[-0.2rem] max-h-[300px] transition-all duration-150 ease-in-out outline-none"
+		:style="{
+			'background-color': isHovering ? hex : '#E2E2E2',
+			'color': isHovering && post.color.isDark ? '#fff' : '#000',
+		}" />
 </template>
