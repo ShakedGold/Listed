@@ -1,4 +1,3 @@
-
 /**
  * This service contains a collection of Algorithms that are usefull.
  * @module
