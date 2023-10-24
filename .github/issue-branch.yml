@@ -1,4 +1,4 @@
-branchName: 'L-${issue.number}'
+branchName: '${issue.number}-${issue.title,}'
 gitSafeReplacementChar: '-'
 autoCloseIssue: true
 defaultBranch: 'development'
