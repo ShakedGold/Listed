@@ -1,13 +1,17 @@
-name: 'Issue Reference'
-on: 
+name: 'Issue Link To PR'
+on:
   pull_request:
-    types: [opened]
+    # we use the `edited` type to detect changes to the PR title
+    types: [opened, edited, synchronize, reopened]
 
 jobs:
-  issue-reference:
+  link-issues:
     runs-on: ubuntu-latest
+    name: Link issues found in PR title and commit message(s)
     steps:
-      - uses: kentaro-m/add-an-issue-reference-action@v2.0.0
+      - id: link-issues
+        uses: boneskull/more-linked-issues-action@v0.2.1
         with:
-          repo-token: "${{ secrets.GH_TOKEN }}"
-          branch-prefix: ""
+          github-token: '${{ secrets.GH_TOKEN }}'
+          use-commit-message: true
+          use-pr-title: true
