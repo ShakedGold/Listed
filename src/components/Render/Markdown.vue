@@ -17,7 +17,7 @@ const plugins = [
       attrs: {
         target: "_blank",
         rel: "noopener",
-        class: 'text-accent'
+        class: 'hover:text-white'
       },
     }
   }
