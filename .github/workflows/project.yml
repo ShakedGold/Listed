@@ -55,7 +55,7 @@ jobs:
           status_value: ${{ env.in_progress }} # Target status
       - name: Find linked issues
         id: find-linked-issues
-        uses: Ismoh-Games/find-linked-issues@v1
+        uses: Ismoh-Games/find-linked-issues@v1.0.2
         with:
           token: ${{ secrets.GH_TOKEN }}
       - name: Move linked issues to ${{ env.ready }}
