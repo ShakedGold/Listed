@@ -39,3 +39,28 @@ export function Rank(term, option) {
 	});
 	return rank;
 }
+
+export function SplitContent(text, maxChars) {
+	const sentences = [];
+	const words = text.split(/\s+/); // Split by both spaces and line breaks
+	let currentSentence = '';
+
+	for (const word of words) {
+		if ((currentSentence + ' ' + word).length <= maxChars) {
+			if (currentSentence) {
+				currentSentence += ' ' + word;
+			} else {
+				currentSentence = word;
+			}
+		} else {
+			sentences.push(currentSentence);
+			currentSentence = word;
+		}
+	}
+
+	if (currentSentence) {
+		sentences.push(currentSentence);
+	}
+
+	return sentences.filter(item => item !== "");
+}

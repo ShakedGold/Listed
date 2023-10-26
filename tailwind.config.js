@@ -1,3 +1,5 @@
+const { scopedPreflightStyles } = require('tailwindcss-scoped-preflight');
+
 // tailwind.config.js
 module.exports = {
 	mode: 'jit',
@@ -34,5 +36,10 @@ module.exports = {
 	variants: {
 		extend: {},
 	},
-	plugins: [],
+	plugins: [
+		scopedPreflightStyles({
+			cssSelector: '.notw', // or .notailwind or even [data-tailwind=false] - any valid CSS selector of your choice
+			mode: 'except matched',
+		}),
+	],
 };
