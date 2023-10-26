@@ -16,10 +16,15 @@
 		"@fortawesome/vue-fontawesome": "^3.0.3",
 		"fast-average-color": "^9.4.0",
 		"firebase": "^10.1.0",
+		"highlight.js": "^11.9.0",
 		"lodash": "^4.17.21",
+		"markdown-it-link-attributes": "^4.0.1",
 		"protobufjs": "^7.2.4",
+		"tailwindcss-scoped-preflight": "^2.0.2",
 		"vue": "^3.3.4",
+		"vue-resizable": "^2.1.7",
 		"vue-router": "^4.2.4",
+		"vue3-markdown-it": "^1.0.10",
 		"vuex": "^4.1.0"
 	},
 	"devDependencies": {

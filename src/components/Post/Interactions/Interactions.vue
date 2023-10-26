@@ -6,367 +6,180 @@ import { User } from '../../../classes/User';
 import router from '../../../router';
 
 const props = defineProps({
-	post: {
-		type: Post,
-		required: true,
-	},
-	isHovering: {
-		type: Boolean,
-		default: false,
-	},
-	user: {
-		type: User,
-		required: true,
-	},
-	chunks: {
-		type: Array,
-		default: () => [],
-	},
+  post: {
+    type: Post,
+    required: true,
+  },
+  isHovering: {
+    type: Boolean,
+    default: false,
+  },
+  user: {
+    type: User,
+    required: true,
+  },
 });
 
 const isDark = ref(props.post.color.isDark);
 const bg = ref(props.post.color.hex + '80'); // 80 is opacity
 
 const hoverState = ref({
-	like: false,
-	dislike: false,
-	share: false,
-	comment: false,
+  like: false,
+  dislike: false,
+  share: false,
+  comment: false,
 });
 function goToPost() {
-	router.push({
-		name: 'Post',
-		params: {
-			id: props.post.ID,
-		},
-	});
+  router.push({
+    name: 'Post',
+    params: {
+      id: props.post.ID,
+    },
+  });
 }
 </script>
 
 <template>
   <div>
-    <div
-      v-if="isDark"
-      class="relative to-transparent from-black h-[66px] mt-[-66px] md px-md bg-gradient-to-t rounded-lg opacity-60"
-    />
-    <div
-      v-else
-      class="relative to-transparent from-white h-[66px] mt-[-66px] md px-md bg-gradient-to-t rounded-lg opacity-60"
-    />
+    <div v-if="isDark"
+      class="relative to-transparent from-black h-[66px] mt-[-66px] md px-md bg-gradient-to-t rounded-lg opacity-60" />
+    <div v-else
+      class="relative to-transparent from-white h-[66px] mt-[-66px] md px-md bg-gradient-to-t rounded-lg opacity-60" />
   </div>
   <div class="absolute z-10 bottom-0 left-0 flex gap-2 items-center p-2">
-    <div
-      class="p-2 rounded-bl-[0.6rem] rounded-lg bg-opacity-50 text-xl w-16 backdrop-blur-md "
-      :style="{
-        backgroundColor: bg,
-        color: isDark ? '#fff' : '#000',
-        textAlign	: 'center',
-        justifyContent: 'center',
-      }"
-    >
+    <div class="p-2 rounded-bl-[0.6rem] rounded-lg bg-opacity-50 text-xl w-16 backdrop-blur-md " :style="{
+      backgroundColor: bg,
+      color: isDark ? '#fff' : '#000',
+      textAlign: 'center',
+      justifyContent: 'center',
+    }">
       <h1>{{ post.votes }}</h1>
     </div>
 
-    <div
-      class="flex rounded-lg gap-2 backdrop-blur-md transition-all duration-200 ease-in-out"
-      :class="isHovering ? 'opacity-100' : 'opacity-0'"
-      :style="{
+    <div class="flex rounded-lg gap-2 backdrop-blur-md transition-all duration-200 ease-in-out"
+      :class="isHovering ? 'opacity-100' : 'opacity-0'" :style="{
         backgroundColor: bg,
-      }"
-    >
-      <div
-        class="object-cover w-[45px] cursor-pointer"
-        @click="() => post.Interact(InteractionEnum.Liked, user)"
-        @mouseenter="hoverState.like = true"
-        @mouseleave="hoverState.like = false"
-      >
+      }">
+      <div class="object-cover w-[45px] cursor-pointer" @click="() => post.Interact(InteractionEnum.Liked, user)"
+        @mouseenter="hoverState.like = true" @mouseleave="hoverState.like = false">
         <div v-if="!hoverState.like && post.interactions[post.username] !== InteractionEnum.Liked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 27 29"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.7506 21.4383C12.1777 21.9721 12.3912 22.239 12.6492 22.3357C12.8754 22.4204 13.1246 22.4204 13.3508 22.3357C13.6088 22.239 13.8223 21.9721 14.2494 21.4383L14.9204 20.5995C15.5861 19.7673 15.919 19.3513 15.9194 19.0011C15.9197 18.6965 15.7812 18.4084 15.5432 18.2185C15.2696 18 14.7367 18 13.671 18H12.329C11.2633 18 10.7304 18 10.4568 18.2185C10.2188 18.4084 10.0803 18.6965 10.0806 19.0011C10.081 19.3513 10.4139 19.7673 11.0796 20.5995L11.7506 21.4383Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M10.956 9.32147C11.6324 8.22228 11.9707 7.67269 12.4053 7.48498C12.7848 7.32109 13.2152 7.32109 13.5947 7.48498C14.0293 7.67269 14.3676 8.22228 15.044 9.32147L18.749 15.3422C19.4845 16.5373 19.8522 17.1349 19.8102 17.6275C19.7736 18.0569 19.554 18.4498 19.2075 18.7061C18.81 19 18.1084 19 16.705 19H9.29495C7.89164 19 7.18998 19 6.79249 18.7061C6.44596 18.4498 6.2264 18.0569 6.18977 17.6275C6.14776 17.1349 6.5155 16.5373 7.25097 15.3422L10.956 9.32147Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
         <div v-if="hoverState.like && post.interactions[post.username] !== InteractionEnum.Liked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 27 31"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.6687 23.0031C12.1138 23.6708 12.3364 24.0046 12.6169 24.1209C12.8622 24.2227 13.1378 24.2227 13.3831 24.1209C13.6636 24.0046 13.8862 23.6708 14.3313 23.0031L14.9012 22.1482C15.2918 21.5623 15.4871 21.2694 15.5276 21.0868C15.6617 20.4815 15.2185 19.9013 14.5993 19.8715C14.4125 19.8625 14.0785 19.9738 13.4105 20.1965C13.3173 20.2276 13.2707 20.2431 13.2239 20.2539C13.0765 20.2877 12.9235 20.2877 12.7761 20.2539C12.7293 20.2431 12.6827 20.2276 12.5895 20.1965C11.9215 19.9738 11.5875 19.8625 11.4007 19.8715C10.7815 19.9013 10.3383 20.4815 10.4724 21.0868C10.5129 21.2694 10.7082 21.5623 11.0988 22.1482L11.6687 23.0031Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M10.956 8.32147C11.6324 7.22228 11.9707 6.67269 12.4053 6.48498C12.7848 6.32109 13.2152 6.32109 13.5947 6.48498C14.0293 6.67269 14.3676 7.22228 15.044 8.32147L18.749 14.3422C19.4845 15.5373 19.8522 16.1349 19.8102 16.6275C19.7736 17.0569 19.554 17.4498 19.2075 17.7061C18.81 18 18.1084 18 16.705 18H9.29495C7.89164 18 7.18998 18 6.79249 17.7061C6.44596 17.4498 6.2264 17.0569 6.18977 16.6275C6.14776 16.1349 6.5155 15.5373 7.25097 14.3422L10.956 8.32147Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
         <div v-if="post.interactions[post.username] === InteractionEnum.Liked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 27 31"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.7506 22.4383C12.1777 22.9721 12.3912 23.239 12.6492 23.3357C12.8754 23.4204 13.1246 23.4204 13.3508 23.3357C13.6088 23.239 13.8223 22.9721 14.2494 22.4383L14.9204 21.5995C15.5861 20.7673 15.919 20.3513 15.9194 20.0011C15.9197 19.6965 15.7812 19.4084 15.5432 19.2185C15.2696 19 14.7367 19 13.671 19H12.329C11.2633 19 10.7304 19 10.4568 19.2185C10.2188 19.4084 10.0803 19.6965 10.0806 20.0011C10.081 20.3513 10.4139 20.7673 11.0796 21.5995L11.7506 22.4383Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M10.956 10.3215C11.6324 9.22228 11.9707 8.67269 12.4053 8.48498C12.7848 8.32109 13.2152 8.32109 13.5947 8.48498C14.0293 8.67269 14.3676 9.22228 15.044 10.3215L18.749 16.3422C19.4845 17.5373 19.8522 18.1349 19.8102 18.6275C19.7736 19.0569 19.554 19.4498 19.2075 19.7061C18.81 20 18.1084 20 16.705 20H9.29495C7.89164 20 7.18998 20 6.79249 19.7061C6.44596 19.4498 6.2264 19.0569 6.18977 18.6275C6.14776 18.1349 6.5155 17.5373 7.25097 16.3422L10.956 10.3215Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
           </svg>
         </div>
       </div>
-      <div
-        class="object-cover w-[45px] cursor-pointer"
-        @click="() => post.Interact(InteractionEnum.Disliked, user)"
-        @mouseenter="hoverState.dislike = true"
-        @mouseleave="hoverState.dislike = false"
-      >
+      <div class="object-cover w-[45px] cursor-pointer" @click="() => post.Interact(InteractionEnum.Disliked, user)"
+        @mouseenter="hoverState.dislike = true" @mouseleave="hoverState.dislike = false">
         <div v-if="!hoverState.dislike && post.interactions[post.username] !== InteractionEnum.Disliked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 28 29"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12.7506 7.56174C13.1777 7.02789 13.3912 6.76097 13.6492 6.66433C13.8754 6.5796 14.1246 6.5796 14.3508 6.66433C14.6088 6.76097 14.8223 7.02789 15.2494 7.56174L15.9204 8.40049C16.5861 9.23266 16.919 9.64875 16.9194 9.99892C16.9197 10.3035 16.7812 10.5916 16.5432 10.7815C16.2696 11 15.7367 11 14.671 11H13.329C12.2633 11 11.7304 11 11.4568 10.7815C11.2188 10.5916 11.0803 10.3035 11.0806 9.99892C11.081 9.64875 11.4139 9.23266 12.0796 8.40049L12.7506 7.56174Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M11.956 19.6785C12.6324 20.7777 12.9707 21.3273 13.4053 21.515C13.7848 21.6789 14.2152 21.6789 14.5947 21.515C15.0293 21.3273 15.3676 20.7777 16.044 19.6785L19.749 13.6578C20.4845 12.4627 20.8522 11.8651 20.8102 11.3725C20.7736 10.9431 20.554 10.5502 20.2075 10.2939C19.81 10 19.1084 10 17.705 10H10.295C8.89164 10 8.18998 10 7.79249 10.2939C7.44596 10.5502 7.2264 10.9431 7.18977 11.3725C7.14776 11.8651 7.5155 12.4627 8.25097 13.6578L11.956 19.6785Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
         <div v-if="hoverState.dislike && post.interactions[post.username] !== InteractionEnum.Disliked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 28 29"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12.8259 7.76114C13.1297 7.30549 13.2816 7.07767 13.453 6.96564C13.7853 6.74849 14.2147 6.74849 14.547 6.96564C14.7184 7.07767 14.8703 7.3055 15.1741 7.76114L15.8296 8.74443C15.9616 8.94241 16.0276 9.0414 16.0527 9.08978C16.4694 9.89204 15.6923 10.7915 14.838 10.4957C14.7865 10.4778 14.679 10.4269 14.4639 10.325C14.4289 10.3084 14.4113 10.3001 14.3943 10.2928C14.1425 10.1848 13.8575 10.1848 13.6057 10.2928C13.5887 10.3001 13.5711 10.3084 13.5361 10.325C13.321 10.4269 13.2135 10.4778 13.162 10.4957C12.3077 10.7915 11.5306 9.89204 11.9473 9.08978C11.9724 9.0414 12.0384 8.94241 12.1704 8.74443L12.8259 7.76114Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M11.956 21.6785C12.6324 22.7777 12.9707 23.3273 13.4053 23.515C13.7848 23.6789 14.2152 23.6789 14.5947 23.515C15.0293 23.3273 15.3676 22.7777 16.044 21.6785L19.749 15.6578C20.4845 14.4627 20.8522 13.8651 20.8102 13.3725C20.7736 12.9431 20.554 12.5502 20.2075 12.2939C19.81 12 19.1084 12 17.705 12H10.295C8.89164 12 8.18998 12 7.79249 12.2939C7.44596 12.5502 7.2264 12.9431 7.18977 13.3725C7.14776 13.8651 7.5155 14.4627 8.25097 15.6578L11.956 21.6785Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
         <div v-if="post.interactions[post.username] === InteractionEnum.Disliked">
-          <svg
-            width="45"
-            height="45"
-            viewBox="0 0 28 29"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="45" height="45" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12.7506 8.56174C13.1777 8.02789 13.3912 7.76097 13.6492 7.66433C13.8754 7.5796 14.1246 7.5796 14.3508 7.66433C14.6088 7.76097 14.8223 8.02789 15.2494 8.56174L15.9204 9.40049C16.5861 10.2327 16.919 10.6487 16.9194 10.9989C16.9197 11.3035 16.7812 11.5916 16.5432 11.7815C16.2696 12 15.7367 12 14.671 12H13.329C12.2633 12 11.7304 12 11.4568 11.7815C11.2188 11.5916 11.0803 11.3035 11.0806 10.9989C11.081 10.6487 11.4139 10.2327 12.0796 9.40049L12.7506 8.56174Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M11.956 20.6785C12.6324 21.7777 12.9707 22.3273 13.4053 22.515C13.7848 22.6789 14.2152 22.6789 14.5947 22.515C15.0293 22.3273 15.3676 21.7777 16.044 20.6785L19.749 14.6578C20.4845 13.4627 20.8522 12.8651 20.8102 12.3725C20.7736 11.9431 20.554 11.5502 20.2075 11.2939C19.81 11 19.1084 11 17.705 11H10.295C8.89164 11 8.18998 11 7.79249 11.2939C7.44596 11.5502 7.2264 11.9431 7.18977 12.3725C7.14776 12.8651 7.5155 13.4627 8.25097 14.6578L11.956 20.6785Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
           </svg>
         </div>
       </div>
     </div>
   </div>
   <div class="p-2 absolute right-0 bottom-0 transition-all duration-200 ease-in-out">
-    <div
-      class="backdrop-blur-md rounded-md flex gap-2"
-      :class="isHovering ? 'opacity-100' : 'opacity-0'"
-      :style="{
-        backgroundColor: bg,
-      }"
-    >
+    <div class="backdrop-blur-md rounded-md flex gap-2" :class="isHovering ? 'opacity-100' : 'opacity-0'" :style="{
+      backgroundColor: bg,
+    }">
       <!--Share-->
-      <div
-        class="cursor-pointer"
-        @mouseenter="hoverState.share = true"
-        @mouseleave="hoverState.share = false"
-      >
+      <div class="cursor-pointer" @mouseenter="hoverState.share = true" @mouseleave="hoverState.share = false">
         <div v-if="!hoverState.share">
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 30 35"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="50" height="50" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12.5335 21.6525L14.8701 21.0285C16.1293 20.6922 16.7589 20.524 16.9645 20.2655C17.2362 19.924 17.2547 19.4459 17.0103 19.0844C16.8253 18.8108 16.2091 18.594 14.9768 18.1606L14.9768 18.1606L14.9768 18.1606C14.758 18.0836 14.6485 18.0451 14.5547 17.9864C14.425 17.9054 14.3157 17.7958 14.2351 17.666C14.1767 17.572 14.1387 17.4628 14.0626 17.2443C13.6439 16.0422 13.4346 15.4412 13.1702 15.256C12.8044 14.9997 12.3128 15.0167 11.9657 15.2978C11.7148 15.5008 11.5477 16.1149 11.2134 17.343L10.5752 19.6882C10.3357 20.568 10.216 21.0079 10.3318 21.3119C10.4329 21.577 10.642 21.7867 10.9069 21.8888C11.2108 22.0058 11.6517 21.888 12.5335 21.6525L12.5335 21.6525Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M17.5982 11.5282L11.5012 13.1565C9.23838 13.7609 8.10699 14.063 7.79405 14.5763C7.52364 15.0198 7.50227 15.5715 7.73756 16.0346C8.00986 16.5705 9.11448 16.9591 11.3237 17.7362L11.3237 17.7362L12.4622 18.1367C12.8626 18.2776 13.0628 18.348 13.2297 18.4639C13.3775 18.5667 13.5056 18.6951 13.6078 18.8431C13.7233 19.0102 13.793 19.2105 13.9325 19.611L14.3049 20.68C15.0741 22.8883 15.4586 23.9925 15.994 24.2665C16.4566 24.5033 17.0089 24.4842 17.4539 24.2159C17.9689 23.9055 18.276 22.7773 18.8901 20.521L20.5357 14.4747C20.8949 13.155 21.0745 12.4951 20.9007 12.0391C20.7492 11.6415 20.4355 11.3269 20.038 11.1738C19.5823 10.9983 18.921 11.1749 17.5982 11.5282Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
         <div v-if="hoverState.share">
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 30 35"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="50" height="50" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M10.5583 23.1561L11.9597 22.7818C12.5151 22.6334 12.7929 22.5593 12.9148 22.4856C13.5295 22.1141 13.5635 21.2358 12.9794 20.8179C12.8636 20.7351 12.5912 20.6393 12.0465 20.4477L12.0465 20.4477C11.9513 20.4141 11.9036 20.3974 11.8601 20.3772C11.6444 20.2772 11.4714 20.1037 11.3721 19.8879C11.352 19.8443 11.3355 19.7969 11.3024 19.7019L11.3024 19.7019C11.1211 19.1813 11.0305 18.9211 10.9525 18.8089C10.5376 18.2113 9.64311 18.2423 9.27066 18.8671C9.20072 18.9845 9.12834 19.2504 8.98358 19.7823L8.59998 21.1917C8.36051 22.0715 8.24078 22.5114 8.35665 22.8154C8.4577 23.0805 8.66679 23.2903 8.93178 23.3923C9.2356 23.5093 9.6765 23.3916 10.5583 23.1561Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M17.8791 11.2265L12.6064 12.6347C10.3436 13.239 9.21225 13.5412 8.89931 14.0544C8.6289 14.498 8.60753 15.0497 8.84282 15.5127C9.11512 16.0486 10.2198 16.4372 12.429 17.2144L13.1208 17.4577C13.5212 17.5986 13.7214 17.669 13.8882 17.785C14.036 17.8877 14.1641 18.0161 14.2664 18.1641C14.3818 18.3312 14.4516 18.5315 14.5911 18.932L14.809 19.5577C15.5782 21.766 15.9628 22.8702 16.4982 23.1442C16.9607 23.381 17.513 23.3619 17.9581 23.0936C18.4731 22.7832 18.7802 21.655 19.3943 19.3988L20.8166 14.173C21.1758 12.8533 21.3554 12.1934 21.1816 11.7375C21.03 11.3398 20.7163 11.0252 20.3189 10.8721C19.8631 10.6966 19.2018 10.8732 17.8791 11.2265Z"
-              fill="white"
-            />
+              fill="white" />
           </svg>
         </div>
       </div>
       <!--Comment-->
-      <div
-        class="cursor-pointer"
-        @mouseenter="hoverState.comment = true"
-        @mouseleave="hoverState.comment = false"
-        @click="goToPost"
-      >
+      <div class="cursor-pointer" @mouseenter="hoverState.comment = true" @mouseleave="hoverState.comment = false"
+        @click="goToPost">
         <div v-if="!hoverState.comment">
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 26 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="5"
-              y="9"
-              width="16"
-              height="10"
-              rx="2"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="11"
-              width="14"
-              height="2"
-              rx="1"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="11"
-              width="14"
-              height="2"
-              rx="1"
-              fill="black"
-              fill-opacity="0.2"
-            />
-            <rect
-              x="6"
-              y="15"
-              width="14"
-              height="2"
-              rx="1"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="15"
-              width="14"
-              height="2"
-              rx="1"
-              fill="black"
-              fill-opacity="0.2"
-            />
+          <svg width="50" height="50" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="9" width="16" height="10" rx="2" fill="white" />
+            <rect x="6" y="11" width="14" height="2" rx="1" fill="white" />
+            <rect x="6" y="11" width="14" height="2" rx="1" fill="black" fill-opacity="0.2" />
+            <rect x="6" y="15" width="14" height="2" rx="1" fill="white" />
+            <rect x="6" y="15" width="14" height="2" rx="1" fill="black" fill-opacity="0.2" />
           </svg>
         </div>
         <div v-if="hoverState.comment">
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 26 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="50" height="50" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.8896 21.2641L12.8711 20.6916C14.3863 19.8077 15.1439 19.3658 15.2496 18.9664C15.3407 18.6218 15.2413 18.2549 14.9886 18.0033C14.6958 17.7116 13.8184 17.7116 12.0638 17.7116H12.0638L11.0823 17.7116C10.5219 17.7116 10.2418 17.7116 10.0277 17.8205C9.83947 17.9164 9.6864 18.0692 9.59047 18.2573C9.48142 18.4711 9.48142 18.751 9.48142 19.3107V19.3107L9.48142 19.8832C9.48142 20.7967 9.48141 21.2534 9.67338 21.5165C9.84081 21.746 10.098 21.8935 10.3808 21.9222C10.7051 21.9551 11.0999 21.7247 11.8896 21.2641Z"
-              fill="#061A86"
-            />
+              fill="#061A86" />
             <path
               d="M11.8896 21.2641L12.8711 20.6916C14.3863 19.8077 15.1439 19.3658 15.2496 18.9664C15.3407 18.6218 15.2413 18.2549 14.9886 18.0033C14.6958 17.7116 13.8184 17.7116 12.0638 17.7116H12.0638L11.0823 17.7116C10.5219 17.7116 10.2418 17.7116 10.0277 17.8205C9.83947 17.9164 9.6864 18.0692 9.59047 18.2573C9.48142 18.4711 9.48142 18.751 9.48142 19.3107V19.3107L9.48142 19.8832C9.48142 20.7967 9.48141 21.2534 9.67338 21.5165C9.84081 21.746 10.098 21.8935 10.3808 21.9222C10.7051 21.9551 11.0999 21.7247 11.8896 21.2641Z"
-              fill="black"
-              fill-opacity="0.2"
-            />
-            <rect
-              x="5"
-              y="8.46729"
-              width="16"
-              height="10"
-              rx="2"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="10.4673"
-              width="14"
-              height="2"
-              rx="1"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="10.4673"
-              width="14"
-              height="2"
-              rx="1"
-              fill="black"
-              fill-opacity="0.2"
-            />
-            <rect
-              x="6"
-              y="14.4673"
-              width="14"
-              height="2"
-              rx="1"
-              fill="white"
-            />
-            <rect
-              x="6"
-              y="14.4673"
-              width="14"
-              height="2"
-              rx="1"
-              fill="black"
-              fill-opacity="0.2"
-            />
+              fill="black" fill-opacity="0.2" />
+            <rect x="5" y="8.46729" width="16" height="10" rx="2" fill="white" />
+            <rect x="6" y="10.4673" width="14" height="2" rx="1" fill="white" />
+            <rect x="6" y="10.4673" width="14" height="2" rx="1" fill="black" fill-opacity="0.2" />
+            <rect x="6" y="14.4673" width="14" height="2" rx="1" fill="white" />
+            <rect x="6" y="14.4673" width="14" height="2" rx="1" fill="black" fill-opacity="0.2" />
           </svg>
         </div>
       </div>
