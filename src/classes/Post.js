@@ -75,16 +75,6 @@ export class Post {
 		);
 	}
 
-	/**
-	 * 
-	 * @param {string} ID 
-	 * @returns {Post} the post object
-	 */
-	static GetPost(ID) {
-		const postDocRef = doc(postsRef, ID);
-		return postDocRef.withConverter(postConverter).get();
-	}
-
 	Interact(interaction, user) {
 		if (this.interactions[user.username] === interaction) {
 			this.votes -= interaction;
@@ -120,7 +110,7 @@ export class Post {
 		// create post
 		const ref = doc(postsRef).withConverter(postConverter);
 		this.ID = ref.id;
-		if (this.type === 'image') {
+		if(this.type === 'image') {
 			this.color = await getAverageColor(file);
 			const storageRef = firebaseRef(
 				storage,
