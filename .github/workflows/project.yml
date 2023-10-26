@@ -58,11 +58,6 @@ jobs:
         uses: Ismoh-Games/find-linked-issues@v1
         with:
           token: ${{ secrets.GH_TOKEN }}
-          user: ${{ env.user }}
-          # organization: sample-org
-          project_id: 1
-          resource_node_id: ${{ .node_id }}
-          status_value: ${{ env.in_progress }} # Target status
       - name: Move linked issues to ${{ env.ready }}
         run: |
           echo "is-pull-request-linked-to-issues: ${{ steps.find-linked-issues.outputs.is-pull-request-linked-to-issues }}"
