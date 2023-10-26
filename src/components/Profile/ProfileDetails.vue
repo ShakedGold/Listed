@@ -38,8 +38,25 @@ const options = computed(() => {
       </h1>
       <hr class="w-full text-gray-500 m-1">
     </div>
-    <!--Personal profile page-->
+  <div class="grid grid-rows-2 grid-flow-col gap-4">
+      <img class="rounded-full" src="https://picsum.photos/100"><!--Profile picture-->
+      <div><h4>{{ user.username }}</h4><br>
+        <p>bio about my user!</p>
+      </div> <!--name and bio-->
+      <div class="row-span-2">
+        <div class="grid grid-flow-col gap-5 cursor-pointer">
+          <h4 @click="() => {open = true; selection='following'}">
+            {{ user.following.length }} <br> Following
+          </h4>
+          <h4 @click="() => {open = true; selection='followers'}">
+            {{ user.followers.length }} <br> Followers 
+          </h4>
+        </div>
+      </div>
+  </div>
+    <hr class="w-full text-gray-500 m-1">
     <div class="grid place-items-center gap-2 mb-4">
+      <img class="rounded-full" src="https://picsum.photos/200"><!--Profile picture-->
       <h4>{{ user.username }}</h4>
       <h4 v-if="user.username === currentUser.username">
         {{ user.email }}
@@ -53,7 +70,7 @@ const options = computed(() => {
         </h4>
       </div>
     </div>
-    <div v-if="user.username === currentUser.username">
+    <div v-if="user.username === currentUser.username"><!--Personal profile page-->
       <button
         class="button w-full"
         @click="currentUser.SignOut()"
