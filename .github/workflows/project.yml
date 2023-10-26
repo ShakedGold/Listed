@@ -16,6 +16,7 @@ on:
 env:
   done: ✅ Done
   in_progress: 🏗️ In progress
+  ready: 🔖 Ready
   to_do: ✏️ To Do
   in_review: 👀 In review
   user: ShakedGold
@@ -37,6 +38,9 @@ jobs:
           status_value: ${{ env.done }} # Target status
   pr_opened_or_reopened:
     name: pr_opened_or_reopened_or_reviewrequested
+    permissions:
+        issues: read
+        pull-requests: write
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
@@ -49,6 +53,21 @@ jobs:
           project_id: 1
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: ${{ env.in_progress }} # Target status
+      - name: Find linked issues
+        id: find-linked-issues
+        uses: Ismoh-Games/find-linked-issues@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          user: ${{ env.user }}
+          # organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ .node_id }}
+          status_value: ${{ env.in_progress }} # Target status
+      - name: Move linked issues to ${{ env.ready }}
+        run: |
+          echo "is-pull-request-linked-to-issues: ${{ steps.find-linked-issues.outputs.is-pull-request-linked-to-issues }}"
+          echo "linked-issues: ${{ steps.find-linked-issues.outputs.linked-issues }}"
+          echo "pull-request-labels: ${{ steps.find-linked-issues.outputs.pull-request-labels }}"
   pr_review_requested:
     name: pr_reviewrequested
     runs-on: ubuntu-latest
