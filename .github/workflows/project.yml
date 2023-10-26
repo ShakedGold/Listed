@@ -53,16 +53,6 @@ jobs:
           project_id: 1
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: ${{ env.in_progress }} # Target status
-      - name: Find linked issues
-        id: find-linked-issues
-        uses: Ismoh-Games/find-linked-issues@v1.0.2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-      - name: Move linked issues to ${{ env.ready }}
-        run: |
-          echo "is-pull-request-linked-to-issues: ${{ steps.find-linked-issues.outputs.is-pull-request-linked-to-issues }}"
-          echo "linked-issues: ${{ steps.find-linked-issues.outputs.linked-issues }}"
-          echo "pull-request-labels: ${{ steps.find-linked-issues.outputs.pull-request-labels }}"
   pr_review_requested:
     name: pr_reviewrequested
     runs-on: ubuntu-latest
