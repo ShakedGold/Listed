@@ -4,7 +4,7 @@ import Notifications from './Notifications.vue';
 </script>
 
 <template>
-  <div>
+  <div class="m-auto">
     <AddPost />
     <Notifications />
   </div>
