@@ -5,7 +5,7 @@ import Home from '../views/HomeView.vue';
 import ListView from '../views/ListView.vue';
 import LogIn from '../views/LogInView.vue';
 import NewPost from '../views/NewPostView.vue';
-import PostView from '../views/PostView.vue';
+import PostImageView from '../views/PostImageView.vue';
 import Profile from '../views/ProfileView.vue';
 import SignUp from '../views/SignUpView.vue';
 
@@ -26,19 +26,13 @@ const router = createRouter({
 			meta: { requiresAuth: true },
 		},
 		{
-			path: '/post/:id',
-			component: PostView,
-			name: 'Post',
+			path: '/post/:id/:imageName',
+			component: PostImageView,
+			name: 'PostImage',
 			meta: { requiresAuth: true },
 		},
 		{ path: '/login', component: LogIn, name: 'Login' },
 		{ path: '/signup', component: SignUp, name: 'Signup' },
-		{
-			path: '/post/:id/:imageName',
-			component: PostView,
-			name: 'Image',
-			meta: { requiresAuth: true },
-		},
 		{
 			path: '/list/:name',
 			component: ListView,

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { storage } from '../../../services/storage';
 import { ref as firebaseRef, getDownloadURL } from 'firebase/storage';
 import { Post } from '../../../classes/Post';
@@ -19,24 +19,45 @@ const props = defineProps({
 		default: '#E2E2E2',
 	},
 });
-const postImageUrl = ref('');
-onMounted(() => {
+const postImageUrlPromise = computed(() => {
 	if (props.post.type === 'image') {
 		const storageRef = firebaseRef(storage, `/uploads/${props.post.ID}/${props.post.imageName}`);
-		getDownloadURL(storageRef).then((url) => {
-			postImageUrl.value = url;
-		});
+		return getDownloadURL(storageRef);
 	}
 });
+const getMeta = (url) =>
+	new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => resolve(img);
+		img.onerror = (err) => reject(err);
+		img.src = url;
+	});
+const postImageUrl = ref(await postImageUrlPromise.value);
+const postImageSizePromise = computed(async () => {
+	if (props.post.type === 'image') {
+		const img = await getMeta(postImageUrl.value);
+		return {
+			width: img.width,
+			height: img.height,
+		};
+	} else {
+		return {
+			width: 0,
+			height: 0,
+		};
+	}
+});
+const postImageSize = ref(await postImageSizePromise.value);
 </script>
 
 <template>
-	<div v-if="post.type === 'image'">
-		<img class="object-cover w-[800px] h-[450px] rounded-[0.6rem]" :src="postImageUrl" :alt="post.title">
+	<div v-if="post.type === 'image'" class="overflow-hidden"
+		:class="postImageSize.height <= 450 ? 'justify-center items-center flex' : ''">
+		<img class="w-full" :src="postImageUrl" :alt="post.title">
 	</div>
 	<div v-else-if="post.type === 'text'">
 		<Markdown
-			class="rounded-[0.6rem] overflow-hidden cursor-pointer w-[800px] select-none resize-none p-2 min-h-[150px] mb-[-0.2rem] max-h-[350px] transition-all duration-150 ease-in-out outline-none"
+			class="text-base overflow-hidden cursor-pointer select-none resize-none p-2 transition-all duration-150 ease-in-out outline-none"
 			:src="post.text" />
 	</div>
 </template>
